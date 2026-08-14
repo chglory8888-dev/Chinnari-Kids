@@ -3,84 +3,34 @@ import Link from "next/link";
 import { useState } from "react";
 
 const colours = [
-  { name: "Red", emoji: "🔴", telugu: "ఎరుపు" },
-  { name: "Blue", emoji: "🔵", telugu: "నీలం" },
-  { name: "Green", emoji: "🟢", telugu: "ఆకుపచ్చ" },
-  { name: "Yellow", emoji: "🟡", telugu: "పసుపు" },
-  { name: "Orange", emoji: "🟠", telugu: "నారింజ" },
-  { name: "Purple", emoji: "🟣", telugu: "ఊదా" },
-];
-
-const quiz = [
-  {
-    question: "Which colour is RED?",
-    options: ["🔴", "🔵", "🟢", "🟡"],
-    answer: "🔴",
-  },
-  {
-    question: "Which colour is BLUE?",
-    options: ["🟢", "🟡", "🔵", "🔴"],
-    answer: "🔵",
-  },
-  {
-    question: "Which colour is GREEN?",
-    options: ["🟣", "🟢", "🟠", "🔴"],
-    answer: "🟢",
-  },
-  {
-    question: "Which colour is YELLOW?",
-    options: ["🔵", "🟡", "🟣", "🟢"],
-    answer: "🟡",
-  },
+  { name: "Red", telugu: "ఎరుపు", emoji: "🔴", color: "#ff4d4d" },
+  { name: "Blue", telugu: "నీలం", emoji: "🔵", color: "#4d9cff" },
+  { name: "Yellow", telugu: "పసుపు", emoji: "🟡", color: "#ffd43b" },
+  { name: "Green", telugu: "ఆకుపచ్చ", emoji: "🟢", color: "#45c95a" },
+  { name: "Orange", telugu: "నారింజ", emoji: "🟠", color: "#ff922b" },
+  { name: "Purple", telugu: "ఊదా", emoji: "🟣", color: "#9b5de5" },
 ];
 
 export default function Colours() {
-  const [mode, setMode] = useState("learn");
+  const [selected, setSelected] = useState(null);
+  const [stars, setStars] = useState(0);
 
-  const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [finished, setFinished] = useState(false);
-  const [message, setMessage] = useState("");
+  function chooseColour(index) {
+    setSelected(index);
 
-  function startQuiz() {
-    setCurrent(0);
-    setScore(0);
-    setFinished(false);
-    setMessage("");
-    setMode("quiz");
-  }
-
-  function chooseAnswer(option) {
-    if (option === quiz[current].answer) {
-      setScore((value) => value + 1);
-      setMessage("🎉 Correct! Well done!");
-    } else {
-      setMessage("💡 Nice try! Keep learning!");
+    if (selected !== index) {
+      setStars((value) => value + 2);
     }
-
-    setTimeout(() => {
-      setMessage("");
-
-      if (current === quiz.length - 1) {
-        setFinished(true);
-      } else {
-        setCurrent((value) => value + 1);
-      }
-    }, 800);
-  }
-
-  function restartQuiz() {
-    startQuiz();
   }
 
   return (
     <>
       <Head>
-        <title>Learn Colours for Kids | Chinnaari Kids</title>
+        <title>Learn Colours | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Learn colours for kids with fun English and Telugu colour names, examples and a simple colour quiz."
+          content="Learn basic colours in English and Telugu with Chinnaari Kids."
         />
 
         <meta
@@ -101,25 +51,12 @@ export default function Colours() {
 
           <nav>
             <Link href="/">Home</Link>
-
-            <Link href="/stories">
-              📚 Stories
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
-            </Link>
-
-            <Link href="/puzzles">
-              🧩 Puzzles
-            </Link>
-
-            <Link
-              href="/colours"
-              className="active"
-            >
-              🎨 Colours
-            </Link>
+            <Link href="/dashboard">🌟 Dashboard</Link>
+            <Link href="/stories">📚 Stories</Link>
+            <Link href="/games">🎮 Games</Link>
+            <Link href="/puzzles">🧩 Puzzles</Link>
+            <Link href="/colours">🎨 Colours</Link>
+            <Link href="/learn">🔤 Learn</Link>
           </nav>
 
         </header>
@@ -133,228 +70,151 @@ export default function Colours() {
           </div>
 
           <h1>
-            Let's Learn Colours!
+            Let's Learn Colours! 🎨
           </h1>
 
           <p>
-            Learn colours in English & Telugu 🎨
+            Click a colour and discover its name.
           </p>
+
+          <div className="starBox">
+            ⭐ {stars} Stars
+          </div>
 
         </section>
 
-        {/* TABS */}
+        {/* COLOUR CARDS */}
 
-        <div className="tabs">
+        <section className="colourSection">
 
-          <button
-            className={mode === "learn" ? "selected" : ""}
-            onClick={() => setMode("learn")}
-          >
-            🎨 Learn Colours
-          </button>
+          <h2>
+            🌟 Choose a Colour
+          </h2>
 
-          <button
-            className={mode === "quiz" ? "selected" : ""}
-            onClick={startQuiz}
-          >
-            🧠 Colour Quiz
-          </button>
+          <p className="subtitle">
+            Tap any colour to learn!
+          </p>
 
-        </div>
+          <div className="colourGrid">
 
-        {/* LEARN */}
+            {colours.map((item, index) => (
 
-        {mode === "learn" && (
-          <section className="learning">
+              <button
+                key={item.name}
+                className={
+                  selected === index
+                    ? "colourCard selected"
+                    : "colourCard"
+                }
+                onClick={() => chooseColour(index)}
+              >
 
-            <h2>
-              🌟 Colours Around Us
-            </h2>
-
-            <p className="intro">
-              Tap and learn the colour names!
-            </p>
-
-            <div className="colourGrid">
-
-              {colours.map((colour) => (
                 <div
-                  className="colourCard"
-                  key={colour.name}
-                >
+                  className="colourCircle"
+                  style={{
+                    background: item.color,
+                  }}
+                />
 
-                  <div className="bigColour">
-                    {colour.emoji}
-                  </div>
-
-                  <h3>
-                    {colour.name}
-                  </h3>
-
-                  <p>
-                    {colour.telugu}
-                  </p>
-
-                </div>
-              ))}
-
-            </div>
-
-            <div className="learnMessage">
-
-              <span>
-                🌟
-              </span>
-
-              <div>
                 <h3>
-                  Ready for a challenge?
+                  {item.emoji} {item.name}
                 </h3>
 
                 <p>
-                  Test how many colours you remember!
+                  {item.telugu}
                 </p>
 
-                <button onClick={startQuiz}>
-                  🧠 Start Colour Quiz
-                </button>
-              </div>
+                <span>
+                  Tap to Learn
+                </span>
 
-            </div>
-
-          </section>
-        )}
-
-        {/* QUIZ */}
-
-        {mode === "quiz" && !finished && (
-          <section className="quizBox">
-
-            <div className="quizTop">
-
-              <span>
-                🎨 Colour Quiz
-              </span>
-
-              <span>
-                {current + 1} / {quiz.length}
-              </span>
-
-            </div>
-
-            <h2>
-              {quiz[current].question}
-            </h2>
-
-            <div className="quizOptions">
-
-              {quiz[current].options.map(
-                (option) => (
-                  <button
-                    key={option}
-                    onClick={() =>
-                      chooseAnswer(option)
-                    }
-                  >
-                    {option}
-                  </button>
-                )
-              )}
-
-            </div>
-
-            {message && (
-              <div className="message">
-                {message}
-              </div>
-            )}
-
-            <button
-              className="backButton"
-              onClick={() => setMode("learn")}
-            >
-              ← Back to Colours
-            </button>
-
-          </section>
-        )}
-
-        {/* RESULT */}
-
-        {mode === "quiz" && finished && (
-          <section className="result">
-
-            <div className="trophy">
-              🏆🎨
-            </div>
-
-            <h2>
-              Colour Champion!
-            </h2>
-
-            <p>
-              Your score
-            </p>
-
-            <div className="score">
-              {score} / {quiz.length}
-            </div>
-
-            <p>
-              Keep learning and exploring colours! 🌈
-            </p>
-
-            <div className="resultButtons">
-
-              <button onClick={restartQuiz}>
-                🔄 Play Again
               </button>
 
-              <button
-                onClick={() => setMode("learn")}
-              >
-                🎨 Learn Again
-              </button>
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* SELECTED COLOUR */}
+
+        {selected !== null && (
+
+          <section className="learningCard">
+
+            <div
+              className="bigCircle"
+              style={{
+                background: colours[selected].color,
+              }}
+            />
+
+            <div>
+
+              <span className="badge">
+                ⭐ Great Choice!
+              </span>
+
+              <h2>
+                {colours[selected].emoji}{" "}
+                {colours[selected].name}
+              </h2>
+
+              <p>
+                Telugu:
+                <strong>
+                  {" "}
+                  {colours[selected].telugu}
+                </strong>
+              </p>
+
+              <p>
+                You found a beautiful colour! 🎉
+              </p>
 
             </div>
 
           </section>
+
         )}
 
-        {/* COLOUR FACT */}
+        {/* COLOUR TIP */}
 
-        <section className="fact">
+        <section className="tip">
 
-          <div className="factEmoji">
-            🌈
+          <div className="tipEmoji">
+            💡
           </div>
 
           <div>
 
             <h2>
-              🌟 Did You Know?
+              Little Colour Tip
             </h2>
 
             <p>
-              Colours make our world beautiful!
-              Children can learn colours by looking
-              at fruits, flowers, toys and things around
-              them.
+              Colours are everywhere! Look around
+              your home and try to find something
+              red, blue, yellow or green. 🌈
             </p>
 
           </div>
 
         </section>
 
-        {/* HOME */}
+        {/* NAVIGATION */}
 
-        <div className="homeButton">
+        <section className="navigation">
 
-          <Link href="/">
-            🏠 Back to Home
+          <Link href="/dashboard">
+            🌟 Dashboard
           </Link>
 
-        </div>
+          <Link href="/learn">
+            🔤 Continue Learning
+          </Link>
+
+        </section>
 
         {/* FOOTER */}
 
@@ -421,18 +281,19 @@ export default function Colours() {
 
         nav {
           display: flex;
-          gap: 18px;
+          gap: 15px;
           flex-wrap: wrap;
         }
 
         nav a {
           color: #444;
           text-decoration: none;
+
+          font-size: 14px;
           font-weight: 600;
         }
 
-        nav a:hover,
-        nav a.active {
+        nav a:hover {
           color: #ff6b6b;
         }
 
@@ -441,13 +302,13 @@ export default function Colours() {
         .hero {
           text-align: center;
 
-          padding: 55px 20px;
+          padding: 45px 20px;
 
           background:
             linear-gradient(
               135deg,
-              #ffe0ea,
-              #dff4ff
+              #ffe1ea,
+              #e0f5ff
             );
         }
 
@@ -456,70 +317,53 @@ export default function Colours() {
         }
 
         .hero h1 {
-          font-size: 42px;
-          margin: 15px 0 10px;
+          font-size: 40px;
+
+          margin: 10px 0;
         }
 
         .hero p {
           font-size: 18px;
+
           color: #555;
         }
 
-        /* TABS */
+        .starBox {
+          display: inline-block;
 
-        .tabs {
-          display: flex;
+          margin-top: 10px;
 
-          justify-content: center;
-
-          gap: 12px;
-
-          margin: 35px 20px 10px;
-
-          flex-wrap: wrap;
-        }
-
-        .tabs button {
-          border: none;
-
-          padding: 14px 22px;
+          padding: 9px 18px;
 
           border-radius: 25px;
 
-          background: white;
-
-          box-shadow:
-            0 3px 12px
-            rgba(0,0,0,0.08);
+          background: #fff0b8;
 
           font-weight: bold;
-
-          cursor: pointer;
         }
 
-        .tabs button.selected {
-          background: #ff6b6b;
-          color: white;
-        }
+        /* COLOURS */
 
-        /* LEARNING */
-
-        .learning {
+        .colourSection {
           max-width: 1050px;
 
-          margin: 30px auto 55px;
+          margin: auto;
 
-          padding: 30px 20px;
+          padding: 50px 20px;
 
           text-align: center;
         }
 
-        .learning h2 {
+        .colourSection h2 {
           font-size: 30px;
+
+          margin-bottom: 5px;
         }
 
-        .intro {
+        .subtitle {
           color: #666;
+
+          margin-bottom: 30px;
         }
 
         .colourGrid {
@@ -528,277 +372,88 @@ export default function Colours() {
           grid-template-columns:
             repeat(3, 1fr);
 
-          gap: 22px;
-
-          margin-top: 30px;
+          gap: 20px;
         }
 
         .colourCard {
-          padding: 28px 15px;
+          border: none;
+
+          padding: 25px 15px;
+
+          border-radius: 28px;
 
           background: white;
 
-          border-radius: 25px;
+          cursor: pointer;
 
           box-shadow:
             0 5px 20px
             rgba(0,0,0,0.07);
 
           transition:
-            transform 0.2s;
+            transform 0.2s,
+            box-shadow 0.2s;
         }
 
         .colourCard:hover {
           transform: translateY(-7px);
+
+          box-shadow:
+            0 10px 28px
+            rgba(0,0,0,0.12);
         }
 
-        .bigColour {
-          font-size: 75px;
+        .colourCard.selected {
+          transform: translateY(-5px);
+
+          box-shadow:
+            0 0 0 4px #ffd84d,
+            0 10px 28px
+            rgba(0,0,0,0.12);
+        }
+
+        .colourCircle {
+          width: 110px;
+
+          height: 110px;
+
+          margin: auto;
+
+          border-radius: 50%;
+
+          box-shadow:
+            inset 0 -7px 12px
+            rgba(0,0,0,0.12),
+            0 5px 12px
+            rgba(0,0,0,0.12);
         }
 
         .colourCard h3 {
-          margin: 12px 0 5px;
-
           font-size: 22px;
+
+          margin: 18px 0 5px;
         }
 
         .colourCard p {
-          margin: 0;
+          margin: 0 0 12px;
 
           font-size: 18px;
 
           color: #666;
         }
 
-        /* LEARN MESSAGE */
+        .colourCard span {
+          font-size: 13px;
 
-        .learnMessage {
-          max-width: 750px;
-
-          margin: 40px auto 0;
-
-          padding: 25px;
-
-          display: flex;
-
-          align-items: center;
-
-          gap: 20px;
-
-          text-align: left;
-
-          border-radius: 25px;
-
-          background:
-            linear-gradient(
-              135deg,
-              #e8ddff,
-              #dff6ff
-            );
+          color: #888;
         }
 
-        .learnMessage > span {
-          font-size: 60px;
-        }
+        /* LEARNING CARD */
 
-        .learnMessage h3 {
-          margin: 0 0 5px;
-        }
+        .learningCard {
+          max-width: 800px;
 
-        .learnMessage p {
-          margin: 5px 0 12px;
-
-          color: #555;
-        }
-
-        .learnMessage button {
-          border: none;
-
-          padding: 12px 18px;
-
-          border-radius: 22px;
-
-          background: #4caf50;
-
-          color: white;
-
-          font-weight: bold;
-
-          cursor: pointer;
-        }
-
-        /* QUIZ */
-
-        .quizBox {
-          max-width: 700px;
-
-          margin: 50px auto;
-
-          padding: 40px 30px;
-
-          background: white;
-
-          border-radius: 30px;
-
-          text-align: center;
-
-          box-shadow:
-            0 7px 25px
-            rgba(0,0,0,0.08);
-        }
-
-        .quizTop {
-          display: flex;
-
-          justify-content: space-between;
-
-          color: #666;
-
-          font-weight: bold;
-        }
-
-        .quizBox h2 {
-          font-size: 28px;
-
-          margin: 45px 0 30px;
-        }
-
-        .quizOptions {
-          display: grid;
-
-          grid-template-columns:
-            repeat(2, 1fr);
-
-          gap: 15px;
-        }
-
-        .quizOptions button {
-          border: none;
-
-          padding: 25px;
-
-          border-radius: 22px;
-
-          background: #f1edff;
-
-          font-size: 50px;
-
-          cursor: pointer;
-
-          transition:
-            transform 0.2s;
-        }
-
-        .quizOptions button:hover {
-          transform: scale(1.05);
-        }
-
-        .message {
-          margin-top: 25px;
-
-          padding: 15px;
-
-          border-radius: 18px;
-
-          background: #fff0b8;
-
-          font-weight: bold;
-        }
-
-        .backButton {
-          margin-top: 25px;
-
-          border: none;
-
-          padding: 12px 20px;
-
-          border-radius: 25px;
-
-          background: #333;
-
-          color: white;
-
-          font-weight: bold;
-
-          cursor: pointer;
-        }
-
-        /* RESULT */
-
-        .result {
-          max-width: 650px;
-
-          margin: 60px auto;
-
-          padding: 45px 25px;
-
-          background: white;
-
-          border-radius: 30px;
-
-          text-align: center;
-
-          box-shadow:
-            0 7px 25px
-            rgba(0,0,0,0.08);
-        }
-
-        .trophy {
-          font-size: 75px;
-        }
-
-        .result h2 {
-          font-size: 32px;
-        }
-
-        .score {
-          font-size: 45px;
-
-          font-weight: 800;
-
-          margin: 20px;
-        }
-
-        .result p {
-          color: #555;
-
-          font-size: 18px;
-        }
-
-        .resultButtons {
-          display: flex;
-
-          justify-content: center;
-
-          gap: 12px;
-
-          flex-wrap: wrap;
-
-          margin-top: 25px;
-        }
-
-        .resultButtons button {
-          border: none;
-
-          padding: 13px 20px;
-
-          border-radius: 25px;
-
-          background: #ff6b6b;
-
-          color: white;
-
-          font-weight: bold;
-
-          cursor: pointer;
-        }
-
-        /* FACT */
-
-        .fact {
-          max-width: 950px;
-
-          margin: 20px auto 50px;
+          margin: 0 auto 45px;
 
           padding: 35px;
 
@@ -806,43 +461,117 @@ export default function Colours() {
 
           align-items: center;
 
-          gap: 25px;
+          gap: 30px;
 
           border-radius: 30px;
 
           background:
             linear-gradient(
               135deg,
-              #fff0bd,
-              #e0f4ff
+              #fff0b8,
+              #e0f6ff
             );
+
+          box-shadow:
+            0 7px 25px
+            rgba(0,0,0,0.07);
         }
 
-        .factEmoji {
-          font-size: 70px;
+        .bigCircle {
+          min-width: 130px;
+
+          height: 130px;
+
+          border-radius: 50%;
+
+          box-shadow:
+            inset 0 -8px 15px
+            rgba(0,0,0,0.12),
+            0 7px 15px
+            rgba(0,0,0,0.12);
         }
 
-        .fact h2 {
+        .badge {
+          display: inline-block;
+
+          padding: 7px 14px;
+
+          border-radius: 20px;
+
+          background: white;
+
+          font-size: 13px;
+
+          font-weight: bold;
+        }
+
+        .learningCard h2 {
+          font-size: 30px;
+
+          margin: 12px 0;
+        }
+
+        .learningCard p {
+          color: #555;
+
+          line-height: 1.6;
+        }
+
+        /* TIP */
+
+        .tip {
+          max-width: 800px;
+
+          margin: 0 auto 45px;
+
+          padding: 30px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 20px;
+
+          border-radius: 28px;
+
+          background: white;
+
+          box-shadow:
+            0 5px 20px
+            rgba(0,0,0,0.06);
+        }
+
+        .tipEmoji {
+          font-size: 55px;
+        }
+
+        .tip h2 {
           margin-top: 0;
         }
 
-        .fact p {
+        .tip p {
+          color: #666;
+
           line-height: 1.7;
 
-          color: #555;
+          margin-bottom: 0;
         }
 
-        /* HOME */
+        /* NAVIGATION */
 
-        .homeButton {
-          text-align: center;
+        .navigation {
+          display: flex;
 
-          margin: 40px 0 55px;
+          justify-content: center;
+
+          gap: 15px;
+
+          flex-wrap: wrap;
+
+          margin: 20px 20px 55px;
         }
 
-        .homeButton a {
-          display: inline-block;
-
+        .navigation a {
           padding: 13px 22px;
 
           border-radius: 25px;
@@ -854,6 +583,10 @@ export default function Colours() {
           text-decoration: none;
 
           font-weight: bold;
+        }
+
+        .navigation a:last-child {
+          background: #4caf50;
         }
 
         /* FOOTER */
@@ -873,12 +606,12 @@ export default function Colours() {
         }
 
         footer p {
-          margin: 8px;
+          margin: 9px;
         }
 
         /* TABLET */
 
-        @media (max-width: 800px) {
+        @media (max-width: 850px) {
 
           .header {
             flex-direction: column;
@@ -888,12 +621,6 @@ export default function Colours() {
 
           nav {
             justify-content: center;
-
-            gap: 12px;
-          }
-
-          nav a {
-            font-size: 13px;
           }
 
           .colourGrid {
@@ -901,7 +628,44 @@ export default function Colours() {
               repeat(2, 1fr);
           }
 
-          .fact {
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+          .logo {
+            font-size: 21px;
+          }
+
+          nav {
+            gap: 10px;
+          }
+
+          nav a {
+            font-size: 12px;
+          }
+
+          .hero h1 {
+            font-size: 32px;
+          }
+
+          .colourGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .learningCard {
+            margin-left: 20px;
+            margin-right: 20px;
+
+            flex-direction: column;
+
+            text-align: center;
+
+            padding: 30px 20px;
+          }
+
+          .tip {
             margin-left: 20px;
             margin-right: 20px;
 
@@ -912,46 +676,7 @@ export default function Colours() {
 
         }
 
-        /* MOBILE */
-
-        @media (max-width: 550px) {
-
-          .hero h1 {
-            font-size: 34px;
-          }
-
-          .colourGrid {
-            grid-template-columns: 1fr;
-          }
-
-          .quizBox {
-            margin: 35px 20px;
-
-            padding: 30px 20px;
-          }
-
-          .quizBox h2 {
-            font-size: 23px;
-          }
-
-          .quizOptions {
-            grid-template-columns:
-              repeat(2, 1fr);
-          }
-
-          .quizOptions button {
-            font-size: 40px;
-          }
-
-          .learnMessage {
-            flex-direction: column;
-
-            text-align: center;
-          }
-
-        }
-
       `}</style>
     </>
   );
-    }
+                }
