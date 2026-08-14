@@ -3,34 +3,69 @@ import Link from "next/link";
 import { useState } from "react";
 
 const colours = [
-  { name: "Red", telugu: "ఎరుపు", emoji: "🔴", color: "#ff4d4d" },
-  { name: "Blue", telugu: "నీలం", emoji: "🔵", color: "#4d9cff" },
-  { name: "Yellow", telugu: "పసుపు", emoji: "🟡", color: "#ffd43b" },
-  { name: "Green", telugu: "ఆకుపచ్చ", emoji: "🟢", color: "#45c95a" },
-  { name: "Orange", telugu: "నారింజ", emoji: "🟠", color: "#ff922b" },
-  { name: "Purple", telugu: "ఊదా", emoji: "🟣", color: "#9b5de5" },
+  { name: "Red", telugu: "ఎరుపు", value: "#ff4d4d", emoji: "🍎" },
+  { name: "Blue", telugu: "నీలం", value: "#4d8cff", emoji: "🫐" },
+  { name: "Yellow", telugu: "పసుపు", value: "#ffd633", emoji: "🌞" },
+  { name: "Green", telugu: "ఆకుపచ్చ", value: "#4caf50", emoji: "🍃" },
+  { name: "Orange", telugu: "నారింజ", value: "#ff8c32", emoji: "🍊" },
+  { name: "Pink", telugu: "గులాబీ", value: "#ff7eb6", emoji: "🌸" },
+  { name: "Purple", telugu: "ఊదా", value: "#9b59b6", emoji: "🍇" },
+  { name: "Brown", telugu: "గోధుమ", value: "#9b6b43", emoji: "🧸" },
+  { name: "Black", telugu: "నలుపు", value: "#222222", emoji: "🖤" },
+  { name: "White", telugu: "తెలుపు", value: "#ffffff", emoji: "☁️" },
 ];
 
 export default function Colours() {
-  const [selected, setSelected] = useState(null);
-  const [stars, setStars] = useState(0);
+  const [selected, setSelected] = useState(0);
+  const [question, setQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [message, setMessage] = useState("");
+
+  const current = colours[selected];
 
   function chooseColour(index) {
     setSelected(index);
+    setMessage("");
+  }
 
-    if (selected !== index) {
-      setStars((value) => value + 2);
+  function speak(text) {
+    if (
+      typeof window !== "undefined" &&
+      "speechSynthesis" in window
+    ) {
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = "en-US";
+      speech.rate = 0.75;
+
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(speech);
     }
+  }
+
+  function answer(index) {
+    if (index === question) {
+      setScore((value) => value + 1);
+      setMessage("🎉 Correct! Great job!");
+    } else {
+      setMessage("😊 Try again!");
+    }
+  }
+
+  function nextQuestion() {
+    const next = (question + 1) % colours.length;
+
+    setQuestion(next);
+    setMessage("");
   }
 
   return (
     <>
       <Head>
-        <title>Learn Colours | Chinnaari Kids</title>
+        <title>Colours Learning | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Learn basic colours in English and Telugu with Chinnaari Kids."
+          content="Learn colours for kids with fun activities, pictures and simple colour games."
         />
 
         <meta
@@ -51,12 +86,11 @@ export default function Colours() {
 
           <nav>
             <Link href="/">Home</Link>
-            <Link href="/dashboard">🌟 Dashboard</Link>
-            <Link href="/stories">📚 Stories</Link>
+            <Link href="/numbers">🔢 Numbers</Link>
+            <Link href="/abc">🔤 ABC</Link>
+            <Link href="/telugu">🇮🇳 తెలుగు</Link>
             <Link href="/games">🎮 Games</Link>
             <Link href="/puzzles">🧩 Puzzles</Link>
-            <Link href="/colours">🎨 Colours</Link>
-            <Link href="/learn">🔤 Learn</Link>
           </nav>
 
         </header>
@@ -70,16 +104,16 @@ export default function Colours() {
           </div>
 
           <h1>
-            Let's Learn Colours! 🎨
+            🎨 Learn Colours!
           </h1>
 
           <p>
-            Click a colour and discover its name.
+            చూడండి • గుర్తించండి • నేర్చుకోండి
           </p>
 
-          <div className="starBox">
-            ⭐ {stars} Stars
-          </div>
+          <span>
+            ♾️ Unlimited Practice
+          </span>
 
         </section>
 
@@ -88,45 +122,44 @@ export default function Colours() {
         <section className="colourSection">
 
           <h2>
-            🌟 Choose a Colour
+            🌈 Choose a Colour
           </h2>
-
-          <p className="subtitle">
-            Tap any colour to learn!
-          </p>
 
           <div className="colourGrid">
 
-            {colours.map((item, index) => (
+            {colours.map((colour, index) => (
 
               <button
-                key={item.name}
+                key={colour.name}
                 className={
                   selected === index
                     ? "colourCard selected"
                     : "colourCard"
                 }
-                onClick={() => chooseColour(index)}
+                onClick={() =>
+                  chooseColour(index)
+                }
               >
 
                 <div
                   className="colourCircle"
                   style={{
-                    background: item.color,
+                    backgroundColor:
+                      colour.value,
                   }}
                 />
 
+                <div className="colourEmoji">
+                  {colour.emoji}
+                </div>
+
                 <h3>
-                  {item.emoji} {item.name}
+                  {colour.name}
                 </h3>
 
                 <p>
-                  {item.telugu}
+                  {colour.telugu}
                 </p>
-
-                <span>
-                  Tap to Learn
-                </span>
 
               </button>
 
@@ -138,80 +171,163 @@ export default function Colours() {
 
         {/* SELECTED COLOUR */}
 
-        {selected !== null && (
+        <section className="selectedBox">
 
-          <section className="learningCard">
+          <div
+            className="bigColour"
+            style={{
+              backgroundColor:
+                current.value,
+            }}
+          />
 
-            <div
-              className="bigCircle"
-              style={{
-                background: colours[selected].color,
-              }}
-            />
+          <div>
 
-            <div>
+            <h2>
+              {current.name}
+            </h2>
 
-              <span className="badge">
-                ⭐ Great Choice!
-              </span>
+            <h3>
+              {current.telugu}
+            </h3>
 
-              <h2>
-                {colours[selected].emoji}{" "}
-                {colours[selected].name}
-              </h2>
-
-              <p>
-                Telugu:
-                <strong>
-                  {" "}
-                  {colours[selected].telugu}
-                </strong>
-              </p>
-
-              <p>
-                You found a beautiful colour! 🎉
-              </p>
-
+            <div className="selectedEmoji">
+              {current.emoji}
             </div>
 
-          </section>
+            <button
+              className="listen"
+              onClick={() =>
+                speak(
+                  `${current.name}, ${current.telugu}`
+                )
+              }
+            >
+              🔊 Say Colour
+            </button>
 
-        )}
+          </div>
 
-        {/* COLOUR TIP */}
+        </section>
+
+        {/* GAME */}
+
+        <section className="game">
+
+          <div className="gameTop">
+
+            <span>
+              ⭐ Score: {score}
+            </span>
+
+            <span>
+              Question {question + 1}
+            </span>
+
+          </div>
+
+          <h2>
+            🧠 Which colour is this?
+          </h2>
+
+          <p>
+            Tap the correct colour!
+          </p>
+
+          <div
+            className="questionColour"
+            style={{
+              backgroundColor:
+                colours[question].value,
+            }}
+          />
+
+          <div className="answers">
+
+            {colours.map((colour, index) => (
+
+              <button
+                key={colour.name}
+                onClick={() =>
+                  answer(index)
+                }
+                style={{
+                  backgroundColor:
+                    colour.value,
+                }}
+                className={
+                  colour.name === "White"
+                    ? "answer whiteAnswer"
+                    : "answer"
+                }
+              >
+                {colour.name}
+              </button>
+
+            ))}
+
+          </div>
+
+          {message && (
+            <div className="message">
+              {message}
+            </div>
+          )}
+
+          <button
+            className="next"
+            onClick={nextQuestion}
+          >
+            Next Question ➡️
+          </button>
+
+        </section>
+
+        {/* LEARNING TIP */}
 
         <section className="tip">
 
-          <div className="tipEmoji">
-            💡
+          <div className="tipIcon">
+            🧠
           </div>
 
           <div>
 
             <h2>
-              Little Colour Tip
+              Little Learner Tip
             </h2>
 
             <p>
-              Colours are everywhere! Look around
-              your home and try to find something
-              red, blue, yellow or green. 🌈
+              Look around your home and find
+              something that has the same colour!
             </p>
 
           </div>
 
         </section>
 
-        {/* NAVIGATION */}
+        {/* OTHER LEARNING */}
 
-        <section className="navigation">
+        <section className="links">
 
-          <Link href="/dashboard">
-            🌟 Dashboard
+          <Link href="/numbers">
+            🔢 Numbers
           </Link>
 
-          <Link href="/learn">
-            🔤 Continue Learning
+          <Link href="/abc">
+            🔤 ABC
+          </Link>
+
+          <Link href="/telugu">
+            🇮🇳 Telugu
+          </Link>
+
+          <Link href="/games">
+            🎮 Games
+          </Link>
+
+          <Link href="/puzzles">
+            🧩 Puzzles
           </Link>
 
         </section>
@@ -249,21 +365,15 @@ export default function Colours() {
           font-family: Arial, sans-serif;
         }
 
-        /* HEADER */
-
         .header {
           min-height: 70px;
-          padding: 14px 6%;
-
+          padding: 15px 6%;
           display: flex;
           align-items: center;
           justify-content: space-between;
-
+          gap: 15px;
           background: white;
-
-          box-shadow:
-            0 2px 15px rgba(0,0,0,0.08);
-
+          box-shadow: 0 2px 15px rgba(0,0,0,.08);
           position: sticky;
           top: 0;
           z-index: 10;
@@ -272,355 +382,292 @@ export default function Colours() {
         .logo {
           color: #333;
           text-decoration: none;
-
-          font-size: 24px;
-          font-weight: 800;
-
+          font-size: 23px;
+          font-weight: bold;
           white-space: nowrap;
         }
 
         nav {
           display: flex;
-          gap: 15px;
+          gap: 14px;
           flex-wrap: wrap;
+          justify-content: center;
         }
 
         nav a {
           color: #444;
           text-decoration: none;
-
           font-size: 14px;
-          font-weight: 600;
+          font-weight: bold;
         }
 
         nav a:hover {
           color: #ff6b6b;
         }
 
-        /* HERO */
-
         .hero {
           text-align: center;
-
           padding: 45px 20px;
-
-          background:
-            linear-gradient(
-              135deg,
-              #ffe1ea,
-              #e0f5ff
-            );
+          background: linear-gradient(
+            135deg,
+            #ffe1ec,
+            #e3f4ff
+          );
         }
 
         .rainbow {
-          font-size: 75px;
+          font-size: 65px;
         }
 
         .hero h1 {
-          font-size: 40px;
-
+          font-size: 42px;
           margin: 10px 0;
         }
 
         .hero p {
           font-size: 18px;
-
           color: #555;
         }
 
-        .starBox {
+        .hero span {
           display: inline-block;
-
-          margin-top: 10px;
-
           padding: 9px 18px;
-
+          background: white;
           border-radius: 25px;
-
-          background: #fff0b8;
-
           font-weight: bold;
         }
 
-        /* COLOURS */
-
         .colourSection {
-          max-width: 1050px;
-
-          margin: auto;
-
-          padding: 50px 20px;
-
+          max-width: 1000px;
+          margin: 35px auto;
+          padding: 0 20px;
           text-align: center;
-        }
-
-        .colourSection h2 {
-          font-size: 30px;
-
-          margin-bottom: 5px;
-        }
-
-        .subtitle {
-          color: #666;
-
-          margin-bottom: 30px;
         }
 
         .colourGrid {
           display: grid;
-
           grid-template-columns:
-            repeat(3, 1fr);
-
-          gap: 20px;
+            repeat(5, 1fr);
+          gap: 15px;
         }
 
         .colourCard {
-          border: none;
-
-          padding: 25px 15px;
-
-          border-radius: 28px;
-
+          border: 3px solid transparent;
+          padding: 20px 10px;
+          border-radius: 25px;
           background: white;
-
           cursor: pointer;
-
-          box-shadow:
-            0 5px 20px
-            rgba(0,0,0,0.07);
-
-          transition:
-            transform 0.2s,
-            box-shadow 0.2s;
+          box-shadow: 0 5px 18px rgba(0,0,0,.06);
+          transition: .2s;
         }
 
         .colourCard:hover {
-          transform: translateY(-7px);
-
-          box-shadow:
-            0 10px 28px
-            rgba(0,0,0,0.12);
+          transform: translateY(-5px);
         }
 
         .colourCard.selected {
+          border-color: #ff6b6b;
           transform: translateY(-5px);
-
-          box-shadow:
-            0 0 0 4px #ffd84d,
-            0 10px 28px
-            rgba(0,0,0,0.12);
         }
 
         .colourCircle {
-          width: 110px;
-
-          height: 110px;
-
+          width: 75px;
+          height: 75px;
           margin: auto;
-
           border-radius: 50%;
+          border: 3px solid #ddd;
+        }
 
-          box-shadow:
-            inset 0 -7px 12px
-            rgba(0,0,0,0.12),
-            0 5px 12px
-            rgba(0,0,0,0.12);
+        .colourEmoji {
+          font-size: 38px;
+          margin-top: 10px;
         }
 
         .colourCard h3 {
-          font-size: 22px;
-
-          margin: 18px 0 5px;
+          margin: 8px 0 3px;
         }
 
         .colourCard p {
-          margin: 0 0 12px;
-
-          font-size: 18px;
-
-          color: #666;
+          margin: 0;
+          color: #777;
         }
 
-        .colourCard span {
-          font-size: 13px;
-
-          color: #888;
-        }
-
-        /* LEARNING CARD */
-
-        .learningCard {
-          max-width: 800px;
-
-          margin: 0 auto 45px;
-
+        .selectedBox {
+          max-width: 850px;
+          margin: 40px auto;
           padding: 35px;
-
           display: flex;
-
           align-items: center;
-
-          gap: 30px;
-
+          justify-content: center;
+          gap: 40px;
+          text-align: center;
           border-radius: 30px;
-
-          background:
-            linear-gradient(
-              135deg,
-              #fff0b8,
-              #e0f6ff
-            );
-
-          box-shadow:
-            0 7px 25px
-            rgba(0,0,0,0.07);
-        }
-
-        .bigCircle {
-          min-width: 130px;
-
-          height: 130px;
-
-          border-radius: 50%;
-
-          box-shadow:
-            inset 0 -8px 15px
-            rgba(0,0,0,0.12),
-            0 7px 15px
-            rgba(0,0,0,0.12);
-        }
-
-        .badge {
-          display: inline-block;
-
-          padding: 7px 14px;
-
-          border-radius: 20px;
-
           background: white;
+          box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
 
-          font-size: 13px;
+        .bigColour {
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          border: 6px solid white;
+          box-shadow:
+            0 5px 25px rgba(0,0,0,.15);
+        }
 
+        .selectedBox h2 {
+          font-size: 35px;
+          margin: 5px;
+        }
+
+        .selectedBox h3 {
+          font-size: 22px;
+          color: #777;
+        }
+
+        .selectedEmoji {
+          font-size: 65px;
+          margin: 10px;
+        }
+
+        .listen {
+          border: none;
+          padding: 13px 22px;
+          border-radius: 25px;
+          background: #dff2ff;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        .game {
+          max-width: 850px;
+          margin: 40px auto;
+          padding: 35px 25px;
+          text-align: center;
+          border-radius: 30px;
+          background: linear-gradient(
+            135deg,
+            #eee5ff,
+            #e1f8ff
+          );
+          box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        }
+
+        .gameTop {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .gameTop span {
+          padding: 9px 16px;
+          border-radius: 20px;
+          background: white;
           font-weight: bold;
         }
 
-        .learningCard h2 {
-          font-size: 30px;
-
-          margin: 12px 0;
+        .questionColour {
+          width: 150px;
+          height: 150px;
+          margin: 25px auto;
+          border-radius: 50%;
+          border: 6px solid white;
+          box-shadow:
+            0 5px 20px rgba(0,0,0,.15);
         }
 
-        .learningCard p {
-          color: #555;
-
-          line-height: 1.6;
+        .answers {
+          display: grid;
+          grid-template-columns:
+            repeat(5, 1fr);
+          gap: 10px;
         }
 
-        /* TIP */
+        .answer {
+          border: none;
+          padding: 13px 5px;
+          border-radius: 20px;
+          color: white;
+          font-weight: bold;
+          cursor: pointer;
+          text-shadow:
+            0 1px 2px rgba(0,0,0,.5);
+        }
+
+        .whiteAnswer {
+          color: #333;
+          border: 2px solid #ddd;
+          text-shadow: none;
+        }
+
+        .message {
+          margin: 20px;
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        .next {
+          border: none;
+          padding: 13px 25px;
+          border-radius: 25px;
+          background: #4caf50;
+          color: white;
+          font-weight: bold;
+          cursor: pointer;
+        }
 
         .tip {
-          max-width: 800px;
-
-          margin: 0 auto 45px;
-
+          max-width: 850px;
+          margin: 35px auto 50px;
           padding: 30px;
-
           display: flex;
-
           align-items: center;
-
           gap: 20px;
-
-          border-radius: 28px;
-
           background: white;
-
-          box-shadow:
-            0 5px 20px
-            rgba(0,0,0,0.06);
+          border-radius: 30px;
+          box-shadow: 0 5px 20px rgba(0,0,0,.06);
         }
 
-        .tipEmoji {
+        .tipIcon {
           font-size: 55px;
-        }
-
-        .tip h2 {
-          margin-top: 0;
         }
 
         .tip p {
           color: #666;
-
           line-height: 1.7;
-
-          margin-bottom: 0;
         }
 
-        /* NAVIGATION */
-
-        .navigation {
+        .links {
           display: flex;
-
           justify-content: center;
-
-          gap: 15px;
-
           flex-wrap: wrap;
-
-          margin: 20px 20px 55px;
+          gap: 12px;
+          margin: 30px 20px 50px;
         }
 
-        .navigation a {
-          padding: 13px 22px;
-
+        .links a {
+          padding: 13px 20px;
           border-radius: 25px;
-
           background: #333;
-
           color: white;
-
           text-decoration: none;
-
           font-weight: bold;
         }
 
-        .navigation a:last-child {
-          background: #4caf50;
-        }
-
-        /* FOOTER */
-
         footer {
           padding: 35px 20px;
-
           text-align: center;
-
           background: #333;
-
           color: white;
         }
 
-        footer h3 {
-          margin-top: 0;
-        }
-
         footer p {
-          margin: 9px;
+          margin: 8px;
         }
 
-        /* TABLET */
-
-        @media (max-width: 850px) {
+        @media (max-width: 800px) {
 
           .header {
             flex-direction: column;
-
-            gap: 15px;
-          }
-
-          nav {
-            justify-content: center;
           }
 
           .colourGrid {
@@ -628,18 +675,27 @@ export default function Colours() {
               repeat(2, 1fr);
           }
 
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 600px) {
-
-          .logo {
-            font-size: 21px;
+          .selectedBox {
+            margin: 30px 15px;
+            flex-direction: column;
+            gap: 20px;
           }
 
+          .game {
+            margin: 30px 15px;
+          }
+
+          .answers {
+            grid-template-columns:
+              repeat(2, 1fr);
+          }
+
+        }
+
+        @media (max-width: 500px) {
+
           nav {
-            gap: 10px;
+            gap: 8px;
           }
 
           nav a {
@@ -647,36 +703,34 @@ export default function Colours() {
           }
 
           .hero h1 {
-            font-size: 32px;
+            font-size: 34px;
           }
 
           .colourGrid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
           }
 
-          .learningCard {
-            margin-left: 20px;
-            margin-right: 20px;
+          .colourCircle {
+            width: 60px;
+            height: 60px;
+          }
 
-            flex-direction: column;
-
-            text-align: center;
-
-            padding: 30px 20px;
+          .bigColour {
+            width: 140px;
+            height: 140px;
           }
 
           .tip {
-            margin-left: 20px;
-            margin-right: 20px;
-
+            margin-left: 15px;
+            margin-right: 15px;
             flex-direction: column;
-
             text-align: center;
           }
 
         }
 
       `}</style>
+
     </>
   );
-                }
+                  }
