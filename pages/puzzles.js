@@ -4,56 +4,65 @@ import { useState } from "react";
 
 const puzzles = [
   {
-    question: "🍎 Which one is a fruit?",
-    options: ["🍎 Apple", "🚗 Car", "🐶 Dog"],
+    id: 1,
+    question: "Which animal says Moo? 🐄",
+    options: ["🐱 Cat", "🐄 Cow", "🐶 Dog", "🦁 Lion"],
+    answer: "🐄 Cow",
+  },
+  {
+    id: 2,
+    question: "Which one is a fruit? 🍎",
+    options: ["🚗 Car", "🏠 House", "🍎 Apple", "⚽ Ball"],
     answer: "🍎 Apple",
   },
   {
-    question: "🐱 Which animal says Meow?",
-    options: ["🐶 Dog", "🐱 Cat", "🦁 Lion"],
-    answer: "🐱 Cat",
+    id: 3,
+    question: "What comes after 4? 🔢",
+    options: ["3", "5", "7", "9"],
+    answer: "5",
   },
   {
-    question: "🔢 What comes after 2?",
-    options: ["1", "3", "5"],
+    id: 4,
+    question: "Which colour is the sun usually shown as? ☀️",
+    options: ["🟣 Purple", "🔵 Blue", "🟡 Yellow", "🟢 Green"],
+    answer: "🟡 Yellow",
+  },
+  {
+    id: 5,
+    question: "Which animal can fly? 🪽",
+    options: ["🐘 Elephant", "🐟 Fish", "🐦 Bird", "🐄 Cow"],
+    answer: "🐦 Bird",
+  },
+  {
+    id: 6,
+    question: "How many sides does a triangle have? 🔺",
+    options: ["2", "3", "4", "5"],
     answer: "3",
-  },
-  {
-    question: "🌈 Which one is a colour?",
-    options: ["Red", "Chair", "Book"],
-    answer: "Red",
-  },
-  {
-    question: "☀️ What gives us light during the day?",
-    options: ["Moon", "Sun", "Star"],
-    answer: "Sun",
   },
 ];
 
 export default function Puzzles() {
   const [current, setCurrent] = useState(0);
-  const [stars, setStars] = useState(0);
-  const [message, setMessage] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
   const puzzle = puzzles[current];
 
-  function checkAnswer(option) {
-    if (message) return;
+  function chooseAnswer(option) {
+    if (selected !== null) return;
+
+    setSelected(option);
 
     if (option === puzzle.answer) {
-      setStars((value) => value + 5);
-      setMessage("🎉 Correct! +5 Stars ⭐");
-    } else {
-      setMessage("😊 Try again!");
+      setScore((value) => value + 1);
     }
   }
 
   function nextPuzzle() {
-    setMessage("");
-
     if (current < puzzles.length - 1) {
       setCurrent((value) => value + 1);
+      setSelected(null);
     } else {
       setFinished(true);
     }
@@ -61,8 +70,8 @@ export default function Puzzles() {
 
   function restart() {
     setCurrent(0);
-    setStars(0);
-    setMessage("");
+    setSelected(null);
+    setScore(0);
     setFinished(false);
   }
 
@@ -73,7 +82,7 @@ export default function Puzzles() {
 
         <meta
           name="description"
-          content="Fun educational puzzles for kids."
+          content="Fun educational puzzles and quizzes for children."
         />
 
         <meta
@@ -83,6 +92,8 @@ export default function Puzzles() {
       </Head>
 
       <main className="page">
+
+        {/* HEADER */}
 
         <header className="header">
 
@@ -102,10 +113,12 @@ export default function Puzzles() {
 
         </header>
 
+        {/* HERO */}
+
         <section className="hero">
 
           <div className="heroIcon">
-            🧩
+            🧩✨
           </div>
 
           <h1>
@@ -113,65 +126,117 @@ export default function Puzzles() {
           </h1>
 
           <p>
-            Think, choose and earn stars! ⭐
+            Think, choose and learn!
           </p>
+
+          {!finished && (
+            <div className="progress">
+              Question {current + 1} of {puzzles.length}
+            </div>
+          )}
 
         </section>
 
-        {!finished ? (
-          <section className="gameBox">
+        {/* PUZZLE */}
 
-            <div className="progress">
-              Puzzle {current + 1} of {puzzles.length}
+        {!finished && (
+
+          <section className="puzzleBox">
+
+            <div className="score">
+              ⭐ Score: {score}
             </div>
 
-            <div className="stars">
-              ⭐ {stars} Stars
-            </div>
-
-            <div className="question">
+            <h2>
               {puzzle.question}
-            </div>
+            </h2>
 
             <div className="options">
 
-              {puzzle.options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => checkAnswer(option)}
-                  className="option"
-                >
-                  {option}
-                </button>
-              ))}
+              {puzzle.options.map((option) => {
+
+                let className = "option";
+
+                if (selected !== null) {
+
+                  if (option === puzzle.answer) {
+                    className += " correct";
+                  } else if (option === selected) {
+                    className += " wrong";
+                  }
+
+                }
+
+                return (
+                  <button
+                    key={option}
+                    className={className}
+                    onClick={() => chooseAnswer(option)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
 
             </div>
 
-            {message && (
-              <div
-                className={
-                  message.includes("Correct")
-                    ? "message correct"
-                    : "message wrong"
-                }
-              >
-                {message}
-              </div>
-            )}
+            {selected !== null && (
 
-            {message.includes("Correct") && (
-              <button
-                onClick={nextPuzzle}
-                className="nextButton"
-              >
-                {current === puzzles.length - 1
-                  ? "🏆 Finish"
-                  : "➡️ Next Puzzle"}
-              </button>
+              <div className="feedback">
+
+                {selected === puzzle.answer ? (
+                  <>
+                    <div className="feedbackEmoji">
+                      🎉
+                    </div>
+
+                    <h3>
+                      Correct! Great Job!
+                    </h3>
+
+                    <p>
+                      You earned a point! ⭐
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="feedbackEmoji">
+                      💪
+                    </div>
+
+                    <h3>
+                      Nice Try!
+                    </h3>
+
+                    <p>
+                      The correct answer is{" "}
+                      <strong>
+                        {puzzle.answer}
+                      </strong>
+                    </p>
+                  </>
+                )}
+
+                <button
+                  className="nextButton"
+                  onClick={nextPuzzle}
+                >
+                  {current === puzzles.length - 1
+                    ? "🏆 See Result"
+                    : "Next Puzzle ➡️"}
+                </button>
+
+              </div>
+
             )}
 
           </section>
-        ) : (
+        )}
+
+        {/* RESULT */}
+
+        {finished && (
+
           <section className="result">
 
             <div className="trophy">
@@ -179,56 +244,116 @@ export default function Puzzles() {
             </div>
 
             <h2>
-              Amazing Job! 🎉
+              Puzzle Complete!
             </h2>
 
-            <p>
-              You completed all the puzzles!
+            <p className="resultScore">
+              You got{" "}
+              <strong>
+                {score}
+              </strong>{" "}
+              out of{" "}
+              <strong>
+                {puzzles.length}
+              </strong>
+              !
             </p>
 
-            <div className="finalStars">
-              ⭐ {stars} Stars
-            </div>
+            {score === puzzles.length ? (
+
+              <p className="message">
+                🌟 Perfect Score! You are amazing!
+              </p>
+
+            ) : score >= 4 ? (
+
+              <p className="message">
+                🎉 Excellent work! Keep learning!
+              </p>
+
+            ) : score >= 2 ? (
+
+              <p className="message">
+                😊 Good job! Try again and improve!
+              </p>
+
+            ) : (
+
+              <p className="message">
+                💪 Keep practicing. You can do it!
+              </p>
+
+            )}
 
             <div className="resultButtons">
 
               <button
                 onClick={restart}
-                className="restart"
+                className="restartButton"
               >
                 🔄 Play Again
               </button>
 
               <Link
-                href="/dashboard"
-                className="dashboard"
+                href="/games"
+                className="gamesButton"
               >
-                🌟 Dashboard
+                🎮 More Games
               </Link>
 
             </div>
 
           </section>
+
         )}
+
+        {/* TIP */}
 
         <section className="tip">
 
-          <div>
-            💡
+          <div className="tipIcon">
+            🧠
           </div>
 
           <div>
-            <h3>
-              Little Learning Tip
-            </h3>
+
+            <h2>
+              Think Like a Little Detective!
+            </h2>
 
             <p>
-              Think carefully before choosing your
-              answer. Every puzzle helps your brain grow! 🧠
+              Read the question carefully, look at
+              all the choices and then make your answer.
+              Every mistake helps you learn! 🌟
             </p>
+
           </div>
 
         </section>
+
+        {/* NAVIGATION */}
+
+        <section className="navigation">
+
+          <Link href="/stories">
+            📚 Stories
+          </Link>
+
+          <Link href="/colours">
+            🎨 Colours
+          </Link>
+
+          <Link href="/learn">
+            🔤 Learn
+          </Link>
+
+          <Link href="/games">
+            🎮 Games
+          </Link>
+
+        </section>
+
+        {/* FOOTER */}
 
         <footer>
 
@@ -239,10 +364,6 @@ export default function Puzzles() {
           <p>
             Learn • Play • Discover
           </p>
-
-          <Link href="/">
-            🏠 Back to Home
-          </Link>
 
           <p>
             © 2026 Chinnaari Kids
@@ -264,6 +385,8 @@ export default function Puzzles() {
           color: #333;
           font-family: Arial, sans-serif;
         }
+
+        /* HEADER */
 
         .header {
           min-height: 70px;
@@ -302,13 +425,16 @@ export default function Puzzles() {
         nav a {
           color: #444;
           text-decoration: none;
-          font-weight: 600;
+
           font-size: 14px;
+          font-weight: 600;
         }
 
         nav a:hover {
           color: #ff6b6b;
         }
+
+        /* HERO */
 
         .hero {
           text-align: center;
@@ -318,8 +444,8 @@ export default function Puzzles() {
           background:
             linear-gradient(
               135deg,
-              #e5ddff,
-              #dff4ff
+              #e6ddff,
+              #dff5ff
             );
         }
 
@@ -337,68 +463,79 @@ export default function Puzzles() {
           color: #555;
         }
 
-        .gameBox {
-          max-width: 700px;
+        .progress {
+          display: inline-block;
 
-          margin: 45px auto;
+          margin-top: 10px;
 
-          padding: 35px 25px;
+          padding: 9px 18px;
+
+          border-radius: 25px;
 
           background: white;
-
-          border-radius: 30px;
-
-          text-align: center;
-
-          box-shadow:
-            0 7px 25px
-            rgba(0,0,0,0.08);
-        }
-
-        .progress {
-          color: #777;
 
           font-weight: bold;
         }
 
-        .stars {
+        /* PUZZLE BOX */
+
+        .puzzleBox {
+          max-width: 800px;
+
+          margin: 50px auto;
+
+          padding: 40px 25px;
+
+          text-align: center;
+
+          border-radius: 32px;
+
+          background: white;
+
+          box-shadow:
+            0 8px 30px
+            rgba(0,0,0,0.08);
+        }
+
+        .score {
           display: inline-block;
 
-          margin-top: 12px;
+          padding: 9px 18px;
 
-          padding: 8px 16px;
-
-          border-radius: 20px;
+          border-radius: 25px;
 
           background: #fff0b8;
 
           font-weight: bold;
         }
 
-        .question {
-          margin: 35px 0;
+        .puzzleBox h2 {
+          margin: 30px 0;
 
-          font-size: 30px;
+          font-size: 27px;
 
-          font-weight: bold;
+          line-height: 1.5;
         }
 
         .options {
           display: grid;
 
+          grid-template-columns:
+            1fr 1fr;
+
           gap: 15px;
         }
 
         .option {
-          border: 3px solid transparent;
+          min-height: 70px;
 
-          padding: 17px;
+          border: 3px solid transparent;
 
           border-radius: 20px;
 
-          background: #eef7ff;
+          background: #f2efff;
 
-          font-size: 19px;
+          font-size: 18px;
 
           font-weight: bold;
 
@@ -406,45 +543,59 @@ export default function Puzzles() {
 
           transition:
             transform 0.2s,
-            background 0.2s;
+            box-shadow 0.2s;
         }
 
         .option:hover {
-          transform: scale(1.02);
+          transform: translateY(-4px);
 
-          background: #dff0ff;
+          box-shadow:
+            0 7px 18px
+            rgba(0,0,0,0.1);
         }
 
-        .message {
+        .option.correct {
+          background: #dff7dc;
+
+          border-color: #4caf50;
+        }
+
+        .option.wrong {
+          background: #ffdede;
+
+          border-color: #ff6b6b;
+        }
+
+        /* FEEDBACK */
+
+        .feedback {
           margin-top: 25px;
 
-          padding: 15px;
+          padding: 25px;
 
-          border-radius: 18px;
+          border-radius: 25px;
 
-          font-size: 19px;
-
-          font-weight: bold;
+          background: #fff8df;
         }
 
-        .correct {
-          background: #dcf6d9;
-
-          color: #237a25;
+        .feedbackEmoji {
+          font-size: 50px;
         }
 
-        .wrong {
-          background: #ffe0e0;
+        .feedback h3 {
+          font-size: 24px;
 
-          color: #b83232;
+          margin: 10px 0;
+        }
+
+        .feedback p {
+          color: #666;
         }
 
         .nextButton {
-          margin-top: 20px;
-
           border: none;
 
-          padding: 14px 25px;
+          padding: 13px 23px;
 
           border-radius: 25px;
 
@@ -452,28 +603,33 @@ export default function Puzzles() {
 
           color: white;
 
-          font-size: 16px;
-
           font-weight: bold;
 
           cursor: pointer;
         }
 
-        .result {
-          max-width: 650px;
+        /* RESULT */
 
-          margin: 50px auto;
+        .result {
+          max-width: 700px;
+
+          margin: 55px auto;
 
           padding: 45px 25px;
 
           text-align: center;
 
-          background: white;
+          border-radius: 32px;
 
-          border-radius: 30px;
+          background:
+            linear-gradient(
+              135deg,
+              #fff0b8,
+              #e1f5ff
+            );
 
           box-shadow:
-            0 7px 25px
+            0 8px 30px
             rgba(0,0,0,0.08);
         }
 
@@ -485,26 +641,16 @@ export default function Puzzles() {
           font-size: 32px;
         }
 
-        .result p {
-          color: #666;
-
-          font-size: 18px;
+        .resultScore {
+          font-size: 22px;
         }
 
-        .finalStars {
-          display: inline-block;
+        .message {
+          font-size: 18px;
 
-          margin: 15px;
+          line-height: 1.6;
 
-          padding: 12px 22px;
-
-          border-radius: 25px;
-
-          background: #fff0b8;
-
-          font-size: 22px;
-
-          font-weight: bold;
+          color: #555;
         }
 
         .resultButtons {
@@ -516,42 +662,44 @@ export default function Puzzles() {
 
           flex-wrap: wrap;
 
-          margin-top: 20px;
+          margin-top: 25px;
         }
 
-        .restart,
-        .dashboard {
-          padding: 13px 21px;
-
-          border-radius: 25px;
+        .restartButton,
+        .gamesButton {
+          padding: 13px 22px;
 
           border: none;
 
-          text-decoration: none;
+          border-radius: 25px;
 
           font-weight: bold;
+
+          text-decoration: none;
 
           cursor: pointer;
         }
 
-        .restart {
+        .restartButton {
           background: #ff6b6b;
 
           color: white;
         }
 
-        .dashboard {
-          background: #ffd84d;
+        .gamesButton {
+          background: #4caf50;
 
-          color: #333;
+          color: white;
         }
 
+        /* TIP */
+
         .tip {
-          max-width: 700px;
+          max-width: 800px;
 
-          margin: 0 auto 50px;
+          margin: 0 auto 45px;
 
-          padding: 25px;
+          padding: 30px;
 
           display: flex;
 
@@ -559,31 +707,60 @@ export default function Puzzles() {
 
           gap: 20px;
 
-          border-radius: 25px;
+          border-radius: 28px;
 
-          background:
-            linear-gradient(
-              135deg,
-              #fff0b8,
-              #e0f6ff
-            );
+          background: white;
+
+          box-shadow:
+            0 5px 20px
+            rgba(0,0,0,0.06);
         }
 
-        .tip > div:first-child {
-          font-size: 45px;
+        .tipIcon {
+          font-size: 55px;
         }
 
-        .tip h3 {
+        .tip h2 {
           margin-top: 0;
         }
 
         .tip p {
           margin-bottom: 0;
 
-          color: #555;
+          color: #666;
 
-          line-height: 1.6;
+          line-height: 1.7;
         }
+
+        /* NAVIGATION */
+
+        .navigation {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 12px;
+
+          flex-wrap: wrap;
+
+          margin: 20px 20px 55px;
+        }
+
+        .navigation a {
+          padding: 13px 20px;
+
+          border-radius: 25px;
+
+          background: #333;
+
+          color: white;
+
+          text-decoration: none;
+
+          font-weight: bold;
+        }
+
+        /* FOOTER */
 
         footer {
           padding: 35px 20px;
@@ -600,18 +777,16 @@ export default function Puzzles() {
         }
 
         footer p {
-          margin: 10px;
+          margin: 9px;
         }
 
-        footer a {
-          color: white;
-          text-decoration: none;
-        }
+        /* TABLET */
 
         @media (max-width: 850px) {
 
           .header {
             flex-direction: column;
+
             gap: 15px;
           }
 
@@ -620,6 +795,8 @@ export default function Puzzles() {
           }
 
         }
+
+        /* MOBILE */
 
         @media (max-width: 600px) {
 
@@ -639,19 +816,26 @@ export default function Puzzles() {
             font-size: 32px;
           }
 
-          .question {
-            font-size: 24px;
+          .puzzleBox {
+            margin: 30px 15px;
+
+            padding: 30px 18px;
           }
 
-          .gameBox,
-          .result,
+          .options {
+            grid-template-columns: 1fr;
+          }
+
+          .puzzleBox h2 {
+            font-size: 23px;
+          }
+
           .tip {
             margin-left: 20px;
             margin-right: 20px;
-          }
 
-          .tip {
             flex-direction: column;
+
             text-align: center;
           }
 
@@ -660,4 +844,4 @@ export default function Puzzles() {
       `}</style>
     </>
   );
-                  }
+                 }
