@@ -1,62 +1,131 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 
 const stories = [
   {
     id: 1,
-    title: "The Thirsty Crow",
-    teluguTitle: "దాహంతో ఉన్న కాకి",
-    emoji: "🐦",
-    category: "Moral Story",
-    description:
-      "A clever crow finds a smart way to get water and teaches us an important lesson.",
-    lesson: "Where there is a will, there is a way.",
-    color: "pink",
+    title: "The Honest Boy",
+    teluguTitle: "నిజాయితీ గల బాలుడు",
+    emoji: "🌳",
+    language: "English",
+    color: "#ffe1e8",
+    pages: [
+      "Once there was a kind boy named Ravi.",
+      "One day, Ravi found a beautiful purse under a tree.",
+      "There was money inside the purse.",
+      "Ravi did not keep it. He went around the village and found its owner.",
+      "The owner was very happy and thanked Ravi for his honesty.",
+      "Ravi smiled because he knew he had done the right thing."
+    ],
+    moral: "Always be honest and do the right thing. ❤️"
   },
   {
     id: 2,
-    title: "The Lion and the Mouse",
-    teluguTitle: "సింహం మరియు ఎలుక",
-    emoji: "🦁",
-    category: "Friendship",
-    description:
-      "A tiny mouse helps a mighty lion and shows that everyone can be helpful.",
-    lesson: "Never underestimate anyone.",
-    color: "yellow",
+    title: "The Helpful Little Bird",
+    teluguTitle: "సహాయం చేసిన చిన్న పక్షి",
+    emoji: "🐦",
+    language: "English",
+    color: "#dff2ff",
+    pages: [
+      "A little bird lived in a beautiful forest.",
+      "One day, the bird saw a tiny ant struggling in the water.",
+      "The bird quickly dropped a leaf near the ant.",
+      "The ant climbed onto the leaf and safely reached the land.",
+      "A few days later, the ant saw a hunter near the bird.",
+      "The ant warned the bird, and the bird flew away safely."
+    ],
+    moral: "A small act of kindness can make a big difference. 🌟"
   },
   {
     id: 3,
-    title: "The Honest Woodcutter",
-    teluguTitle: "నిజాయితీ గల కట్టెలవాడు",
-    emoji: "🪓",
-    category: "Good Habits",
-    description:
-      "A poor woodcutter chooses honesty when he gets a chance to take something that is not his.",
-    lesson: "Honesty is always rewarded.",
-    color: "green",
+    title: "చీమ మరియు మిడత",
+    teluguTitle: "కష్టపడే చీమ",
+    emoji: "🐜",
+    language: "తెలుగు",
+    color: "#fff0b8",
+    pages: [
+      "ఒక అడవిలో ఒక చీమ మరియు ఒక మిడత ఉండేవి.",
+      "చీమ ప్రతిరోజూ కష్టపడి ఆహారాన్ని సేకరించేది.",
+      "మిడత మాత్రం రోజంతా ఆడుతూ పాడుతూ ఉండేది.",
+      "వర్షాకాలం వచ్చింది. మిడతకు ఆహారం లేక ఇబ్బంది పడింది.",
+      "చీమ తన దగ్గర ఉన్న ఆహారాన్ని పంచుకుంది.",
+      "మిడత తన తప్పును తెలుసుకుని ఇకపై కష్టపడాలని నిర్ణయించుకుంది."
+    ],
+    moral: "కష్టపడి పనిచేస్తే మంచి ఫలితాలు వస్తాయి. 🌟"
   },
   {
     id: 4,
-    title: "The Hare and the Tortoise",
-    teluguTitle: "కుందేలు మరియు తాబేలు",
-    emoji: "🐰",
-    category: "Life Lesson",
-    description:
-      "A fast hare learns an important lesson when a slow and steady tortoise wins the race.",
-    lesson: "Slow and steady wins the race.",
-    color: "blue",
-  },
+    title: "దాహంతో ఉన్న కాకి",
+    teluguTitle: "దాహంతో ఉన్న కాకి",
+    emoji: "🐦‍⬛",
+    language: "తెలుగు",
+    color: "#e9ddff",
+    pages: [
+      "ఒక రోజు ఒక కాకికి చాలా దాహం వేసింది.",
+      "అది నీటి కోసం చాలా చోట్ల వెతికింది.",
+      "చివరికి ఒక కుండ కనిపించింది.",
+      "కుండలో కొంచెం నీరు మాత్రమే ఉంది.",
+      "కాకి చిన్న రాళ్లను ఒక్కొక్కటిగా కుండలో వేసింది.",
+      "నీరు పైకి వచ్చింది. కాకి నీరు తాగి తన దాహం తీర్చుకుంది."
+    ],
+    moral: "తెలివిగా ఆలోచిస్తే సమస్యకు పరిష్కారం దొరుకుతుంది. 🧠"
+  }
 ];
 
 export default function Stories() {
+  const [selectedStory, setSelectedStory] = useState(null);
+  const [page, setPage] = useState(0);
+  const [stars, setStars] = useState(0);
+  const [completed, setCompleted] = useState({});
+
+  function openStory(story) {
+    setSelectedStory(story);
+    setPage(0);
+  }
+
+  function closeStory() {
+    setSelectedStory(null);
+    setPage(0);
+  }
+
+  function nextPage() {
+    if (!selectedStory) return;
+
+    if (page < selectedStory.pages.length - 1) {
+      setPage((value) => value + 1);
+    }
+  }
+
+  function previousPage() {
+    if (page > 0) {
+      setPage((value) => value - 1);
+    }
+  }
+
+  function finishStory() {
+    if (!selectedStory) return;
+
+    if (!completed[selectedStory.id]) {
+      setStars((value) => value + 5);
+
+      setCompleted((value) => ({
+        ...value,
+        [selectedStory.id]: true
+      }));
+    }
+
+    setPage(selectedStory.pages.length);
+  }
+
   return (
     <>
       <Head>
-        <title>Stories for Kids | Chinnaari Kids</title>
+        <title>Kids Stories | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Fun and educational stories for children with simple moral lessons. Read Telugu and English stories at Chinnaari Kids."
+          content="Fun English and Telugu moral stories for children."
         />
 
         <meta
@@ -77,51 +146,49 @@ export default function Stories() {
 
           <nav>
             <Link href="/">Home</Link>
-            <Link href="/stories" className="active">
-              📚 Stories
-            </Link>
+            <Link href="/dashboard">🌟 Dashboard</Link>
+            <Link href="/stories">📚 Stories</Link>
             <Link href="/games">🎮 Games</Link>
             <Link href="/puzzles">🧩 Puzzles</Link>
             <Link href="/colours">🎨 Colours</Link>
+            <Link href="/learn">🔤 Learn</Link>
           </nav>
 
         </header>
 
         {/* HERO */}
 
-        <section className="storyHero">
+        <section className="hero">
 
-          <div className="heroEmoji">
+          <div className="heroIcon">
             📚✨
           </div>
 
           <h1>
-            Wonderful Stories
+            Story Time!
           </h1>
 
           <p>
-            Read fun stories, discover new ideas
-            <br />
-            and learn valuable lessons! 🌟
+            Read, imagine and learn a beautiful lesson.
           </p>
+
+          <div className="stars">
+            ⭐ {stars} Stars
+          </div>
 
         </section>
 
         {/* STORY LIST */}
 
-        <section className="storySection">
+        <section className="storiesSection">
 
-          <div className="sectionHeading">
+          <h2>
+            🌟 Choose a Story
+          </h2>
 
-            <h2>
-              📖 Choose a Story
-            </h2>
-
-            <p>
-              Pick a story and start your adventure!
-            </p>
-
-          </div>
+          <p className="subtitle">
+            Pick a story and start reading!
+          </p>
 
           <div className="storyGrid">
 
@@ -129,39 +196,44 @@ export default function Stories() {
 
               <article
                 key={story.id}
-                className={`storyCard ${story.color}`}
+                className="storyCard"
+                style={{
+                  background: story.color
+                }}
               >
 
                 <div className="storyEmoji">
                   {story.emoji}
                 </div>
 
-                <div className="category">
-                  ⭐ {story.category}
+                <div className="language">
+                  {story.language}
                 </div>
 
                 <h3>
                   {story.title}
                 </h3>
 
-                <h4>
+                <p className="teluguTitle">
                   {story.teluguTitle}
-                </h4>
-
-                <p>
-                  {story.description}
                 </p>
 
-                <div className="lesson">
-                  💡 {story.lesson}
-                </div>
+                <p>
+                  {story.pages[0]}
+                </p>
 
                 <button
+                  onClick={() => openStory(story)}
                   className="readButton"
-                  type="button"
                 >
                   📖 Read Story
                 </button>
+
+                {completed[story.id] && (
+                  <div className="completed">
+                    ✅ Completed
+                  </div>
+                )}
 
               </article>
 
@@ -171,39 +243,155 @@ export default function Stories() {
 
         </section>
 
-        {/* LEARNING MESSAGE */}
+        {/* STORY READER */}
 
-        <section className="message">
+        {selectedStory && (
 
-          <div className="messageEmoji">
-            🧠
+          <div className="overlay">
+
+            <section className="reader">
+
+              <button
+                className="closeButton"
+                onClick={closeStory}
+              >
+                ✕
+              </button>
+
+              <div className="readerEmoji">
+                {selectedStory.emoji}
+              </div>
+
+              <h2>
+                {selectedStory.title}
+              </h2>
+
+              <p className="readerTelugu">
+                {selectedStory.teluguTitle}
+              </p>
+
+              {page < selectedStory.pages.length ? (
+
+                <>
+                  <div className="pageNumber">
+                    Page {page + 1} of{" "}
+                    {selectedStory.pages.length}
+                  </div>
+
+                  <div className="storyText">
+                    {selectedStory.pages[page]}
+                  </div>
+
+                  <div className="readerButtons">
+
+                    <button
+                      onClick={previousPage}
+                      disabled={page === 0}
+                      className="prevButton"
+                    >
+                      ⬅️ Previous
+                    </button>
+
+                    {page === selectedStory.pages.length - 1 ? (
+
+                      <button
+                        onClick={finishStory}
+                        className="finishButton"
+                      >
+                        🏆 Finish Story
+                      </button>
+
+                    ) : (
+
+                      <button
+                        onClick={nextPage}
+                        className="nextButton"
+                      >
+                        Next ➡️
+                      </button>
+
+                    )}
+
+                  </div>
+                </>
+
+              ) : (
+
+                <div className="storyFinished">
+
+                  <div className="bigStar">
+                    ⭐
+                  </div>
+
+                  <h2>
+                    Story Completed! 🎉
+                  </h2>
+
+                  <p>
+                    {selectedStory.moral}
+                  </p>
+
+                  <div className="earned">
+                    +5 Stars ⭐
+                  </div>
+
+                  <button
+                    onClick={closeStory}
+                    className="finishButton"
+                  >
+                    📚 Choose Another Story
+                  </button>
+
+                </div>
+
+              )}
+
+            </section>
+
+          </div>
+
+        )}
+
+        {/* TIP */}
+
+        <section className="tip">
+
+          <div className="tipIcon">
+            💡
           </div>
 
           <div>
 
             <h2>
-              Every story teaches something! 🌟
+              Little Reader Tip
             </h2>
 
             <p>
-              Stories help children imagine,
-              understand emotions, learn good habits
-              and discover valuable life lessons.
+              Read slowly, look at the pictures and
+              think about the lesson in every story. ❤️
             </p>
 
           </div>
 
         </section>
 
-        {/* BACK HOME */}
+        {/* NAVIGATION */}
 
-        <div className="backHome">
+        <section className="navigation">
 
-          <Link href="/">
-            🏠 Back to Home
+          <Link href="/dashboard">
+            🌟 Dashboard
           </Link>
 
-        </div>
+          <Link href="/games">
+            🎮 Play Games
+          </Link>
+
+          <Link href="/puzzles">
+            🧩 Solve Puzzles
+          </Link>
+
+        </section>
 
         {/* FOOTER */}
 
@@ -251,276 +439,461 @@ export default function Stories() {
           background: white;
 
           box-shadow:
-            0 2px 15px rgba(0, 0, 0, 0.08);
+            0 2px 15px rgba(0,0,0,0.08);
 
           position: sticky;
           top: 0;
-          z-index: 20;
+          z-index: 10;
         }
 
         .logo {
+          color: #333;
+          text-decoration: none;
+
           font-size: 24px;
           font-weight: 800;
-          text-decoration: none;
-          color: #333;
+
           white-space: nowrap;
         }
 
         nav {
           display: flex;
-          gap: 20px;
-          align-items: center;
+          gap: 15px;
           flex-wrap: wrap;
         }
 
         nav a {
           color: #444;
           text-decoration: none;
+
+          font-size: 14px;
           font-weight: 600;
         }
 
-        nav a:hover,
-        nav a.active {
+        nav a:hover {
           color: #ff6b6b;
         }
 
         /* HERO */
 
-        .storyHero {
+        .hero {
           text-align: center;
 
-          padding: 60px 20px;
+          padding: 45px 20px;
 
           background:
             linear-gradient(
               135deg,
-              #ffe1ea,
-              #fff1c7
+              #ffe1e8,
+              #e5ddff
             );
         }
 
-        .heroEmoji {
-          font-size: 75px;
+        .heroIcon {
+          font-size: 70px;
         }
 
-        .storyHero h1 {
-          font-size: 45px;
-          margin: 15px 0 10px;
+        .hero h1 {
+          font-size: 40px;
+          margin: 10px 0;
         }
 
-        .storyHero p {
+        .hero p {
           font-size: 18px;
-          line-height: 1.7;
           color: #555;
+        }
+
+        .stars {
+          display: inline-block;
+
+          margin-top: 10px;
+
+          padding: 9px 18px;
+
+          border-radius: 25px;
+
+          background: #fff0b8;
+
+          font-weight: bold;
         }
 
         /* STORIES */
 
-        .storySection {
-          padding: 55px 7%;
-        }
+        .storiesSection {
+          max-width: 1100px;
 
-        .sectionHeading {
+          margin: auto;
+
+          padding: 50px 20px;
+
           text-align: center;
-          margin-bottom: 35px;
         }
 
-        .sectionHeading h2 {
-          font-size: 32px;
-          margin-bottom: 8px;
+        .storiesSection h2 {
+          font-size: 30px;
+          margin-bottom: 5px;
         }
 
-        .sectionHeading p {
+        .subtitle {
           color: #666;
-          font-size: 17px;
+          margin-bottom: 30px;
         }
 
         .storyGrid {
-          max-width: 1200px;
-          margin: auto;
-
           display: grid;
 
           grid-template-columns:
             repeat(2, 1fr);
 
-          gap: 25px;
+          gap: 22px;
         }
 
         .storyCard {
-          padding: 30px;
+          padding: 28px 22px;
 
           border-radius: 28px;
 
-          min-height: 430px;
+          text-align: left;
 
           box-shadow:
             0 6px 20px
-            rgba(0, 0, 0, 0.06);
-
-          transition:
-            transform 0.25s,
-            box-shadow 0.25s;
-        }
-
-        .storyCard:hover {
-          transform: translateY(-6px);
-
-          box-shadow:
-            0 12px 30px
-            rgba(0, 0, 0, 0.1);
-        }
-
-        .pink {
-          background: #ffe0e9;
-        }
-
-        .yellow {
-          background: #fff0bd;
-        }
-
-        .green {
-          background: #ddf5dc;
-        }
-
-        .blue {
-          background: #dceeff;
+            rgba(0,0,0,0.06);
         }
 
         .storyEmoji {
-          font-size: 70px;
-          margin-bottom: 12px;
+          font-size: 65px;
         }
 
-        .category {
+        .language {
           display: inline-block;
 
-          padding: 7px 13px;
+          margin-top: 10px;
 
-          background: white;
+          padding: 6px 12px;
 
           border-radius: 20px;
 
-          font-size: 13px;
+          background: white;
+
+          font-size: 12px;
 
           font-weight: bold;
         }
 
         .storyCard h3 {
-          font-size: 25px;
-          margin: 15px 0 5px;
+          font-size: 24px;
+
+          margin: 14px 0 5px;
         }
 
-        .storyCard h4 {
-          margin: 0 0 15px;
-
-          font-size: 18px;
-
-          color: #555;
-        }
-
-        .storyCard p {
+        .teluguTitle {
           font-size: 16px;
-          line-height: 1.7;
-          color: #555;
-        }
-
-        .lesson {
-          margin-top: 18px;
-
-          padding: 13px;
-
-          background: rgba(255, 255, 255, 0.7);
-
-          border-radius: 15px;
 
           font-weight: bold;
 
-          line-height: 1.5;
+          color: #666;
+        }
+
+        .storyCard > p:not(.teluguTitle) {
+          line-height: 1.6;
+
+          color: #555;
+
+          min-height: 50px;
         }
 
         .readButton {
-          margin-top: 20px;
+          margin-top: 10px;
 
           padding: 12px 20px;
 
           border: none;
 
-          border-radius: 25px;
+          border-radius: 24px;
 
           background: #ff6b6b;
 
           color: white;
 
-          font-size: 15px;
-
           font-weight: bold;
 
           cursor: pointer;
-
-          transition:
-            transform 0.2s;
         }
 
         .readButton:hover {
           transform: scale(1.04);
         }
 
-        /* MESSAGE */
+        .completed {
+          display: inline-block;
 
-        .message {
-          max-width: 1000px;
+          margin-left: 10px;
 
-          margin: 10px auto 50px;
+          padding: 8px 12px;
 
-          padding: 35px;
+          border-radius: 20px;
 
-          border-radius: 30px;
+          background: #dcf6d9;
+
+          color: #237a25;
+
+          font-size: 13px;
+
+          font-weight: bold;
+        }
+
+        /* READER */
+
+        .overlay {
+          position: fixed;
+
+          inset: 0;
+
+          z-index: 100;
 
           display: flex;
 
           align-items: center;
 
-          gap: 25px;
+          justify-content: center;
+
+          padding: 20px;
 
           background:
-            linear-gradient(
-              135deg,
-              #e3f5ff,
-              #eee5ff
-            );
+            rgba(0,0,0,0.65);
+        }
+
+        .reader {
+          width: 100%;
+
+          max-width: 700px;
+
+          max-height: 90vh;
+
+          overflow-y: auto;
+
+          position: relative;
+
+          padding: 40px 30px;
+
+          border-radius: 30px;
+
+          background: white;
+
+          text-align: center;
 
           box-shadow:
-            0 6px 22px
-            rgba(0, 0, 0, 0.06);
+            0 15px 50px
+            rgba(0,0,0,0.25);
         }
 
-        .messageEmoji {
-          font-size: 70px;
+        .closeButton {
+          position: absolute;
+
+          top: 15px;
+
+          right: 15px;
+
+          width: 38px;
+          height: 38px;
+
+          border: none;
+
+          border-radius: 50%;
+
+          background: #eee;
+
+          cursor: pointer;
+
+          font-size: 18px;
         }
 
-        .message h2 {
-          margin-top: 0;
-          font-size: 27px;
+        .readerEmoji {
+          font-size: 65px;
         }
 
-        .message p {
-          line-height: 1.7;
+        .reader h2 {
+          font-size: 30px;
+
+          margin: 10px 0 5px;
+        }
+
+        .readerTelugu {
+          color: #777;
+
+          font-weight: bold;
+        }
+
+        .pageNumber {
+          margin-top: 20px;
+
+          color: #888;
+
+          font-size: 14px;
+        }
+
+        .storyText {
+          min-height: 170px;
+
+          margin: 20px 0;
+
+          padding: 30px 20px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          border-radius: 25px;
+
+          background: #fff8df;
+
+          font-size: 21px;
+
+          line-height: 1.8;
+        }
+
+        .readerButtons {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 12px;
+
+          flex-wrap: wrap;
+        }
+
+        .prevButton,
+        .nextButton,
+        .finishButton {
+          border: none;
+
+          padding: 13px 20px;
+
+          border-radius: 24px;
+
+          font-weight: bold;
+
+          cursor: pointer;
+        }
+
+        .prevButton {
+          background: #eee;
+
           color: #555;
-          font-size: 17px;
         }
 
-        /* BACK */
+        .nextButton {
+          background: #4caf50;
 
-        .backHome {
-          text-align: center;
-          margin-bottom: 50px;
+          color: white;
         }
 
-        .backHome a {
+        .finishButton {
+          background: #ff6b6b;
+
+          color: white;
+        }
+
+        .prevButton:disabled {
+          opacity: 0.4;
+
+          cursor: not-allowed;
+        }
+
+        /* FINISHED */
+
+        .storyFinished {
+          padding: 20px;
+        }
+
+        .bigStar {
+          font-size: 80px;
+        }
+
+        .storyFinished h2 {
+          font-size: 28px;
+        }
+
+        .storyFinished p {
+          font-size: 18px;
+
+          line-height: 1.7;
+
+          color: #555;
+        }
+
+        .earned {
           display: inline-block;
 
-          padding: 13px 22px;
+          margin: 15px;
+
+          padding: 10px 20px;
+
+          border-radius: 25px;
+
+          background: #fff0b8;
+
+          font-weight: bold;
+        }
+
+        /* TIP */
+
+        .tip {
+          max-width: 800px;
+
+          margin: 0 auto 45px;
+
+          padding: 30px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 20px;
+
+          border-radius: 28px;
+
+          background: white;
+
+          box-shadow:
+            0 5px 20px
+            rgba(0,0,0,0.06);
+        }
+
+        .tipIcon {
+          font-size: 55px;
+        }
+
+        .tip h2 {
+          margin-top: 0;
+        }
+
+        .tip p {
+          margin-bottom: 0;
+
+          color: #666;
+
+          line-height: 1.7;
+        }
+
+        /* NAVIGATION */
+
+        .navigation {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 12px;
+
+          flex-wrap: wrap;
+
+          margin: 20px 20px 55px;
+        }
+
+        .navigation a {
+          padding: 13px 20px;
 
           border-radius: 25px;
 
@@ -550,37 +923,66 @@ export default function Stories() {
         }
 
         footer p {
-          margin: 8px;
+          margin: 9px;
         }
 
         /* TABLET */
 
-        @media (max-width: 800px) {
+        @media (max-width: 850px) {
 
           .header {
             flex-direction: column;
+
             gap: 15px;
           }
 
           nav {
             justify-content: center;
-            gap: 12px;
-          }
-
-          nav a {
-            font-size: 13px;
-          }
-
-          .storyHero h1 {
-            font-size: 36px;
           }
 
           .storyGrid {
             grid-template-columns: 1fr;
           }
 
-          .message {
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+          .logo {
+            font-size: 21px;
+          }
+
+          nav {
+            gap: 10px;
+          }
+
+          nav a {
+            font-size: 12px;
+          }
+
+          .hero h1 {
+            font-size: 32px;
+          }
+
+          .storyCard {
+            padding: 24px 18px;
+          }
+
+          .reader {
+            padding: 35px 20px;
+          }
+
+          .storyText {
+            font-size: 18px;
+
+            min-height: 190px;
+          }
+
+          .tip {
             margin-left: 20px;
+
             margin-right: 20px;
 
             flex-direction: column;
@@ -590,34 +992,7 @@ export default function Stories() {
 
         }
 
-        /* MOBILE */
-
-        @media (max-width: 500px) {
-
-          .storySection {
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
-          .storyCard {
-            padding: 25px;
-          }
-
-          .heroEmoji {
-            font-size: 60px;
-          }
-
-          .storyHero h1 {
-            font-size: 32px;
-          }
-
-          .storyHero p {
-            font-size: 16px;
-          }
-
-        }
-
       `}</style>
     </>
   );
-    }
+}
