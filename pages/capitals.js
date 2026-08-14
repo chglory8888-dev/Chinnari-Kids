@@ -3,190 +3,63 @@ import Link from "next/link";
 import { useState } from "react";
 
 const capitals = [
-  {
-    country: "India",
-    flag: "🇮🇳",
-    capital: "New Delhi",
-    continent: "Asia",
-  },
-  {
-    country: "United States",
-    flag: "🇺🇸",
-    capital: "Washington, D.C.",
-    continent: "North America",
-  },
-  {
-    country: "United Kingdom",
-    flag: "🇬🇧",
-    capital: "London",
-    continent: "Europe",
-  },
-  {
-    country: "Japan",
-    flag: "🇯🇵",
-    capital: "Tokyo",
-    continent: "Asia",
-  },
-  {
-    country: "China",
-    flag: "🇨🇳",
-    capital: "Beijing",
-    continent: "Asia",
-  },
-  {
-    country: "Australia",
-    flag: "🇦🇺",
-    capital: "Canberra",
-    continent: "Oceania",
-  },
-  {
-    country: "France",
-    flag: "🇫🇷",
-    capital: "Paris",
-    continent: "Europe",
-  },
-  {
-    country: "Germany",
-    flag: "🇩🇪",
-    capital: "Berlin",
-    continent: "Europe",
-  },
-  {
-    country: "Italy",
-    flag: "🇮🇹",
-    capital: "Rome",
-    continent: "Europe",
-  },
-  {
-    country: "Canada",
-    flag: "🇨🇦",
-    capital: "Ottawa",
-    continent: "North America",
-  },
-  {
-    country: "Brazil",
-    flag: "🇧🇷",
-    capital: "Brasília",
-    continent: "South America",
-  },
-  {
-    country: "South Africa",
-    flag: "🇿🇦",
-    capital: "Pretoria",
-    continent: "Africa",
-  },
-  {
-    country: "South Korea",
-    flag: "🇰🇷",
-    capital: "Seoul",
-    continent: "Asia",
-  },
-  {
-    country: "Singapore",
-    flag: "🇸🇬",
-    capital: "Singapore",
-    continent: "Asia",
-  },
-  {
-    country: "United Arab Emirates",
-    flag: "🇦🇪",
-    capital: "Abu Dhabi",
-    continent: "Asia",
-  },
-  {
-    country: "Egypt",
-    flag: "🇪🇬",
-    capital: "Cairo",
-    continent: "Africa",
-  },
-  {
-    country: "Greece",
-    flag: "🇬🇷",
-    capital: "Athens",
-    continent: "Europe",
-  },
-  {
-    country: "Mexico",
-    flag: "🇲🇽",
-    capital: "Mexico City",
-    continent: "North America",
-  },
-  {
-    country: "New Zealand",
-    flag: "🇳🇿",
-    capital: "Wellington",
-    continent: "Oceania",
-  },
-  {
-    country: "Switzerland",
-    flag: "🇨🇭",
-    capital: "Bern",
-    continent: "Europe",
-  },
-  {
-    country: "Nepal",
-    flag: "🇳🇵",
-    capital: "Kathmandu",
-    continent: "Asia",
-  },
-  {
-    country: "Thailand",
-    flag: "🇹🇭",
-    capital: "Bangkok",
-    continent: "Asia",
-  },
-  {
-    country: "Indonesia",
-    flag: "🇮🇩",
-    capital: "Jakarta",
-    continent: "Asia",
-  },
-  {
-    country: "Malaysia",
-    flag: "🇲🇾",
-    capital: "Kuala Lumpur",
-    continent: "Asia",
-  },
-  {
-    country: "Russia",
-    flag: "🇷🇺",
-    capital: "Moscow",
-    continent: "Europe / Asia",
-  },
+  { country: "India", flag: "🇮🇳", capital: "New Delhi", icon: "🏛️" },
+  { country: "Japan", flag: "🇯🇵", capital: "Tokyo", icon: "🗼" },
+  { country: "France", flag: "🇫🇷", capital: "Paris", icon: "🗼" },
+  { country: "United Kingdom", flag: "🇬🇧", capital: "London", icon: "🎡" },
+  { country: "United States", flag: "🇺🇸", capital: "Washington, D.C.", icon: "🏛️" },
+  { country: "China", flag: "🇨🇳", capital: "Beijing", icon: "🏯" },
+  { country: "Australia", flag: "🇦🇺", capital: "Canberra", icon: "🏛️" },
+  { country: "Canada", flag: "🇨🇦", capital: "Ottawa", icon: "🏛️" },
+  { country: "Germany", flag: "🇩🇪", capital: "Berlin", icon: "🏛️" },
+  { country: "Italy", flag: "🇮🇹", capital: "Rome", icon: "🏛️" },
+  { country: "Spain", flag: "🇪🇸", capital: "Madrid", icon: "🏰" },
+  { country: "Brazil", flag: "🇧🇷", capital: "Brasília", icon: "🏛️" },
+  { country: "Russia", flag: "🇷🇺", capital: "Moscow", icon: "🏰" },
+  { country: "South Korea", flag: "🇰🇷", capital: "Seoul", icon: "🏙️" },
+  { country: "Thailand", flag: "🇹🇭", capital: "Bangkok", icon: "🛕" },
+  { country: "Nepal", flag: "🇳🇵", capital: "Kathmandu", icon: "🏔️" },
+  { country: "Egypt", flag: "🇪🇬", capital: "Cairo", icon: "🔺" },
+  { country: "South Africa", flag: "🇿🇦", capital: "Pretoria", icon: "🏛️" },
+  { country: "Mexico", flag: "🇲🇽", capital: "Mexico City", icon: "🏙️" },
+  { country: "Singapore", flag: "🇸🇬", capital: "Singapore", icon: "🏙️" },
+  { country: "Malaysia", flag: "🇲🇾", capital: "Kuala Lumpur", icon: "🏙️" },
+  { country: "Indonesia", flag: "🇮🇩", capital: "Jakarta", icon: "🏙️" },
+  { country: "New Zealand", flag: "🇳🇿", capital: "Wellington", icon: "🏛️" },
+  { country: "Greece", flag: "🇬🇷", capital: "Athens", icon: "🏛️" },
+  { country: "UAE", flag: "🇦🇪", capital: "Abu Dhabi", icon: "🏙️" },
+  { country: "Saudi Arabia", flag: "🇸🇦", capital: "Riyadh", icon: "🏙️" },
+  { country: "Turkey", flag: "🇹🇷", capital: "Ankara", icon: "🏛️" },
+  { country: "Argentina", flag: "🇦🇷", capital: "Buenos Aires", icon: "🏙️" },
+  { country: "Peru", flag: "🇵🇪", capital: "Lima", icon: "🏙️" },
+  { country: "Kenya", flag: "🇰🇪", capital: "Nairobi", icon: "🌳" },
 ];
 
 export default function Capitals() {
   const [search, setSearch] = useState("");
-  const [score, setScore] = useState(0);
   const [question, setQuestion] = useState(0);
+  const [score, setScore] = useState(0);
   const [message, setMessage] = useState("");
 
   const filtered = capitals.filter((item) =>
-    item.country
-      .toLowerCase()
-      .includes(search.toLowerCase()) ||
-    item.capital
+    `${item.country} ${item.capital}`
       .toLowerCase()
       .includes(search.toLowerCase())
   );
 
   const current = capitals[question];
 
-  function checkAnswer(answer) {
-    if (answer === current.capital) {
-      setScore((old) => old + 1);
-      setMessage("🎉 Correct! Excellent!");
+  function answer(value) {
+    if (value === current.capital) {
+      setScore((s) => s + 1);
+      setMessage("🎉 Correct! Great job!");
     } else {
-      setMessage(
-        `😊 Try again! Answer: ${current.capital}`
-      );
+      setMessage(`😊 Correct answer: ${current.capital}`);
     }
   }
 
   function nextQuestion() {
-    setQuestion(
-      (old) => (old + 1) % capitals.length
-    );
+    setQuestion((q) => (q + 1) % capitals.length);
     setMessage("");
   }
 
@@ -194,12 +67,10 @@ export default function Capitals() {
     <>
       <Head>
         <title>World Capitals | Chinnaari Kids</title>
-
         <meta
           name="description"
-          content="Learn world capitals with flags and fun quizzes for kids."
+          content="Learn countries and their capitals with fun cards and quizzes for kids."
         />
-
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
@@ -208,176 +79,113 @@ export default function Capitals() {
 
       <main className="page">
 
-        {/* HEADER */}
-
         <header className="header">
-
           <Link href="/" className="logo">
             🌈 Chinnaari Kids
           </Link>
 
           <nav>
             <Link href="/">Home</Link>
-
-            <Link href="/world-explorer">
-              🌍 World Explorer
-            </Link>
-
-            <Link href="/countries">
-              🚩 Countries
-            </Link>
-
-            <Link href="/numbers">
-              🔢 Numbers
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
-            </Link>
+            <Link href="/countries">🌍 Countries</Link>
+            <Link href="/indian-states">🇮🇳 States</Link>
+            <Link href="/currencies">💰 Currencies</Link>
+            <Link href="/famous-places">🗺️ Places</Link>
           </nav>
-
         </header>
 
-        {/* HERO */}
-
         <section className="hero">
+          <div className="heroIcon">🏛️</div>
 
-          <div className="heroIcon">
-            🏛️
-          </div>
-
-          <h1>
-            World Capitals
-          </h1>
+          <h1>World Capitals</h1>
 
           <p>
             Learn countries and their capital cities!
           </p>
 
-          <div className="heroFlags">
-            🇮🇳 🇺🇸 🇬🇧 🇯🇵 🇫🇷 🌍
+          <div className="heroIcons">
+            🏛️ 🏙️ 🏰 🗼 🏯
           </div>
-
         </section>
 
-        {/* SEARCH */}
-
         <section className="searchBox">
-
           <input
-            type="text"
-            placeholder="🔍 Search country or capital..."
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="🔍 Search country or capital..."
           />
 
           <p>
-            Showing {filtered.length} places
+            Showing {filtered.length} capitals
           </p>
-
         </section>
 
-        {/* CAPITAL CARDS */}
-
         <section className="capitalGrid">
-
           {filtered.map((item) => (
-
-            <div
-              className="capitalCard"
-              key={item.country}
-            >
+            <div className="capitalCard" key={item.country}>
 
               <div className="flag">
                 {item.flag}
               </div>
 
-              <h2>
-                {item.country}
-              </h2>
-
-              <div className="arrow">
-                ↓
+              <div className="cityIcon">
+                {item.icon}
               </div>
 
-              <h3>
-                🏛️ {item.capital}
-              </h3>
+              <h2>{item.country}</h2>
 
-              <span>
-                🌎 {item.continent}
-              </span>
+              <div className="capitalName">
+                🏛️ {item.capital}
+              </div>
 
             </div>
-
           ))}
-
         </section>
-
-        {/* QUIZ */}
 
         <section className="quiz">
 
           <div className="quizTop">
-
-            <span>
-              🧠 Capital Quiz
-            </span>
-
-            <span>
-              ⭐ Score: {score}
-            </span>
-
+            <span>🧠 Capital Quiz</span>
+            <span>⭐ Score: {score}</span>
           </div>
 
           <h2>
-            What is the capital of...
+            What is the capital of this country?
           </h2>
 
-          <div className="questionCountry">
+          <div className="question">
 
-            <div className="questionFlag">
+            <div className="bigFlag">
               {current.flag}
             </div>
 
-            <h2>
-              {current.country}
-            </h2>
+            <h2>{current.country}</h2>
+
+            <div className="city">
+              🏛️
+            </div>
 
           </div>
-
-          <p>
-            Choose the correct capital:
-          </p>
 
           <div className="answers">
 
             {[
               current.capital,
-              capitals[
-                (question + 1) % capitals.length
-              ].capital,
-              capitals[
-                (question + 2) % capitals.length
-              ].capital,
-              capitals[
-                (question + 3) % capitals.length
-              ].capital,
+              capitals[(question + 1) % capitals.length].capital,
+              capitals[(question + 2) % capitals.length].capital,
+              capitals[(question + 3) % capitals.length].capital,
             ]
+              .filter(
+                (value, index, array) =>
+                  array.indexOf(value) === index
+              )
               .sort(() => Math.random() - 0.5)
-              .map((answer) => (
-
+              .map((value) => (
                 <button
-                  key={answer}
-                  onClick={() =>
-                    checkAnswer(answer)
-                  }
+                  key={value}
+                  onClick={() => answer(value)}
                 >
-                  🏛️ {answer}
+                  🏛️ {value}
                 </button>
-
               ))}
 
           </div>
@@ -397,80 +205,56 @@ export default function Capitals() {
 
         </section>
 
-        {/* LEARNING TIP */}
+        <section className="learning">
 
-        <section className="tip">
-
-          <div className="tipIcon">
+          <div className="learningIcon">
             🌍
           </div>
 
           <div>
-
             <h2>
-              Little Explorer Tip
+              What is a Capital City?
             </h2>
 
             <p>
               A capital city is an important city
-              where a country's government is based.
+              where a country's main government
+              offices are located.
             </p>
 
             <p className="telugu">
-              రాజధాని అంటే దేశం లేదా రాష్ట్రానికి
-              ముఖ్యమైన పరిపాలనా నగరం.
+              ఒక దేశానికి ముఖ్యమైన ప్రభుత్వ
+              కార్యాలయాలు ఉండే ప్రధాన నగరాన్ని
+              రాజధాని నగరం అంటారు.
             </p>
-
           </div>
 
         </section>
 
-        {/* NAVIGATION */}
-
         <section className="links">
 
           <Link href="/countries">
-            🚩 Countries
-          </Link>
-
-          <Link href="/currencies">
-            💰 Currencies
+            🌍 Countries
           </Link>
 
           <Link href="/indian-states">
             🇮🇳 Indian States
           </Link>
 
+          <Link href="/currencies">
+            💰 Currencies
+          </Link>
+
           <Link href="/famous-places">
             🗺️ Famous Places
           </Link>
 
-          <Link href="/world-quiz">
-            🧠 World Quiz
-          </Link>
-
-          <Link href="/world-explorer">
-            🌍 World Explorer
-          </Link>
-
         </section>
 
-        {/* FOOTER */}
-
         <footer>
-
-          <h3>
-            🌈 Chinnaari Kids
-          </h3>
-
-          <p>
-            Learn • Play • Discover
-          </p>
-
-          <p>
-            © 2026 Chinnaari Kids
-          </p>
-
+          <h3>🌈 Chinnaari Kids</h3>
+          <p>Learn • Play • Discover</p>
+          <p>© 2026 Chinnaari Kids</p>
         </footer>
 
       </main>
@@ -499,8 +283,7 @@ export default function Capitals() {
           position: sticky;
           top: 0;
           z-index: 10;
-          box-shadow:
-            0 2px 15px rgba(0,0,0,.08);
+          box-shadow: 0 2px 15px rgba(0,0,0,.08);
         }
 
         .logo {
@@ -535,8 +318,8 @@ export default function Capitals() {
           background:
             linear-gradient(
               135deg,
-              #e3e8ff,
-              #e1f6ff,
+              #e1f5ff,
+              #eee2ff,
               #fff0c9
             );
         }
@@ -547,7 +330,7 @@ export default function Capitals() {
 
         .hero h1 {
           font-size: 45px;
-          margin: 12px 0;
+          margin: 10px 0;
         }
 
         .hero p {
@@ -555,9 +338,9 @@ export default function Capitals() {
           color: #555;
         }
 
-        .heroFlags {
+        .heroIcons {
           margin-top: 20px;
-          font-size: 38px;
+          font-size: 35px;
           letter-spacing: 5px;
         }
 
@@ -579,7 +362,7 @@ export default function Capitals() {
         }
 
         .searchBox input:focus {
-          border-color: #8b8cff;
+          border-color: #91ceff;
         }
 
         .searchBox p {
@@ -593,16 +376,15 @@ export default function Capitals() {
           display: grid;
           grid-template-columns:
             repeat(4, 1fr);
-          gap: 16px;
+          gap: 17px;
         }
 
         .capitalCard {
-          padding: 25px 15px;
-          border-radius: 25px;
           background: white;
+          padding: 22px 15px;
           text-align: center;
-          box-shadow:
-            0 5px 18px rgba(0,0,0,.06);
+          border-radius: 25px;
+          box-shadow: 0 5px 18px rgba(0,0,0,.06);
           transition: .2s;
         }
 
@@ -611,31 +393,25 @@ export default function Capitals() {
         }
 
         .flag {
-          font-size: 58px;
+          font-size: 55px;
+        }
+
+        .cityIcon {
+          font-size: 42px;
+          margin-top: 8px;
         }
 
         .capitalCard h2 {
-          font-size: 19px;
+          font-size: 18px;
           margin: 10px 0;
         }
 
-        .arrow {
-          color: #999;
-          font-size: 20px;
-        }
-
-        .capitalCard h3 {
-          font-size: 18px;
-          color: #555;
-          margin: 8px 0;
-        }
-
-        .capitalCard span {
-          display: inline-block;
-          padding: 5px 10px;
-          background: #f1f1f1;
+        .capitalName {
+          padding: 10px;
+          background: #e9f4ff;
           border-radius: 15px;
-          font-size: 12px;
+          font-weight: bold;
+          font-size: 14px;
         }
 
         .quiz {
@@ -647,11 +423,10 @@ export default function Capitals() {
           background:
             linear-gradient(
               135deg,
-              #ffe3ed,
+              #ffe6d5,
               #e6e0ff
             );
-          box-shadow:
-            0 8px 30px rgba(0,0,0,.08);
+          box-shadow: 0 8px 30px rgba(0,0,0,.08);
         }
 
         .quizTop {
@@ -668,24 +443,23 @@ export default function Capitals() {
         }
 
         .quiz h2 {
-          font-size: 28px;
+          font-size: 27px;
         }
 
-        .questionCountry {
+        .question {
           display: inline-block;
-          padding: 20px 40px;
-          border-radius: 25px;
+          min-width: 280px;
+          padding: 25px 45px;
           background: white;
-          box-shadow:
-            0 5px 15px rgba(0,0,0,.06);
+          border-radius: 25px;
         }
 
-        .questionFlag {
-          font-size: 75px;
+        .bigFlag {
+          font-size: 85px;
         }
 
-        .questionCountry h2 {
-          margin: 8px 0;
+        .city {
+          font-size: 45px;
         }
 
         .answers {
@@ -708,14 +482,14 @@ export default function Capitals() {
         }
 
         .answers button:hover {
-          background: #fff0f0;
+          background: #fff0dc;
           transform: scale(1.02);
         }
 
         .message {
           margin: 20px;
-          font-weight: bold;
           font-size: 18px;
+          font-weight: bold;
         }
 
         .next {
@@ -728,24 +502,23 @@ export default function Capitals() {
           cursor: pointer;
         }
 
-        .tip {
+        .learning {
           max-width: 850px;
           margin: 30px auto 50px;
           padding: 30px;
           display: flex;
           align-items: center;
           gap: 20px;
-          border-radius: 30px;
           background: white;
-          box-shadow:
-            0 6px 20px rgba(0,0,0,.06);
+          border-radius: 30px;
+          box-shadow: 0 6px 20px rgba(0,0,0,.06);
         }
 
-        .tipIcon {
-          font-size: 60px;
+        .learningIcon {
+          font-size: 65px;
         }
 
-        .tip p {
+        .learning p {
           color: #666;
           line-height: 1.6;
         }
@@ -783,12 +556,10 @@ export default function Capitals() {
         }
 
         @media (max-width: 900px) {
-
           .capitalGrid {
             grid-template-columns:
               repeat(3, 1fr);
           }
-
         }
 
         @media (max-width: 700px) {
@@ -806,13 +577,12 @@ export default function Capitals() {
               repeat(2, 1fr);
           }
 
-          .tip {
+          .learning {
             margin-left: 15px;
             margin-right: 15px;
             flex-direction: column;
             text-align: center;
           }
-
         }
 
         @media (max-width: 500px) {
@@ -825,16 +595,16 @@ export default function Capitals() {
             font-size: 12px;
           }
 
-          .heroIcon {
-            font-size: 70px;
-          }
-
           .hero h1 {
             font-size: 31px;
           }
 
-          .heroFlags {
-            font-size: 28px;
+          .heroIcon {
+            font-size: 70px;
+          }
+
+          .heroIcons {
+            font-size: 27px;
             letter-spacing: 2px;
           }
 
@@ -846,9 +616,13 @@ export default function Capitals() {
             grid-template-columns: 1fr;
           }
 
+          .question {
+            width: 100%;
+            min-width: 0;
+          }
         }
 
       `}</style>
     </>
   );
-    }
+}
