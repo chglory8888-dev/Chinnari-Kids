@@ -4,83 +4,76 @@ import { useState } from "react";
 
 const puzzles = [
   {
-    type: "Number Puzzle",
-    emoji: "🔢",
-    question: "What comes next?",
-    display: "2, 4, 6, 8, ?",
-    options: ["9", "10", "11", "12"],
-    answer: "10",
+    question: "🍎 Which one is a fruit?",
+    options: ["🍎 Apple", "🚗 Car", "🐶 Dog"],
+    answer: "🍎 Apple",
   },
   {
-    type: "Letter Puzzle",
-    emoji: "🔤",
-    question: "What letter comes next?",
-    display: "A, B, C, ?",
-    options: ["D", "E", "F", "G"],
-    answer: "D",
+    question: "🐱 Which animal says Meow?",
+    options: ["🐶 Dog", "🐱 Cat", "🦁 Lion"],
+    answer: "🐱 Cat",
   },
   {
-    type: "Animal Puzzle",
-    emoji: "🐾",
-    question: "Which animal says MOO?",
-    display: "🐮 ?",
-    options: ["Cow", "Dog", "Cat", "Lion"],
-    answer: "Cow",
+    question: "🔢 What comes after 2?",
+    options: ["1", "3", "5"],
+    answer: "3",
   },
   {
-    type: "Shape Puzzle",
-    emoji: "🔷",
-    question: "Which shape has 3 sides?",
-    display: "🔺 ?",
-    options: ["Circle", "Square", "Triangle", "Rectangle"],
-    answer: "Triangle",
+    question: "🌈 Which one is a colour?",
+    options: ["Red", "Chair", "Book"],
+    answer: "Red",
+  },
+  {
+    question: "☀️ What gives us light during the day?",
+    options: ["Moon", "Sun", "Star"],
+    answer: "Sun",
   },
 ];
 
 export default function Puzzles() {
   const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [finished, setFinished] = useState(false);
+  const [stars, setStars] = useState(0);
   const [message, setMessage] = useState("");
+  const [finished, setFinished] = useState(false);
 
-  function chooseAnswer(option) {
-    const puzzle = puzzles[current];
+  const puzzle = puzzles[current];
+
+  function checkAnswer(option) {
+    if (message) return;
 
     if (option === puzzle.answer) {
-      setScore((value) => value + 1);
-      setMessage("🎉 Correct! Great job!");
+      setStars((value) => value + 5);
+      setMessage("🎉 Correct! +5 Stars ⭐");
     } else {
-      setMessage(
-        `💡 Nice try! Correct answer: ${puzzle.answer}`
-      );
+      setMessage("😊 Try again!");
     }
+  }
 
-    setTimeout(() => {
-      setMessage("");
+  function nextPuzzle() {
+    setMessage("");
 
-      if (current === puzzles.length - 1) {
-        setFinished(true);
-      } else {
-        setCurrent((value) => value + 1);
-      }
-    }, 900);
+    if (current < puzzles.length - 1) {
+      setCurrent((value) => value + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   function restart() {
     setCurrent(0);
-    setScore(0);
-    setFinished(false);
+    setStars(0);
     setMessage("");
+    setFinished(false);
   }
 
   return (
     <>
       <Head>
-        <title>Fun Puzzles for Kids | Chinnaari Kids</title>
+        <title>Kids Puzzles | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Fun educational puzzles for kids including numbers, letters, animals and shapes."
+          content="Fun educational puzzles for kids."
         />
 
         <meta
@@ -91,8 +84,6 @@ export default function Puzzles() {
 
       <main className="page">
 
-        {/* HEADER */}
-
         <header className="header">
 
           <Link href="/" className="logo">
@@ -101,103 +92,86 @@ export default function Puzzles() {
 
           <nav>
             <Link href="/">Home</Link>
-
-            <Link href="/stories">
-              📚 Stories
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
-            </Link>
-
-            <Link href="/puzzles" className="active">
-              🧩 Puzzles
-            </Link>
-
-            <Link href="/colours">
-              🎨 Colours
-            </Link>
+            <Link href="/dashboard">🌟 Dashboard</Link>
+            <Link href="/stories">📚 Stories</Link>
+            <Link href="/games">🎮 Games</Link>
+            <Link href="/puzzles">🧩 Puzzles</Link>
+            <Link href="/colours">🎨 Colours</Link>
+            <Link href="/learn">🔤 Learn</Link>
           </nav>
 
         </header>
 
-        {/* HERO */}
-
         <section className="hero">
 
-          <div className="heroEmoji">
-            🧩✨
+          <div className="heroIcon">
+            🧩
           </div>
 
           <h1>
-            Fun Puzzles!
+            Puzzle Time!
           </h1>
 
           <p>
-            Think, solve and learn something new! 🧠
+            Think, choose and earn stars! ⭐
           </p>
 
         </section>
 
-        {/* PUZZLE */}
+        {!finished ? (
+          <section className="gameBox">
 
-        {!finished && (
-          <section className="puzzleBox">
+            <div className="progress">
+              Puzzle {current + 1} of {puzzles.length}
+            </div>
 
-            <div className="top">
+            <div className="stars">
+              ⭐ {stars} Stars
+            </div>
 
-              <span>
-                {puzzles[current].emoji}{" "}
-                {puzzles[current].type}
-              </span>
+            <div className="question">
+              {puzzle.question}
+            </div>
 
-              <span>
-                {current + 1} / {puzzles.length}
-              </span>
+            <div className="options">
+
+              {puzzle.options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => checkAnswer(option)}
+                  className="option"
+                >
+                  {option}
+                </button>
+              ))}
 
             </div>
 
-            <div className="puzzleContent">
-
-              <h2>
-                {puzzles[current].question}
-              </h2>
-
-              <div className="puzzleDisplay">
-                {puzzles[current].display}
+            {message && (
+              <div
+                className={
+                  message.includes("Correct")
+                    ? "message correct"
+                    : "message wrong"
+                }
+              >
+                {message}
               </div>
+            )}
 
-              <div className="options">
-
-                {puzzles[current].options.map(
-                  (option) => (
-                    <button
-                      key={option}
-                      onClick={() =>
-                        chooseAnswer(option)
-                      }
-                    >
-                      {option}
-                    </button>
-                  )
-                )}
-
-              </div>
-
-              {message && (
-                <div className="message">
-                  {message}
-                </div>
-              )}
-
-            </div>
+            {message.includes("Correct") && (
+              <button
+                onClick={nextPuzzle}
+                className="nextButton"
+              >
+                {current === puzzles.length - 1
+                  ? "🏆 Finish"
+                  : "➡️ Next Puzzle"}
+              </button>
+            )}
 
           </section>
-        )}
-
-        {/* RESULT */}
-
-        {finished && (
+        ) : (
           <section className="result">
 
             <div className="trophy">
@@ -205,29 +179,31 @@ export default function Puzzles() {
             </div>
 
             <h2>
-              Puzzle Champion!
+              Amazing Job! 🎉
             </h2>
 
             <p>
-              You completed all the puzzles! 🌟
+              You completed all the puzzles!
             </p>
 
-            <div className="score">
-              {score} / {puzzles.length}
+            <div className="finalStars">
+              ⭐ {stars} Stars
             </div>
 
-            <p>
-              Keep learning and keep playing! ❤️
-            </p>
+            <div className="resultButtons">
 
-            <div className="buttons">
-
-              <button onClick={restart}>
+              <button
+                onClick={restart}
+                className="restart"
+              >
                 🔄 Play Again
               </button>
 
-              <Link href="/games">
-                🎮 More Games
+              <Link
+                href="/dashboard"
+                className="dashboard"
+              >
+                🌟 Dashboard
               </Link>
 
             </div>
@@ -235,41 +211,24 @@ export default function Puzzles() {
           </section>
         )}
 
-        {/* LEARNING MESSAGE */}
+        <section className="tip">
 
-        <section className="learning">
-
-          <div className="learningEmoji">
-            🧠
+          <div>
+            💡
           </div>
 
           <div>
-
-            <h2>
-              Puzzles make your brain stronger! 🌟
-            </h2>
+            <h3>
+              Little Learning Tip
+            </h3>
 
             <p>
-              Solving simple puzzles helps children
-              improve thinking, memory and problem-solving
-              skills.
+              Think carefully before choosing your
+              answer. Every puzzle helps your brain grow! 🧠
             </p>
-
           </div>
 
         </section>
-
-        {/* HOME */}
-
-        <div className="homeButton">
-
-          <Link href="/">
-            🏠 Back to Home
-          </Link>
-
-        </div>
-
-        {/* FOOTER */}
 
         <footer>
 
@@ -280,6 +239,10 @@ export default function Puzzles() {
           <p>
             Learn • Play • Discover
           </p>
+
+          <Link href="/">
+            🏠 Back to Home
+          </Link>
 
           <p>
             © 2026 Chinnaari Kids
@@ -301,8 +264,6 @@ export default function Puzzles() {
           color: #333;
           font-family: Arial, sans-serif;
         }
-
-        /* HEADER */
 
         .header {
           min-height: 70px;
@@ -334,7 +295,7 @@ export default function Puzzles() {
 
         nav {
           display: flex;
-          gap: 18px;
+          gap: 15px;
           flex-wrap: wrap;
         }
 
@@ -342,35 +303,33 @@ export default function Puzzles() {
           color: #444;
           text-decoration: none;
           font-weight: 600;
+          font-size: 14px;
         }
 
-        nav a:hover,
-        nav a.active {
+        nav a:hover {
           color: #ff6b6b;
         }
-
-        /* HERO */
 
         .hero {
           text-align: center;
 
-          padding: 55px 20px;
+          padding: 45px 20px;
 
           background:
             linear-gradient(
               135deg,
-              #fff0c7,
-              #e4ddff
+              #e5ddff,
+              #dff4ff
             );
         }
 
-        .heroEmoji {
+        .heroIcon {
           font-size: 70px;
         }
 
         .hero h1 {
-          font-size: 43px;
-          margin: 15px 0 10px;
+          font-size: 40px;
+          margin: 10px 0;
         }
 
         .hero p {
@@ -378,57 +337,48 @@ export default function Puzzles() {
           color: #555;
         }
 
-        /* PUZZLE BOX */
+        .gameBox {
+          max-width: 700px;
 
-        .puzzleBox {
-          max-width: 750px;
+          margin: 45px auto;
 
-          margin: 55px auto;
-
-          padding: 35px;
+          padding: 35px 25px;
 
           background: white;
 
           border-radius: 30px;
+
+          text-align: center;
 
           box-shadow:
             0 7px 25px
             rgba(0,0,0,0.08);
         }
 
-        .top {
-          display: flex;
-
-          justify-content: space-between;
-
-          gap: 15px;
+        .progress {
+          color: #777;
 
           font-weight: bold;
-
-          color: #666;
         }
 
-        .puzzleContent {
-          text-align: center;
-        }
-
-        .puzzleContent h2 {
-          font-size: 28px;
-          margin: 45px 0 25px;
-        }
-
-        .puzzleDisplay {
+        .stars {
           display: inline-block;
 
-          padding: 20px 30px;
+          margin-top: 12px;
 
-          margin-bottom: 30px;
+          padding: 8px 16px;
 
           border-radius: 20px;
 
-          background: #eee5ff;
+          background: #fff0b8;
 
-          font-size: 32px;
+          font-weight: bold;
+        }
+
+        .question {
+          margin: 35px 0;
+
+          font-size: 30px;
 
           font-weight: bold;
         }
@@ -436,33 +386,33 @@ export default function Puzzles() {
         .options {
           display: grid;
 
-          grid-template-columns:
-            repeat(2, 1fr);
-
           gap: 15px;
         }
 
-        .options button {
-          border: none;
+        .option {
+          border: 3px solid transparent;
 
-          padding: 18px;
+          padding: 17px;
 
           border-radius: 20px;
 
-          background: #dff3ff;
+          background: #eef7ff;
 
-          font-size: 18px;
+          font-size: 19px;
 
           font-weight: bold;
 
           cursor: pointer;
 
           transition:
-            transform 0.2s;
+            transform 0.2s,
+            background 0.2s;
         }
 
-        .options button:hover {
-          transform: scale(1.04);
+        .option:hover {
+          transform: scale(1.02);
+
+          background: #dff0ff;
         }
 
         .message {
@@ -472,27 +422,55 @@ export default function Puzzles() {
 
           border-radius: 18px;
 
-          background: #fff0bd;
+          font-size: 19px;
+
+          font-weight: bold;
+        }
+
+        .correct {
+          background: #dcf6d9;
+
+          color: #237a25;
+        }
+
+        .wrong {
+          background: #ffe0e0;
+
+          color: #b83232;
+        }
+
+        .nextButton {
+          margin-top: 20px;
+
+          border: none;
+
+          padding: 14px 25px;
+
+          border-radius: 25px;
+
+          background: #4caf50;
+
+          color: white;
+
+          font-size: 16px;
 
           font-weight: bold;
 
-          line-height: 1.5;
+          cursor: pointer;
         }
-
-        /* RESULT */
 
         .result {
           max-width: 650px;
 
-          margin: 65px auto;
+          margin: 50px auto;
 
-          padding: 50px 30px;
+          padding: 45px 25px;
+
+          text-align: center;
 
           background: white;
 
           border-radius: 30px;
-
-          text-align: center;
 
           box-shadow:
             0 7px 25px
@@ -500,7 +478,7 @@ export default function Puzzles() {
         }
 
         .trophy {
-          font-size: 80px;
+          font-size: 90px;
         }
 
         .result h2 {
@@ -508,22 +486,28 @@ export default function Puzzles() {
         }
 
         .result p {
+          color: #666;
+
           font-size: 18px;
-
-          color: #555;
-
-          line-height: 1.6;
         }
 
-        .score {
-          font-size: 42px;
+        .finalStars {
+          display: inline-block;
 
-          font-weight: 800;
+          margin: 15px;
 
-          margin: 20px 0;
+          padding: 12px 22px;
+
+          border-radius: 25px;
+
+          background: #fff0b8;
+
+          font-size: 22px;
+
+          font-weight: bold;
         }
 
-        .buttons {
+        .resultButtons {
           display: flex;
 
           justify-content: center;
@@ -532,20 +516,16 @@ export default function Puzzles() {
 
           flex-wrap: wrap;
 
-          margin-top: 25px;
+          margin-top: 20px;
         }
 
-        .buttons button,
-        .buttons a {
-          border: none;
-
-          padding: 13px 20px;
+        .restart,
+        .dashboard {
+          padding: 13px 21px;
 
           border-radius: 25px;
 
-          background: #ff6b6b;
-
-          color: white;
+          border: none;
 
           text-decoration: none;
 
@@ -554,78 +534,56 @@ export default function Puzzles() {
           cursor: pointer;
         }
 
-        /* LEARNING */
+        .restart {
+          background: #ff6b6b;
 
-        .learning {
-          max-width: 1000px;
+          color: white;
+        }
 
-          margin: 20px auto 50px;
+        .dashboard {
+          background: #ffd84d;
 
-          padding: 35px;
+          color: #333;
+        }
+
+        .tip {
+          max-width: 700px;
+
+          margin: 0 auto 50px;
+
+          padding: 25px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 25px;
+          gap: 20px;
 
-          border-radius: 30px;
+          border-radius: 25px;
 
           background:
             linear-gradient(
               135deg,
-              #e0f6ff,
-              #e8ddff
+              #fff0b8,
+              #e0f6ff
             );
-
-          box-shadow:
-            0 6px 20px
-            rgba(0,0,0,0.06);
         }
 
-        .learningEmoji {
-          font-size: 70px;
+        .tip > div:first-child {
+          font-size: 45px;
         }
 
-        .learning h2 {
+        .tip h3 {
           margin-top: 0;
-
-          font-size: 27px;
         }
 
-        .learning p {
+        .tip p {
+          margin-bottom: 0;
+
           color: #555;
 
-          font-size: 17px;
-
-          line-height: 1.7;
+          line-height: 1.6;
         }
-
-        /* HOME */
-
-        .homeButton {
-          text-align: center;
-
-          margin: 40px 0 55px;
-        }
-
-        .homeButton a {
-          display: inline-block;
-
-          padding: 13px 22px;
-
-          border-radius: 25px;
-
-          background: #333;
-
-          color: white;
-
-          text-decoration: none;
-
-          font-weight: bold;
-        }
-
-        /* FOOTER */
 
         footer {
           padding: 35px 20px;
@@ -642,12 +600,15 @@ export default function Puzzles() {
         }
 
         footer p {
-          margin: 8px;
+          margin: 10px;
         }
 
-        /* TABLET */
+        footer a {
+          color: white;
+          text-decoration: none;
+        }
 
-        @media (max-width: 800px) {
+        @media (max-width: 850px) {
 
           .header {
             flex-direction: column;
@@ -656,52 +617,42 @@ export default function Puzzles() {
 
           nav {
             justify-content: center;
-            gap: 12px;
-          }
-
-          nav a {
-            font-size: 13px;
-          }
-
-          .learning {
-            margin-left: 20px;
-            margin-right: 20px;
-
-            flex-direction: column;
-
-            text-align: center;
           }
 
         }
 
-        /* MOBILE */
+        @media (max-width: 600px) {
 
-        @media (max-width: 550px) {
+          .logo {
+            font-size: 21px;
+          }
+
+          nav {
+            gap: 10px;
+          }
+
+          nav a {
+            font-size: 12px;
+          }
 
           .hero h1 {
-            font-size: 34px;
+            font-size: 32px;
           }
 
-          .puzzleBox {
-            margin: 35px 20px;
-
-            padding: 25px 20px;
+          .question {
+            font-size: 24px;
           }
 
-          .puzzleContent h2 {
-            font-size: 23px;
+          .gameBox,
+          .result,
+          .tip {
+            margin-left: 20px;
+            margin-right: 20px;
           }
 
-          .puzzleDisplay {
-            font-size: 25px;
-          }
-
-          .options {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .learning {
-            padding: 25px 20px;
+          .tip {
+            flex-direction: column;
+            text-align: center;
           }
 
         }
@@ -709,4 +660,4 @@ export default function Puzzles() {
       `}</style>
     </>
   );
-    }
+                  }
