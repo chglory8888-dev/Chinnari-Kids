@@ -3,225 +3,86 @@ import Link from "next/link";
 import { useState } from "react";
 
 const countries = [
-  {
-    name: "India",
-    flag: "🇮🇳",
-    capital: "New Delhi",
-    currency: "Indian Rupee",
-    symbol: "₹",
-    continent: "Asia",
-    place: "Taj Mahal",
-  },
-  {
-    name: "United States",
-    flag: "🇺🇸",
-    capital: "Washington, D.C.",
-    currency: "US Dollar",
-    symbol: "$",
-    continent: "North America",
-    place: "Statue of Liberty",
-  },
-  {
-    name: "United Kingdom",
-    flag: "🇬🇧",
-    capital: "London",
-    currency: "Pound Sterling",
-    symbol: "£",
-    continent: "Europe",
-    place: "Big Ben",
-  },
-  {
-    name: "Japan",
-    flag: "🇯🇵",
-    capital: "Tokyo",
-    currency: "Japanese Yen",
-    symbol: "¥",
-    continent: "Asia",
-    place: "Mount Fuji",
-  },
-  {
-    name: "China",
-    flag: "🇨🇳",
-    capital: "Beijing",
-    currency: "Chinese Yuan",
-    symbol: "¥",
-    continent: "Asia",
-    place: "Great Wall of China",
-  },
-  {
-    name: "Australia",
-    flag: "🇦🇺",
-    capital: "Canberra",
-    currency: "Australian Dollar",
-    symbol: "$",
-    continent: "Oceania",
-    place: "Sydney Opera House",
-  },
-  {
-    name: "France",
-    flag: "🇫🇷",
-    capital: "Paris",
-    currency: "Euro",
-    symbol: "€",
-    continent: "Europe",
-    place: "Eiffel Tower",
-  },
-  {
-    name: "Germany",
-    flag: "🇩🇪",
-    capital: "Berlin",
-    currency: "Euro",
-    symbol: "€",
-    continent: "Europe",
-    place: "Brandenburg Gate",
-  },
-  {
-    name: "Italy",
-    flag: "🇮🇹",
-    capital: "Rome",
-    currency: "Euro",
-    symbol: "€",
-    continent: "Europe",
-    place: "Colosseum",
-  },
-  {
-    name: "Canada",
-    flag: "🇨🇦",
-    capital: "Ottawa",
-    currency: "Canadian Dollar",
-    symbol: "$",
-    continent: "North America",
-    place: "Niagara Falls",
-  },
-  {
-    name: "Brazil",
-    flag: "🇧🇷",
-    capital: "Brasília",
-    currency: "Brazilian Real",
-    symbol: "R$",
-    continent: "South America",
-    place: "Christ the Redeemer",
-  },
-  {
-    name: "South Africa",
-    flag: "🇿🇦",
-    capital: "Pretoria",
-    currency: "South African Rand",
-    symbol: "R",
-    continent: "Africa",
-    place: "Table Mountain",
-  },
-  {
-    name: "South Korea",
-    flag: "🇰🇷",
-    capital: "Seoul",
-    currency: "South Korean Won",
-    symbol: "₩",
-    continent: "Asia",
-    place: "Gyeongbokgung Palace",
-  },
-  {
-    name: "Singapore",
-    flag: "🇸🇬",
-    capital: "Singapore",
-    currency: "Singapore Dollar",
-    symbol: "$",
-    continent: "Asia",
-    place: "Marina Bay Sands",
-  },
-  {
-    name: "United Arab Emirates",
-    flag: "🇦🇪",
-    capital: "Abu Dhabi",
-    currency: "UAE Dirham",
-    symbol: "د.إ",
-    continent: "Asia",
-    place: "Burj Khalifa",
-  },
-  {
-    name: "Egypt",
-    flag: "🇪🇬",
-    capital: "Cairo",
-    currency: "Egyptian Pound",
-    symbol: "£",
-    continent: "Africa",
-    place: "Pyramids of Giza",
-  },
-  {
-    name: "Greece",
-    flag: "🇬🇷",
-    capital: "Athens",
-    currency: "Euro",
-    symbol: "€",
-    continent: "Europe",
-    place: "Acropolis",
-  },
-  {
-    name: "Mexico",
-    flag: "🇲🇽",
-    capital: "Mexico City",
-    currency: "Mexican Peso",
-    symbol: "$",
-    continent: "North America",
-    place: "Chichen Itza",
-  },
-  {
-    name: "New Zealand",
-    flag: "🇳🇿",
-    capital: "Wellington",
-    currency: "New Zealand Dollar",
-    symbol: "$",
-    continent: "Oceania",
-    place: "Milford Sound",
-  },
-  {
-    name: "Switzerland",
-    flag: "🇨🇭",
-    capital: "Bern",
-    currency: "Swiss Franc",
-    symbol: "CHF",
-    continent: "Europe",
-    place: "Matterhorn",
-  },
+  { name: "India", flag: "🇮🇳", capital: "New Delhi", currency: "Indian Rupee", continent: "Asia" },
+  { name: "United States", flag: "🇺🇸", capital: "Washington, D.C.", currency: "US Dollar", continent: "North America" },
+  { name: "United Kingdom", flag: "🇬🇧", capital: "London", currency: "Pound Sterling", continent: "Europe" },
+  { name: "Japan", flag: "🇯🇵", capital: "Tokyo", currency: "Japanese Yen", continent: "Asia" },
+  { name: "China", flag: "🇨🇳", capital: "Beijing", currency: "Chinese Yuan", continent: "Asia" },
+  { name: "Australia", flag: "🇦🇺", capital: "Canberra", currency: "Australian Dollar", continent: "Oceania" },
+  { name: "Canada", flag: "🇨🇦", capital: "Ottawa", currency: "Canadian Dollar", continent: "North America" },
+  { name: "France", flag: "🇫🇷", capital: "Paris", currency: "Euro", continent: "Europe" },
+  { name: "Germany", flag: "🇩🇪", capital: "Berlin", currency: "Euro", continent: "Europe" },
+  { name: "Italy", flag: "🇮🇹", capital: "Rome", currency: "Euro", continent: "Europe" },
+  { name: "Spain", flag: "🇪🇸", capital: "Madrid", currency: "Euro", continent: "Europe" },
+  { name: "Brazil", flag: "🇧🇷", capital: "Brasília", currency: "Brazilian Real", continent: "South America" },
+  { name: "Mexico", flag: "🇲🇽", capital: "Mexico City", currency: "Mexican Peso", continent: "North America" },
+  { name: "South Korea", flag: "🇰🇷", capital: "Seoul", currency: "South Korean Won", continent: "Asia" },
+  { name: "Singapore", flag: "🇸🇬", capital: "Singapore", currency: "Singapore Dollar", continent: "Asia" },
+  { name: "Thailand", flag: "🇹🇭", capital: "Bangkok", currency: "Thai Baht", continent: "Asia" },
+  { name: "Malaysia", flag: "🇲🇾", capital: "Kuala Lumpur", currency: "Malaysian Ringgit", continent: "Asia" },
+  { name: "Indonesia", flag: "🇮🇩", capital: "Jakarta", currency: "Indonesian Rupiah", continent: "Asia" },
+  { name: "Nepal", flag: "🇳🇵", capital: "Kathmandu", currency: "Nepalese Rupee", continent: "Asia" },
+  { name: "Sri Lanka", flag: "🇱🇰", capital: "Sri Jayawardenepura Kotte", currency: "Sri Lankan Rupee", continent: "Asia" },
+  { name: "United Arab Emirates", flag: "🇦🇪", capital: "Abu Dhabi", currency: "UAE Dirham", continent: "Asia" },
+  { name: "Saudi Arabia", flag: "🇸🇦", capital: "Riyadh", currency: "Saudi Riyal", continent: "Asia" },
+  { name: "South Africa", flag: "🇿🇦", capital: "Pretoria", currency: "South African Rand", continent: "Africa" },
+  { name: "Egypt", flag: "🇪🇬", capital: "Cairo", currency: "Egyptian Pound", continent: "Africa" },
+  { name: "Nigeria", flag: "🇳🇬", capital: "Abuja", currency: "Nigerian Naira", continent: "Africa" },
+  { name: "Kenya", flag: "🇰🇪", capital: "Nairobi", currency: "Kenyan Shilling", continent: "Africa" },
+  { name: "New Zealand", flag: "🇳🇿", capital: "Wellington", currency: "New Zealand Dollar", continent: "Oceania" },
+  { name: "Switzerland", flag: "🇨🇭", capital: "Bern", currency: "Swiss Franc", continent: "Europe" },
+  { name: "Russia", flag: "🇷🇺", capital: "Moscow", currency: "Russian Ruble", continent: "Europe / Asia" },
+  { name: "Greece", flag: "🇬🇷", capital: "Athens", currency: "Euro", continent: "Europe" },
+  { name: "Turkey", flag: "🇹🇷", capital: "Ankara", currency: "Turkish Lira", continent: "Europe / Asia" },
+  { name: "Argentina", flag: "🇦🇷", capital: "Buenos Aires", currency: "Argentine Peso", continent: "South America" },
+  { name: "Chile", flag: "🇨🇱", capital: "Santiago", currency: "Chilean Peso", continent: "South America" },
+  { name: "Peru", flag: "🇵🇪", capital: "Lima", currency: "Peruvian Sol", continent: "South America" },
+  { name: "Colombia", flag: "🇨🇴", capital: "Bogotá", currency: "Colombian Peso", continent: "South America" },
 ];
 
 export default function Countries() {
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState(0);
-  const [quizIndex, setQuizIndex] = useState(0);
+  const [continent, setContinent] = useState("All");
+  const [question, setQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState("");
 
-  const filteredCountries = countries.filter((country) =>
-    country.name
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+  const continents = [
+    "All",
+    "Asia",
+    "Europe",
+    "Africa",
+    "North America",
+    "South America",
+    "Oceania",
+  ];
 
-  const current = countries[selected];
-  const quizCountry = countries[quizIndex];
+  const filteredCountries = countries.filter((country) => {
+    const matchesSearch =
+      `${country.name} ${country.capital} ${country.currency}`
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-  function selectCountry(index) {
-    setSelected(index);
-    setMessage("");
-  }
+    const matchesContinent =
+      continent === "All" ||
+      country.continent.includes(continent);
 
-  function answerQuiz(name) {
-    if (name === quizCountry.name) {
-      setScore((value) => value + 1);
-      setMessage("🎉 Correct! Amazing!");
+    return matchesSearch && matchesContinent;
+  });
+
+  const current = countries[question];
+
+  function checkAnswer(answer) {
+    if (answer === current.name) {
+      setScore((old) => old + 1);
+      setMessage("🎉 Correct! Excellent!");
     } else {
-      setMessage(
-        `😊 Try again! The answer is ${quizCountry.name}.`
-      );
+      setMessage(`😊 Correct answer: ${current.name}`);
     }
   }
 
-  function nextQuiz() {
-    const next =
-      (quizIndex + 1) % countries.length;
-
-    setQuizIndex(next);
+  function nextQuestion() {
+    setQuestion((old) => (old + 1) % countries.length);
     setMessage("");
   }
 
@@ -232,7 +93,7 @@ export default function Countries() {
 
         <meta
           name="description"
-          content="Learn countries, flags, capitals, currencies, continents and famous places with Chinnaari Kids."
+          content="Learn countries, flags, capitals, currencies and continents with fun quizzes for kids."
         />
 
         <meta
@@ -252,24 +113,22 @@ export default function Countries() {
           </Link>
 
           <nav>
-            <Link href="/">
-              Home
+            <Link href="/">Home</Link>
+
+            <Link href="/indian-states">
+              🇮🇳 States
             </Link>
 
-            <Link href="/world-explorer">
-              🌍 World Explorer
+            <Link href="/capitals">
+              🏛️ Capitals
             </Link>
 
-            <Link href="/numbers">
-              🔢 Numbers
+            <Link href="/currencies">
+              💰 Currencies
             </Link>
 
-            <Link href="/abc">
-              🔤 ABC
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
+            <Link href="/famous-places">
+              🗺️ Places
             </Link>
           </nav>
 
@@ -279,37 +138,60 @@ export default function Countries() {
 
         <section className="hero">
 
-          <div className="heroFlags">
-            🇮🇳 🇺🇸 🇬🇧 🇯🇵 🇫🇷
+          <div className="worldIcon">
+            🌍
           </div>
 
           <h1>
-            🚩 Countries & Flags
+            Countries of the World
           </h1>
 
           <p>
-            Explore countries, flags, capitals,
-            currencies and amazing places!
+            Learn country names, flags, capitals
+            and currencies!
           </p>
 
-          <div className="badge">
-            🌍 Learn About The World
+          <div className="flags">
+            🇮🇳 🇺🇸 🇬🇧 🇯🇵 🇫🇷 🇦🇺 🇧🇷
           </div>
 
         </section>
 
         {/* SEARCH */}
 
-        <section className="searchSection">
+        <section className="searchArea">
 
           <input
             type="text"
-            placeholder="🔍 Search a country..."
+            placeholder="🔍 Search country, capital or currency..."
             value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
+            onChange={(e) => setSearch(e.target.value)}
           />
+
+          <div className="filters">
+
+            {continents.map((item) => (
+              <button
+                key={item}
+                className={
+                  continent === item
+                    ? "active"
+                    : ""
+                }
+                onClick={() => setContinent(item)}
+              >
+                {item === "All" && "🌍 "}
+                {item === "Asia" && "🌏 "}
+                {item === "Europe" && "🇪🇺 "}
+                {item === "Africa" && "🌍 "}
+                {item === "North America" && "🌎 "}
+                {item === "South America" && "🌎 "}
+                {item === "Oceania" && "🌊 "}
+                {item}
+              </button>
+            ))}
+
+          </div>
 
           <p>
             Showing {filteredCountries.length} countries
@@ -321,96 +203,36 @@ export default function Countries() {
 
         <section className="countryGrid">
 
-          {filteredCountries.map((country) => {
+          {filteredCountries.map((country) => (
 
-            const originalIndex =
-              countries.findIndex(
-                (item) =>
-                  item.name === country.name
-              );
+            <div
+              className="countryCard"
+              key={country.name}
+            >
 
-            return (
-              <button
-                key={country.name}
-                className={
-                  selected === originalIndex
-                    ? "countryCard selected"
-                    : "countryCard"
-                }
-                onClick={() =>
-                  selectCountry(originalIndex)
-                }
-              >
-
-                <div className="flag">
-                  {country.flag}
-                </div>
-
-                <h2>
-                  {country.name}
-                </h2>
-
-                <p>
-                  🏛️ {country.capital}
-                </p>
-
-                <span>
-                  🌎 {country.continent}
-                </span>
-
-              </button>
-            );
-          })}
-
-        </section>
-
-        {/* COUNTRY DETAILS */}
-
-        <section className="details">
-
-          <div className="largeFlag">
-            {current.flag}
-          </div>
-
-          <div className="detailsContent">
-
-            <h2>
-              {current.name}
-            </h2>
-
-            <div className="infoGrid">
-
-              <div className="info">
-                <span>🏛️</span>
-                <strong>Capital</strong>
-                <p>{current.capital}</p>
+              <div className="flag">
+                {country.flag}
               </div>
 
-              <div className="info">
-                <span>💰</span>
-                <strong>Currency</strong>
-                <p>
-                  {current.currency}
-                  <br />
-                  {current.symbol}
-                </p>
+              <h2>
+                {country.name}
+              </h2>
+
+              <div className="info capital">
+                🏛️ {country.capital}
               </div>
 
-              <div className="info">
-                <span>🌎</span>
-                <strong>Continent</strong>
-                <p>{current.continent}</p>
+              <div className="info currency">
+                💰 {country.currency}
               </div>
 
-              <div className="info">
-                <span>⭐</span>
-                <strong>Famous Place</strong>
-                <p>{current.place}</p>
+              <div className="continentText">
+                🌍 {country.continent}
               </div>
 
             </div>
 
-          </div>
+          ))}
 
         </section>
 
@@ -418,10 +240,10 @@ export default function Countries() {
 
         <section className="quiz">
 
-          <div className="quizHeader">
+          <div className="quizTop">
 
             <span>
-              🧠 Flag Quiz
+              🧠 Country Quiz
             </span>
 
             <span>
@@ -434,26 +256,44 @@ export default function Countries() {
             Which country has this flag?
           </h2>
 
-          <div className="quizFlag">
-            {quizCountry.flag}
+          <div className="question">
+
+            <div className="bigFlag">
+              {current.flag}
+            </div>
+
+            <p>
+              Look carefully at the flag!
+            </p>
+
           </div>
 
-          <div className="quizOptions">
+          <div className="answers">
 
-            {countries
-              .slice(
-                quizIndex % 4,
-                (quizIndex % 4) + 4
+            {[
+              current.name,
+              countries[
+                (question + 1) % countries.length
+              ].name,
+              countries[
+                (question + 2) % countries.length
+              ].name,
+              countries[
+                (question + 3) % countries.length
+              ].name,
+            ]
+              .filter(
+                (answer, index, array) =>
+                  array.indexOf(answer) === index
               )
-              .map((country) => (
+              .sort(() => Math.random() - 0.5)
+              .map((answer) => (
 
                 <button
-                  key={country.name}
-                  onClick={() =>
-                    answerQuiz(country.name)
-                  }
+                  key={answer}
+                  onClick={() => checkAnswer(answer)}
                 >
-                  {country.name}
+                  🌍 {answer}
                 </button>
 
               ))}
@@ -467,36 +307,67 @@ export default function Countries() {
           )}
 
           <button
-            className="nextButton"
-            onClick={nextQuiz}
+            className="next"
+            onClick={nextQuestion}
           >
             Next Question ➡️
           </button>
 
         </section>
 
-        {/* FUN FACT */}
+        {/* LEARNING */}
 
-        <section className="fact">
+        <section className="learning">
 
-          <div>
+          <div className="learningIcon">
             🌍
           </div>
 
-          <h2>
-            Explore More!
-          </h2>
+          <div>
 
-          <p>
-            Every country has its own flag,
-            culture, language, food and traditions.
-          </p>
+            <h2>
+              Let's Explore the World!
+            </h2>
 
-          <Link
-            href="/world-explorer"
-            className="backButton"
-          >
-            🌎 Back to World Explorer
+            <p>
+              Every country has its own flag,
+              language, culture, food and traditions.
+              Learning about countries helps us
+              understand our amazing world.
+            </p>
+
+            <p className="telugu">
+              ప్రతి దేశానికి ప్రత్యేకమైన జెండా,
+              సంస్కృతి, ఆహారం మరియు సంప్రదాయాలు
+              ఉంటాయి.
+            </p>
+
+          </div>
+
+        </section>
+
+        {/* LINKS */}
+
+        <section className="links">
+
+          <Link href="/indian-states">
+            🇮🇳 Indian States
+          </Link>
+
+          <Link href="/capitals">
+            🏛️ Capitals
+          </Link>
+
+          <Link href="/currencies">
+            💰 Currencies
+          </Link>
+
+          <Link href="/famous-places">
+            🗺️ Famous Places
+          </Link>
+
+          <Link href="/world-quiz">
+            🧠 World Quiz
           </Link>
 
         </section>
@@ -581,44 +452,40 @@ export default function Countries() {
           background:
             linear-gradient(
               135deg,
-              #ffe1eb,
-              #e0f3ff,
-              #eee4ff
+              #dff6ff,
+              #eee4ff,
+              #fff0c8
             );
         }
 
-        .heroFlags {
-          font-size: 50px;
-          letter-spacing: 8px;
+        .worldIcon {
+          font-size: 90px;
         }
 
         .hero h1 {
           font-size: 45px;
-          margin: 18px 0 10px;
+          margin: 10px 0;
         }
 
         .hero p {
           font-size: 18px;
           color: #555;
-          line-height: 1.7;
         }
 
-        .badge {
-          display: inline-block;
-          padding: 10px 18px;
-          background: white;
-          border-radius: 25px;
-          font-weight: bold;
+        .flags {
+          margin-top: 20px;
+          font-size: 35px;
+          letter-spacing: 5px;
         }
 
-        .searchSection {
-          max-width: 800px;
-          margin: 35px auto 15px;
+        .searchArea {
+          max-width: 1000px;
+          margin: 35px auto 20px;
           padding: 0 20px;
           text-align: center;
         }
 
-        .searchSection input {
+        .searchArea input {
           width: 100%;
           padding: 16px 20px;
           border: 2px solid #ddd;
@@ -628,146 +495,115 @@ export default function Countries() {
           background: white;
         }
 
-        .searchSection input:focus {
-          border-color: #ff8a8a;
+        .searchArea input:focus {
+          border-color: #8ecfff;
         }
 
-        .searchSection p {
+        .filters {
+          display: flex;
+          gap: 8px;
+          justify-content: center;
+          flex-wrap: wrap;
+          margin: 18px 0;
+        }
+
+        .filters button {
+          border: none;
+          padding: 10px 15px;
+          border-radius: 20px;
+          background: white;
+          cursor: pointer;
+          font-weight: bold;
+        }
+
+        .filters button:hover,
+        .filters button.active {
+          background: #333;
+          color: white;
+        }
+
+        .searchArea p {
           color: #777;
         }
 
         .countryGrid {
           max-width: 1100px;
-          margin: 25px auto 45px;
+          margin: 25px auto 50px;
           padding: 0 20px;
           display: grid;
           grid-template-columns:
             repeat(4, 1fr);
-          gap: 15px;
+          gap: 16px;
         }
 
         .countryCard {
-          border: 3px solid transparent;
-          padding: 22px 10px;
-          border-radius: 25px;
+          padding: 25px 15px;
+          text-align: center;
           background: white;
-          cursor: pointer;
+          border-radius: 25px;
           box-shadow:
             0 5px 18px rgba(0,0,0,.06);
           transition: .2s;
         }
 
         .countryCard:hover {
-          transform: translateY(-5px);
-        }
-
-        .countryCard.selected {
-          border-color: #ff6b6b;
-          transform: translateY(-5px);
+          transform: translateY(-6px);
         }
 
         .flag {
-          font-size: 60px;
+          font-size: 65px;
         }
 
         .countryCard h2 {
           font-size: 19px;
-          margin: 10px 0 8px;
-        }
-
-        .countryCard p {
-          color: #666;
-          margin: 5px;
-        }
-
-        .countryCard span {
-          display: inline-block;
-          margin-top: 8px;
-          padding: 5px 10px;
-          background: #f1f1f1;
-          border-radius: 15px;
-          font-size: 12px;
-        }
-
-        .details {
-          max-width: 1000px;
-          margin: 20px auto 55px;
-          padding: 40px;
-          display: flex;
-          align-items: center;
-          gap: 45px;
-          background: white;
-          border-radius: 32px;
-          box-shadow:
-            0 8px 30px rgba(0,0,0,.08);
-        }
-
-        .largeFlag {
-          font-size: 125px;
-          min-width: 180px;
-          text-align: center;
-        }
-
-        .detailsContent {
-          flex: 1;
-        }
-
-        .detailsContent h2 {
-          font-size: 35px;
-          margin-top: 0;
-        }
-
-        .infoGrid {
-          display: grid;
-          grid-template-columns:
-            repeat(2, 1fr);
-          gap: 12px;
+          margin: 12px 0;
         }
 
         .info {
-          padding: 15px;
-          border-radius: 18px;
-          background: #f7f7f7;
+          padding: 9px;
+          margin-top: 8px;
+          border-radius: 14px;
+          font-size: 13px;
+          font-weight: bold;
         }
 
-        .info span {
-          font-size: 25px;
+        .capital {
+          background: #e6f4ff;
         }
 
-        .info strong {
-          display: block;
-          margin-top: 5px;
+        .currency {
+          background: #fff0ce;
         }
 
-        .info p {
-          margin-bottom: 0;
-          color: #666;
-          line-height: 1.5;
+        .continentText {
+          margin-top: 12px;
+          font-size: 13px;
+          color: #777;
         }
 
         .quiz {
           max-width: 900px;
-          margin: 20px auto 55px;
+          margin: 30px auto 55px;
           padding: 35px 25px;
           text-align: center;
           border-radius: 32px;
           background:
             linear-gradient(
               135deg,
-              #e8e0ff,
-              #dff5ff
+              #ffe4ed,
+              #e5e0ff
             );
           box-shadow:
             0 8px 30px rgba(0,0,0,.08);
         }
 
-        .quizHeader {
+        .quizTop {
           display: flex;
           justify-content: space-between;
           gap: 10px;
         }
 
-        .quizHeader span {
+        .quizTop span {
           padding: 9px 15px;
           border-radius: 20px;
           background: white;
@@ -775,35 +611,46 @@ export default function Countries() {
         }
 
         .quiz h2 {
-          font-size: 28px;
+          font-size: 27px;
         }
 
-        .quizFlag {
-          font-size: 105px;
-          margin: 20px;
+        .question {
+          display: inline-block;
+          padding: 25px 55px;
+          border-radius: 25px;
+          background: white;
         }
 
-        .quizOptions {
+        .bigFlag {
+          font-size: 100px;
+        }
+
+        .question p {
+          color: #777;
+        }
+
+        .answers {
+          max-width: 650px;
+          margin: 20px auto;
           display: grid;
           grid-template-columns:
             repeat(2, 1fr);
           gap: 12px;
-          max-width: 600px;
-          margin: auto;
         }
 
-        .quizOptions button {
+        .answers button {
           border: none;
           padding: 15px;
           border-radius: 20px;
           background: white;
-          cursor: pointer;
-          font-weight: bold;
           font-size: 15px;
+          font-weight: bold;
+          cursor: pointer;
         }
 
-        .quizOptions button:hover {
-          background: #ffebeb;
+        .answers button:hover {
+          background: #fff0dc;
+          transform: scale(1.02);
         }
 
         .message {
@@ -812,9 +659,9 @@ export default function Countries() {
           font-weight: bold;
         }
 
-        .nextButton {
+        .next {
           border: none;
-          padding: 13px 22px;
+          padding: 13px 23px;
           border-radius: 25px;
           background: #4caf50;
           color: white;
@@ -822,33 +669,41 @@ export default function Countries() {
           cursor: pointer;
         }
 
-        .fact {
-          max-width: 800px;
-          margin: 30px auto 55px;
-          padding: 40px 25px;
-          text-align: center;
+        .learning {
+          max-width: 850px;
+          margin: 30px auto 50px;
+          padding: 30px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
           background: white;
           border-radius: 30px;
           box-shadow:
-            0 6px 25px rgba(0,0,0,.07);
+            0 6px 20px rgba(0,0,0,.06);
         }
 
-        .fact > div {
+        .learningIcon {
           font-size: 65px;
         }
 
-        .fact h2 {
-          font-size: 28px;
-        }
-
-        .fact p {
+        .learning p {
           color: #666;
-          line-height: 1.7;
+          line-height: 1.6;
         }
 
-        .backButton {
-          display: inline-block;
-          margin-top: 10px;
+        .telugu {
+          font-weight: bold;
+        }
+
+        .links {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin: 20px 20px 50px;
+        }
+
+        .links a {
           padding: 13px 20px;
           border-radius: 25px;
           background: #333;
@@ -868,7 +723,7 @@ export default function Countries() {
           margin: 8px;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 950px) {
 
           .countryGrid {
             grid-template-columns:
@@ -887,21 +742,21 @@ export default function Countries() {
             font-size: 36px;
           }
 
-          .details {
+          .countryGrid {
+            grid-template-columns:
+              repeat(2, 1fr);
+          }
+
+          .learning {
             margin-left: 15px;
             margin-right: 15px;
-            padding: 30px 20px;
             flex-direction: column;
             text-align: center;
           }
 
-          .infoGrid {
-            grid-template-columns: 1fr;
-          }
-
         }
 
-        @media (max-width: 550px) {
+        @media (max-width: 500px) {
 
           nav {
             gap: 8px;
@@ -911,30 +766,30 @@ export default function Countries() {
             font-size: 12px;
           }
 
-          .countryGrid {
-            grid-template-columns:
-              repeat(2, 1fr);
-          }
-
-          .heroFlags {
-            font-size: 35px;
-            letter-spacing: 3px;
-          }
-
           .hero h1 {
             font-size: 31px;
           }
 
-          .flag {
-            font-size: 48px;
+          .worldIcon {
+            font-size: 70px;
           }
 
-          .quizOptions {
+          .flags {
+            font-size: 26px;
+            letter-spacing: 2px;
+          }
+
+          .countryGrid {
             grid-template-columns: 1fr;
           }
 
-          .quizFlag {
-            font-size: 80px;
+          .answers {
+            grid-template-columns: 1fr;
+          }
+
+          .question {
+            width: 100%;
+            padding: 25px 20px;
           }
 
         }
@@ -942,4 +797,4 @@ export default function Countries() {
       `}</style>
     </>
   );
-      }
+                  }
