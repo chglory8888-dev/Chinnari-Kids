@@ -3,31 +3,36 @@ import Link from "next/link";
 import { useState } from "react";
 
 const currencies = [
-  { country: "India", flag: "🇮🇳", currency: "Indian Rupee", symbol: "₹" },
-  { country: "United States", flag: "🇺🇸", currency: "US Dollar", symbol: "$" },
-  { country: "United Kingdom", flag: "🇬🇧", currency: "Pound Sterling", symbol: "£" },
-  { country: "Japan", flag: "🇯🇵", currency: "Japanese Yen", symbol: "¥" },
-  { country: "China", flag: "🇨🇳", currency: "Chinese Yuan", symbol: "¥" },
-  { country: "Australia", flag: "🇦🇺", currency: "Australian Dollar", symbol: "$" },
-  { country: "Canada", flag: "🇨🇦", currency: "Canadian Dollar", symbol: "$" },
-  { country: "France", flag: "🇫🇷", currency: "Euro", symbol: "€" },
-  { country: "Germany", flag: "🇩🇪", currency: "Euro", symbol: "€" },
-  { country: "Italy", flag: "🇮🇹", currency: "Euro", symbol: "€" },
-  { country: "Spain", flag: "🇪🇸", currency: "Euro", symbol: "€" },
-  { country: "Switzerland", flag: "🇨🇭", currency: "Swiss Franc", symbol: "CHF" },
-  { country: "South Korea", flag: "🇰🇷", currency: "South Korean Won", symbol: "₩" },
-  { country: "Singapore", flag: "🇸🇬", currency: "Singapore Dollar", symbol: "$" },
-  { country: "UAE", flag: "🇦🇪", currency: "UAE Dirham", symbol: "د.إ" },
-  { country: "Saudi Arabia", flag: "🇸🇦", currency: "Saudi Riyal", symbol: "﷼" },
-  { country: "Thailand", flag: "🇹🇭", currency: "Thai Baht", symbol: "฿" },
-  { country: "Malaysia", flag: "🇲🇾", currency: "Malaysian Ringgit", symbol: "RM" },
-  { country: "Indonesia", flag: "🇮🇩", currency: "Indonesian Rupiah", symbol: "Rp" },
-  { country: "Brazil", flag: "🇧🇷", currency: "Brazilian Real", symbol: "R$" },
-  { country: "Mexico", flag: "🇲🇽", currency: "Mexican Peso", symbol: "$" },
-  { country: "South Africa", flag: "🇿🇦", currency: "South African Rand", symbol: "R" },
-  { country: "Egypt", flag: "🇪🇬", currency: "Egyptian Pound", symbol: "£" },
-  { country: "Nepal", flag: "🇳🇵", currency: "Nepalese Rupee", symbol: "रू" },
-  { country: "New Zealand", flag: "🇳🇿", currency: "New Zealand Dollar", symbol: "$" },
+  { country: "India", flag: "🇮🇳", currency: "Indian Rupee", code: "INR", symbol: "₹", capital: "New Delhi" },
+  { country: "United States", flag: "🇺🇸", currency: "US Dollar", code: "USD", symbol: "$", capital: "Washington, D.C." },
+  { country: "United Kingdom", flag: "🇬🇧", currency: "Pound Sterling", code: "GBP", symbol: "£", capital: "London" },
+  { country: "Japan", flag: "🇯🇵", currency: "Japanese Yen", code: "JPY", symbol: "¥", capital: "Tokyo" },
+  { country: "China", flag: "🇨🇳", currency: "Chinese Yuan", code: "CNY", symbol: "¥", capital: "Beijing" },
+  { country: "Australia", flag: "🇦🇺", currency: "Australian Dollar", code: "AUD", symbol: "$", capital: "Canberra" },
+  { country: "Canada", flag: "🇨🇦", currency: "Canadian Dollar", code: "CAD", symbol: "$", capital: "Ottawa" },
+  { country: "France", flag: "🇫🇷", currency: "Euro", code: "EUR", symbol: "€", capital: "Paris" },
+  { country: "Germany", flag: "🇩🇪", currency: "Euro", code: "EUR", symbol: "€", capital: "Berlin" },
+  { country: "Italy", flag: "🇮🇹", currency: "Euro", code: "EUR", symbol: "€", capital: "Rome" },
+  { country: "Spain", flag: "🇪🇸", currency: "Euro", code: "EUR", symbol: "€", capital: "Madrid" },
+  { country: "Brazil", flag: "🇧🇷", currency: "Brazilian Real", code: "BRL", symbol: "R$", capital: "Brasília" },
+  { country: "South Korea", flag: "🇰🇷", currency: "South Korean Won", code: "KRW", symbol: "₩", capital: "Seoul" },
+  { country: "Singapore", flag: "🇸🇬", currency: "Singapore Dollar", code: "SGD", symbol: "$", capital: "Singapore" },
+  { country: "Thailand", flag: "🇹🇭", currency: "Thai Baht", code: "THB", symbol: "฿", capital: "Bangkok" },
+  { country: "Malaysia", flag: "🇲🇾", currency: "Malaysian Ringgit", code: "MYR", symbol: "RM", capital: "Kuala Lumpur" },
+  { country: "Indonesia", flag: "🇮🇩", currency: "Indonesian Rupiah", code: "IDR", symbol: "Rp", capital: "Jakarta" },
+  { country: "Nepal", flag: "🇳🇵", currency: "Nepalese Rupee", code: "NPR", symbol: "रू", capital: "Kathmandu" },
+  { country: "Sri Lanka", flag: "🇱🇰", currency: "Sri Lankan Rupee", code: "LKR", symbol: "Rs", capital: "Sri Jayawardenepura Kotte" },
+  { country: "UAE", flag: "🇦🇪", currency: "UAE Dirham", code: "AED", symbol: "د.إ", capital: "Abu Dhabi" },
+  { country: "Saudi Arabia", flag: "🇸🇦", currency: "Saudi Riyal", code: "SAR", symbol: "﷼", capital: "Riyadh" },
+  { country: "South Africa", flag: "🇿🇦", currency: "South African Rand", code: "ZAR", symbol: "R", capital: "Pretoria" },
+  { country: "Egypt", flag: "🇪🇬", currency: "Egyptian Pound", code: "EGP", symbol: "£", capital: "Cairo" },
+  { country: "Switzerland", flag: "🇨🇭", currency: "Swiss Franc", code: "CHF", symbol: "CHF", capital: "Bern" },
+  { country: "Russia", flag: "🇷🇺", currency: "Russian Ruble", code: "RUB", symbol: "₽", capital: "Moscow" },
+  { country: "Turkey", flag: "🇹🇷", currency: "Turkish Lira", code: "TRY", symbol: "₺", capital: "Ankara" },
+  { country: "Mexico", flag: "🇲🇽", currency: "Mexican Peso", code: "MXN", symbol: "$", capital: "Mexico City" },
+  { country: "Argentina", flag: "🇦🇷", currency: "Argentine Peso", code: "ARS", symbol: "$", capital: "Buenos Aires" },
+  { country: "New Zealand", flag: "🇳🇿", currency: "New Zealand Dollar", code: "NZD", symbol: "$", capital: "Wellington" },
+  { country: "Vietnam", flag: "🇻🇳", currency: "Vietnamese Dong", code: "VND", symbol: "₫", capital: "Hanoi" },
 ];
 
 export default function Currencies() {
@@ -37,7 +42,7 @@ export default function Currencies() {
   const [message, setMessage] = useState("");
 
   const filtered = currencies.filter((item) =>
-    `${item.country} ${item.currency}`
+    `${item.country} ${item.currency} ${item.code}`
       .toLowerCase()
       .includes(search.toLowerCase())
   );
@@ -47,27 +52,25 @@ export default function Currencies() {
   function checkAnswer(answer) {
     if (answer === current.currency) {
       setScore((old) => old + 1);
-      setMessage("🎉 Correct! Great job!");
+      setMessage("🎉 Correct! Excellent!");
     } else {
-      setMessage(`😊 Answer: ${current.currency}`);
+      setMessage(`😊 Correct answer: ${current.currency}`);
     }
   }
 
   function nextQuestion() {
-    setQuestion(
-      (old) => (old + 1) % currencies.length
-    );
+    setQuestion((old) => (old + 1) % currencies.length);
     setMessage("");
   }
 
   return (
     <>
       <Head>
-        <title>Currencies | Chinnaari Kids</title>
+        <title>Currencies of the World | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Learn world currencies, symbols and countries with fun quizzes for kids."
+          content="Learn world currencies, currency symbols and codes with fun quizzes for kids."
         />
 
         <meta
@@ -86,42 +89,28 @@ export default function Currencies() {
 
           <nav>
             <Link href="/">Home</Link>
-
-            <Link href="/countries">
-              🚩 Countries
-            </Link>
-
-            <Link href="/capitals">
-              🏛️ Capitals
-            </Link>
-
-            <Link href="/world-explorer">
-              🌍 World Explorer
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
-            </Link>
+            <Link href="/countries">🌍 Countries</Link>
+            <Link href="/indian-states">🇮🇳 States</Link>
+            <Link href="/capitals">🏛️ Capitals</Link>
+            <Link href="/famous-places">🗺️ Places</Link>
           </nav>
 
         </header>
 
         <section className="hero">
 
-          <div className="money">
-            💰
-          </div>
+          <div className="heroIcon">💰</div>
 
           <h1>
-            World Currencies
+            Currencies of the World
           </h1>
 
           <p>
-            Discover the money used around the world!
+            Learn countries, currencies, symbols and codes!
           </p>
 
-          <div className="symbols">
-            ₹ &nbsp; $ &nbsp; € &nbsp; £ &nbsp; ¥ &nbsp; ₩
+          <div className="moneyIcons">
+            ₹ $ € £ ¥ ₩ ₽ ₺
           </div>
 
         </section>
@@ -130,11 +119,9 @@ export default function Currencies() {
 
           <input
             type="text"
-            placeholder="🔍 Search country or currency..."
+            placeholder="🔍 Search country, currency or code..."
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           <p>
@@ -164,9 +151,17 @@ export default function Currencies() {
                 {item.symbol}
               </div>
 
-              <h3>
-                {item.currency}
-              </h3>
+              <div className="currencyName">
+                💰 {item.currency}
+              </div>
+
+              <div className="code">
+                Code: {item.code}
+              </div>
+
+              <div className="capital">
+                🏛️ {item.capital}
+              </div>
 
             </div>
 
@@ -189,18 +184,22 @@ export default function Currencies() {
           </div>
 
           <h2>
-            What currency does this country use?
+            What is the currency of this country?
           </h2>
 
           <div className="question">
 
-            <div className="questionFlag">
+            <div className="bigFlag">
               {current.flag}
             </div>
 
             <h2>
               {current.country}
             </h2>
+
+            <div className="bigSymbol">
+              {current.symbol}
+            </div>
 
           </div>
 
@@ -218,6 +217,10 @@ export default function Currencies() {
                 (question + 3) % currencies.length
               ].currency,
             ]
+              .filter(
+                (answer, index, array) =>
+                  array.indexOf(answer) === index
+              )
               .sort(() => Math.random() - 0.5)
               .map((answer) => (
 
@@ -249,10 +252,10 @@ export default function Currencies() {
 
         </section>
 
-        <section className="tip">
+        <section className="learning">
 
-          <div className="tipIcon">
-            💡
+          <div className="learningIcon">
+            💰
           </div>
 
           <div>
@@ -262,13 +265,14 @@ export default function Currencies() {
             </h2>
 
             <p>
-              Currency is the money people use
-              to buy things and pay for services.
+              Currency is the money used by people
+              in a country to buy things and services.
             </p>
 
             <p className="telugu">
-              కరెన్సీ అంటే ఒక దేశంలో
-              ఉపయోగించే డబ్బు.
+              ఒక దేశంలో వస్తువులు మరియు సేవలను
+              కొనడానికి ఉపయోగించే డబ్బును
+              కరెన్సీ అంటారు.
             </p>
 
           </div>
@@ -278,7 +282,7 @@ export default function Currencies() {
         <section className="links">
 
           <Link href="/countries">
-            🚩 Countries
+            🌍 Countries
           </Link>
 
           <Link href="/capitals">
@@ -341,8 +345,7 @@ export default function Currencies() {
           position: sticky;
           top: 0;
           z-index: 10;
-          box-shadow:
-            0 2px 15px rgba(0,0,0,.08);
+          box-shadow: 0 2px 15px rgba(0,0,0,.08);
         }
 
         .logo {
@@ -377,18 +380,18 @@ export default function Currencies() {
           background:
             linear-gradient(
               135deg,
-              #fff0c7,
-              #e4f5ff,
-              #e9ddff
+              #fff1c9,
+              #e4f4ff,
+              #eee2ff
             );
         }
 
-        .money {
+        .heroIcon {
           font-size: 90px;
         }
 
         .hero h1 {
-          font-size: 45px;
+          font-size: 43px;
           margin: 10px 0;
         }
 
@@ -397,10 +400,10 @@ export default function Currencies() {
           color: #555;
         }
 
-        .symbols {
+        .moneyIcons {
           margin-top: 20px;
-          font-size: 35px;
-          font-weight: bold;
+          font-size: 38px;
+          letter-spacing: 7px;
         }
 
         .searchBox {
@@ -421,7 +424,7 @@ export default function Currencies() {
         }
 
         .searchBox input:focus {
-          border-color: #ffb347;
+          border-color: #ffc65c;
         }
 
         .searchBox p {
@@ -435,16 +438,15 @@ export default function Currencies() {
           display: grid;
           grid-template-columns:
             repeat(4, 1fr);
-          gap: 16px;
+          gap: 17px;
         }
 
         .currencyCard {
-          text-align: center;
-          padding: 25px 15px;
-          border-radius: 25px;
           background: white;
-          box-shadow:
-            0 5px 18px rgba(0,0,0,.06);
+          padding: 23px 15px;
+          text-align: center;
+          border-radius: 25px;
+          box-shadow: 0 5px 18px rgba(0,0,0,.06);
           transition: .2s;
         }
 
@@ -457,7 +459,7 @@ export default function Currencies() {
         }
 
         .currencyCard h2 {
-          font-size: 19px;
+          font-size: 18px;
           margin: 10px 0;
         }
 
@@ -469,13 +471,28 @@ export default function Currencies() {
           align-items: center;
           justify-content: center;
           border-radius: 50%;
-          background: #fff0c7;
+          background: #fff1c9;
           font-size: 28px;
           font-weight: bold;
         }
 
-        .currencyCard h3 {
-          font-size: 16px;
+        .currencyName {
+          padding: 10px;
+          border-radius: 15px;
+          background: #e8f5ff;
+          font-size: 13px;
+          font-weight: bold;
+        }
+
+        .code {
+          margin-top: 9px;
+          font-size: 13px;
+          color: #777;
+        }
+
+        .capital {
+          margin-top: 8px;
+          font-size: 12px;
           color: #666;
         }
 
@@ -488,16 +505,16 @@ export default function Currencies() {
           background:
             linear-gradient(
               135deg,
-              #e8e0ff,
-              #dff7ff
+              #fff0c9,
+              #e6e0ff
             );
-          box-shadow:
-            0 8px 30px rgba(0,0,0,.08);
+          box-shadow: 0 8px 30px rgba(0,0,0,.08);
         }
 
         .quizTop {
           display: flex;
           justify-content: space-between;
+          gap: 10px;
         }
 
         .quizTop span {
@@ -513,13 +530,19 @@ export default function Currencies() {
 
         .question {
           display: inline-block;
-          padding: 20px 40px;
-          border-radius: 25px;
+          min-width: 280px;
+          padding: 25px 45px;
           background: white;
+          border-radius: 25px;
         }
 
-        .questionFlag {
-          font-size: 75px;
+        .bigFlag {
+          font-size: 80px;
+        }
+
+        .bigSymbol {
+          font-size: 45px;
+          font-weight: bold;
         }
 
         .answers {
@@ -542,7 +565,8 @@ export default function Currencies() {
         }
 
         .answers button:hover {
-          background: #fff0d6;
+          background: #fff0dc;
+          transform: scale(1.02);
         }
 
         .message {
@@ -561,24 +585,23 @@ export default function Currencies() {
           cursor: pointer;
         }
 
-        .tip {
+        .learning {
           max-width: 850px;
           margin: 30px auto 50px;
           padding: 30px;
           display: flex;
           align-items: center;
           gap: 20px;
-          border-radius: 30px;
           background: white;
-          box-shadow:
-            0 6px 20px rgba(0,0,0,.06);
+          border-radius: 30px;
+          box-shadow: 0 6px 20px rgba(0,0,0,.06);
         }
 
-        .tipIcon {
-          font-size: 60px;
+        .learningIcon {
+          font-size: 65px;
         }
 
-        .tip p {
+        .learning p {
           color: #666;
           line-height: 1.6;
         }
@@ -631,7 +654,7 @@ export default function Currencies() {
           }
 
           .hero h1 {
-            font-size: 36px;
+            font-size: 35px;
           }
 
           .currencyGrid {
@@ -639,7 +662,7 @@ export default function Currencies() {
               repeat(2, 1fr);
           }
 
-          .tip {
+          .learning {
             margin-left: 15px;
             margin-right: 15px;
             flex-direction: column;
@@ -659,15 +682,16 @@ export default function Currencies() {
           }
 
           .hero h1 {
-            font-size: 31px;
+            font-size: 30px;
           }
 
-          .money {
+          .heroIcon {
             font-size: 70px;
           }
 
-          .symbols {
-            font-size: 26px;
+          .moneyIcons {
+            font-size: 27px;
+            letter-spacing: 3px;
           }
 
           .currencyGrid {
@@ -678,9 +702,14 @@ export default function Currencies() {
             grid-template-columns: 1fr;
           }
 
+          .question {
+            width: 100%;
+            min-width: 0;
+          }
+
         }
 
       `}</style>
     </>
   );
-  }
+    }
