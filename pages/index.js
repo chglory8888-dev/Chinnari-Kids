@@ -9,7 +9,7 @@ export default function Home() {
 
         <meta
           name="description"
-          content="Chinnaari Kids is a fun learning platform for children with stories, educational games, puzzles and colourful learning activities."
+          content="Chinnaari Kids - fun stories, games, puzzles, colours, ABC, Telugu and numbers learning for children."
         />
 
         <meta
@@ -29,11 +29,35 @@ export default function Home() {
           </Link>
 
           <nav>
-            <Link href="/">Home</Link>
-            <Link href="/stories">📚 Stories</Link>
-            <Link href="/games">🎮 Games</Link>
-            <Link href="/puzzles">🧩 Puzzles</Link>
-            <Link href="/colours">🎨 Colours</Link>
+
+            <Link href="/">
+              Home
+            </Link>
+
+            <Link href="/dashboard">
+              🌟 Dashboard
+            </Link>
+
+            <Link href="/stories">
+              📚 Stories
+            </Link>
+
+            <Link href="/games">
+              🎮 Games
+            </Link>
+
+            <Link href="/puzzles">
+              🧩 Puzzles
+            </Link>
+
+            <Link href="/colours">
+              🎨 Colours
+            </Link>
+
+            <Link href="/learn">
+              🔤 Learn
+            </Link>
+
           </nav>
 
         </header>
@@ -42,36 +66,47 @@ export default function Home() {
 
         <section className="hero">
 
-          <div className="heroContent">
+          <div className="heroText">
 
-            <div className="hello">
+            <span className="hello">
               👋 Hello Little Stars!
-            </div>
+            </span>
 
             <h1>
-              Learn
-              <span> • </span>
-              Play
-              <span> • </span>
-              Discover!
+              Learn, Play
+              <br />
+              & Have Fun! 🌟
             </h1>
 
             <p>
               Welcome to Chinnaari Kids!
               <br />
-              A fun and colourful learning world
+              Stories, games, puzzles and fun learning
               <br />
-              made especially for children. 🌈
+              for little explorers.
             </p>
 
-            <div className="heroButtons">
+            <div className="buttons">
 
-              <Link href="/games" className="primaryButton">
-                🎮 Start Playing
+              <Link
+                href="/dashboard"
+                className="dashboardButton"
+              >
+                🌟 Kids Dashboard
               </Link>
 
-              <Link href="/stories" className="secondaryButton">
-                📚 Read a Story
+              <Link
+                href="/games"
+                className="primary"
+              >
+                🎮 Play Games
+              </Link>
+
+              <Link
+                href="/stories"
+                className="secondary"
+              >
+                📚 Read Stories
               </Link>
 
             </div>
@@ -80,151 +115,175 @@ export default function Home() {
 
           <div className="heroArt">
 
-            <div className="bigEmoji">
-              🧒
-            </div>
+            🧸
 
-            <div className="floatingEmoji">
-              ⭐ 🌈 🦋
-            </div>
-
-            <div className="floatingEmoji second">
-              🎈 🐻 🌸
+            <div className="smallAnimals">
+              🐥 🌸 🦋 🌈
             </div>
 
           </div>
 
         </section>
 
-        {/* EXPLORE */}
+        {/* QUICK START */}
 
-        <section className="explore">
+        <section className="quick">
 
           <h2>
-            🌟 What would you like to learn?
+            🚀 What do you want to do?
           </h2>
 
-          <p className="sectionIntro">
-            Choose an activity and start learning through fun!
+          <p>
+            Choose your favourite activity!
           </p>
 
-          <div className="cards">
+          <div className="quickGrid">
 
-            {/* STORIES */}
-
-            <Link href="/stories" className="card stories">
-
-              <div className="cardIcon">
-                📚
-              </div>
-
-              <h3>
-                Stories
-              </h3>
-
-              <p>
-                Enjoy fun stories and learn
-                wonderful lessons.
-              </p>
-
-              <span className="cardButton">
-                Read Stories →
-              </span>
-
+            <Link
+              href="/dashboard"
+              className="quickCard dashboard"
+            >
+              <span>🌟</span>
+              <h3>Dashboard</h3>
+              <p>Stars & daily challenge</p>
             </Link>
 
-            {/* GAMES */}
-
-            <Link href="/games" className="card games">
-
-              <div className="cardIcon">
-                🎮
-              </div>
-
-              <h3>
-                Games
-              </h3>
-
-              <p>
-                Play fun educational games
-                and improve your skills.
-              </p>
-
-              <span className="cardButton">
-                Play Games →
-              </span>
-
+            <Link
+              href="/stories"
+              className="quickCard stories"
+            >
+              <span>📚</span>
+              <h3>Stories</h3>
+              <p>Fun stories & moral lessons</p>
             </Link>
 
-            {/* PUZZLES */}
-
-            <Link href="/puzzles" className="card puzzles">
-
-              <div className="cardIcon">
-                🧩
-              </div>
-
-              <h3>
-                Puzzles
-              </h3>
-
-              <p>
-                Solve interesting puzzles
-                and train your brain.
-              </p>
-
-              <span className="cardButton">
-                Solve Puzzles →
-              </span>
-
+            <Link
+              href="/games"
+              className="quickCard games"
+            >
+              <span>🎮</span>
+              <h3>Games</h3>
+              <p>Play and learn</p>
             </Link>
 
-            {/* COLOURS */}
+            <Link
+              href="/puzzles"
+              className="quickCard puzzles"
+            >
+              <span>🧩</span>
+              <h3>Puzzles</h3>
+              <p>Think and solve</p>
+            </Link>
 
-            <Link href="/colours" className="card colours">
+            <Link
+              href="/colours"
+              className="quickCard colours"
+            >
+              <span>🎨</span>
+              <h3>Colours</h3>
+              <p>Learn beautiful colours</p>
+            </Link>
 
-              <div className="cardIcon">
-                🎨
-              </div>
-
-              <h3>
-                Learn Colours
-              </h3>
-
-              <p>
-                Discover colours through
-                fun learning activities.
-              </p>
-
-              <span className="cardButton">
-                Learn Colours →
-              </span>
-
+            <Link
+              href="/learn"
+              className="quickCard learn"
+            >
+              <span>🔤</span>
+              <h3>Learn</h3>
+              <p>ABC, Telugu & Numbers</p>
             </Link>
 
           </div>
 
         </section>
 
-        {/* LEARNING MESSAGE */}
+        {/* FEATURED LEARNING */}
 
-        <section className="learning">
+        <section className="featured">
 
-          <div className="learningEmoji">
+          <div className="featuredText">
+
+            <span className="newBadge">
+              ⭐ Learning Zone
+            </span>
+
+            <h2>
+              Little Learning Adventures 🧠
+            </h2>
+
+            <p>
+              Learn something new every day through
+              colourful activities, simple puzzles,
+              stories and educational games.
+            </p>
+
+            <div className="featureList">
+
+              <div>
+                ✅ Learn ABC
+              </div>
+
+              <div>
+                ✅ తెలుగు అచ్చులు
+              </div>
+
+              <div>
+                ✅ Count Numbers
+              </div>
+
+              <div>
+                ✅ Learn Colours
+              </div>
+
+            </div>
+
+            <Link
+              href="/learn"
+              className="learnButton"
+            >
+              🔤 Start Learning
+            </Link>
+
+          </div>
+
+          <div className="featuredArt">
             🧠
+            <div>
+              📚 🎨 🔢
+            </div>
+          </div>
+
+        </section>
+
+        {/* DAILY CHALLENGE */}
+
+        <section className="daily">
+
+          <div className="dailyIcon">
+            🎯
           </div>
 
           <div>
 
+            <span>
+              ⭐ Daily Challenge
+            </span>
+
             <h2>
-              Learning can be fun! 💡
+              Ready to become a Learning Star?
             </h2>
 
             <p>
-              At Chinnaari Kids, children can
-              learn new things while playing,
-              solving puzzles and enjoying stories.
+              Complete activities and collect stars
+              while learning new things!
             </p>
+
+            <Link
+              href="/dashboard"
+              className="challengeButton"
+            >
+              🚀 Start Challenge
+            </Link>
 
           </div>
 
@@ -234,16 +293,23 @@ export default function Home() {
 
         <section className="welcome">
 
+          <div className="welcomeIcon">
+            🌈
+          </div>
+
           <h2>
-            🌈 Welcome to Chinnaari Kids!
+            Welcome to Chinnaari Kids!
           </h2>
 
           <p>
-            Read 📚 • Play 🎮 • Think 🧩 • Learn 🎨
+            పిల్లలు కథలు చదువుతూ, games ఆడుతూ,
+            puzzles solve చేస్తూ, colours, ABC,
+            Telugu మరియు numbers నేర్చుకునే
+            fun learning world! ❤️
           </p>
 
           <div className="welcomeIcons">
-            📚 &nbsp; 🎮 &nbsp; 🧩 &nbsp; 🎨 &nbsp; ⭐
+            📚 &nbsp; 🎮 &nbsp; 🧩 &nbsp; 🎨 &nbsp; 🔤 &nbsp; 🔢
           </div>
 
         </section>
@@ -259,6 +325,38 @@ export default function Home() {
           <p>
             Learn • Play • Discover
           </p>
+
+          <div className="footerLinks">
+
+            <Link href="/">
+              Home
+            </Link>
+
+            <Link href="/dashboard">
+              Dashboard
+            </Link>
+
+            <Link href="/stories">
+              Stories
+            </Link>
+
+            <Link href="/games">
+              Games
+            </Link>
+
+            <Link href="/puzzles">
+              Puzzles
+            </Link>
+
+            <Link href="/colours">
+              Colours
+            </Link>
+
+            <Link href="/learn">
+              Learn
+            </Link>
+
+          </div>
 
           <p>
             © 2026 Chinnaari Kids
@@ -276,7 +374,7 @@ export default function Home() {
 
         .home {
           min-height: 100vh;
-          background: #fffaf2;
+          background: #fffaf3;
           color: #333;
           font-family: Arial, sans-serif;
         }
@@ -291,10 +389,10 @@ export default function Home() {
           align-items: center;
           justify-content: space-between;
 
-          background: #ffffff;
+          background: white;
 
           box-shadow:
-            0 2px 15px rgba(0, 0, 0, 0.08);
+            0 2px 15px rgba(0,0,0,0.08);
 
           position: sticky;
           top: 0;
@@ -302,24 +400,33 @@ export default function Home() {
         }
 
         .logo {
-          font-size: 24px;
-          font-weight: 800;
-          text-decoration: none;
           color: #333;
+          text-decoration: none;
+
+          font-size: 25px;
+          font-weight: 800;
+
           white-space: nowrap;
         }
 
         nav {
           display: flex;
           align-items: center;
-          gap: 20px;
+
+          gap: 17px;
+
           flex-wrap: wrap;
         }
 
         nav a {
-          text-decoration: none;
           color: #444;
+
+          text-decoration: none;
+
+          font-size: 14px;
+
           font-weight: 600;
+
           transition: color 0.2s;
         }
 
@@ -331,306 +438,431 @@ export default function Home() {
 
         .hero {
           min-height: 500px;
-          padding: 70px 8%;
+
+          padding: 65px 8%;
 
           display: flex;
+
           align-items: center;
+
           justify-content: space-between;
 
           background:
             linear-gradient(
               135deg,
-              #ffe4ed,
-              #e4f5ff
+              #ffe1ea,
+              #e1f5ff
             );
-
-          overflow: hidden;
         }
 
-        .heroContent {
+        .heroText {
           max-width: 650px;
         }
 
         .hello {
           display: inline-block;
 
-          background: white;
-
           padding: 10px 18px;
 
           border-radius: 30px;
 
-          font-weight: bold;
+          background: white;
 
-          box-shadow:
-            0 4px 15px rgba(0, 0, 0, 0.05);
+          font-weight: bold;
         }
 
         .hero h1 {
-          font-size: 56px;
-          line-height: 1.1;
+          font-size: 55px;
+
+          line-height: 1.08;
 
           margin: 25px 0 18px;
+        }
+
+        .heroText p {
+          font-size: 18px;
+
+          line-height: 1.7;
+
+          color: #555;
+        }
+
+        .buttons {
+          display: flex;
+
+          gap: 12px;
+
+          flex-wrap: wrap;
+
+          margin-top: 28px;
+        }
+
+        .primary,
+        .secondary,
+        .dashboardButton {
+          display: inline-block;
+
+          padding: 14px 21px;
+
+          border-radius: 30px;
+
+          text-decoration: none;
+
+          font-weight: bold;
+
+          transition:
+            transform 0.2s;
+        }
+
+        .primary:hover,
+        .secondary:hover,
+        .dashboardButton:hover,
+        .learnButton:hover,
+        .challengeButton:hover {
+          transform: scale(1.04);
+        }
+
+        .primary {
+          background: #ff6b6b;
+
+          color: white;
+        }
+
+        .secondary {
+          background: white;
 
           color: #333;
         }
 
-        .hero h1 span {
-          color: #ff6b6b;
+        .dashboardButton {
+          background: #ffd84d;
+
+          color: #333;
         }
 
-        .hero p {
-          font-size: 19px;
-          line-height: 1.7;
-          color: #555;
+        .heroArt {
+          font-size: 155px;
+
+          text-align: center;
+
+          animation:
+            float 3s ease-in-out infinite;
         }
 
-        .heroButtons {
-          display: flex;
+        .smallAnimals {
+          font-size: 35px;
+
+          margin-top: 5px;
+        }
+
+        @keyframes float {
+
+          0% {
+            transform: translateY(0);
+          }
+
+          50% {
+            transform: translateY(-10px);
+          }
+
+          100% {
+            transform: translateY(0);
+          }
+
+        }
+
+        /* QUICK */
+
+        .quick {
+          max-width: 1150px;
+
+          margin: auto;
+
+          padding: 55px 20px;
+
+          text-align: center;
+        }
+
+        .quick h2 {
+          font-size: 31px;
+
+          margin-bottom: 8px;
+        }
+
+        .quick > p {
+          color: #666;
+
+          margin-bottom: 32px;
+        }
+
+        .quickGrid {
+          display: grid;
+
+          grid-template-columns:
+            repeat(6, 1fr);
+
           gap: 15px;
-          margin-top: 28px;
-          flex-wrap: wrap;
         }
 
-        .primaryButton,
-        .secondaryButton {
-          padding: 15px 24px;
-          border-radius: 30px;
+        .quickCard {
+          min-height: 185px;
+
+          padding: 25px 12px;
+
+          border-radius: 25px;
 
           text-decoration: none;
-          font-weight: bold;
+
+          color: #333;
+
+          box-shadow:
+            0 5px 18px
+            rgba(0,0,0,0.06);
 
           transition:
             transform 0.2s,
             box-shadow 0.2s;
         }
 
-        .primaryButton {
-          background: #ff6b6b;
-          color: white;
+        .quickCard:hover {
+          transform: translateY(-7px);
 
           box-shadow:
-            0 5px 15px rgba(255, 107, 107, 0.3);
+            0 10px 25px
+            rgba(0,0,0,0.1);
         }
 
-        .secondaryButton {
-          background: white;
-          color: #333;
+        .quickCard span {
+          font-size: 48px;
         }
 
-        .primaryButton:hover,
-        .secondaryButton:hover {
-          transform: translateY(-3px);
+        .quickCard h3 {
+          margin: 12px 0 7px;
+
+          font-size: 19px;
         }
 
-        .heroArt {
-          width: 350px;
-          height: 300px;
+        .quickCard p {
+          margin: 0;
 
-          position: relative;
+          font-size: 13px;
 
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .bigEmoji {
-          font-size: 160px;
-          animation: bounce 3s ease-in-out infinite;
-        }
-
-        .floatingEmoji {
-          position: absolute;
-
-          top: 15px;
-          right: 10px;
-
-          font-size: 35px;
-
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .floatingEmoji.second {
-          top: auto;
-          right: auto;
-          bottom: 15px;
-          left: 0;
-
-          animation-delay: 1s;
-        }
-
-        @keyframes bounce {
-
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-
-          50% {
-            transform: translateY(-15px);
-          }
-
-        }
-
-        @keyframes float {
-
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-
-          50% {
-            transform: translateY(-12px);
-          }
-
-        }
-
-        /* EXPLORE */
-
-        .explore {
-          padding: 65px 7%;
-          text-align: center;
-        }
-
-        .explore h2 {
-          font-size: 32px;
-          margin-bottom: 10px;
-        }
-
-        .sectionIntro {
-          color: #666;
-          font-size: 17px;
-          margin-bottom: 35px;
-        }
-
-        .cards {
-          display: grid;
-
-          grid-template-columns:
-            repeat(4, 1fr);
-
-          gap: 22px;
-
-          max-width: 1200px;
-
-          margin: auto;
-        }
-
-        .card {
-          padding: 32px 20px;
-
-          border-radius: 28px;
-
-          text-decoration: none;
-
-          color: #333;
-
-          min-height: 300px;
-
-          display: flex;
-
-          flex-direction: column;
-
-          align-items: center;
-
-          justify-content: center;
-
-          box-shadow:
-            0 6px 20px
-            rgba(0, 0, 0, 0.06);
-
-          transition:
-            transform 0.25s,
-            box-shadow 0.25s;
-        }
-
-        .card:hover {
-          transform: translateY(-8px);
-
-          box-shadow:
-            0 12px 30px
-            rgba(0, 0, 0, 0.12);
-        }
-
-        .cardIcon {
-          font-size: 65px;
-          margin-bottom: 15px;
-        }
-
-        .card h3 {
-          font-size: 23px;
-          margin: 8px 0;
-        }
-
-        .card p {
-          line-height: 1.6;
-          margin: 5px 0 18px;
           color: #555;
+
+          line-height: 1.5;
         }
 
-        .cardButton {
-          font-weight: bold;
-          color: #555;
+        .dashboard {
+          background: #fff0b8;
         }
 
         .stories {
-          background: #ffe0e8;
+          background: #ffdce7;
         }
 
         .games {
-          background: #e4ddff;
+          background: #e9ddff;
         }
 
         .puzzles {
-          background: #fff0bd;
+          background: #dff1ff;
         }
 
         .colours {
-          background: #dcf6dc;
+          background: #ffe9bd;
         }
 
-        /* LEARNING */
+        .learn {
+          background: #dcf6d9;
+        }
 
-        .learning {
-          max-width: 1050px;
+        /* FEATURED */
 
-          margin: 10px auto 55px;
+        .featured {
+          max-width: 1000px;
+
+          margin: 10px auto 50px;
 
           padding: 40px;
-
-          border-radius: 30px;
 
           display: flex;
 
           align-items: center;
 
+          justify-content: space-between;
+
           gap: 30px;
+
+          border-radius: 32px;
 
           background:
             linear-gradient(
               135deg,
-              #e3f5ff,
-              #eee5ff
+              #e4ddff,
+              #dff5ff
+            );
+
+          box-shadow:
+            0 8px 30px
+            rgba(0,0,0,0.07);
+        }
+
+        .featuredText {
+          max-width: 620px;
+        }
+
+        .newBadge {
+          display: inline-block;
+
+          padding: 8px 15px;
+
+          border-radius: 20px;
+
+          background: white;
+
+          font-size: 14px;
+
+          font-weight: bold;
+        }
+
+        .featured h2 {
+          font-size: 32px;
+
+          margin: 15px 0;
+        }
+
+        .featured p {
+          color: #555;
+
+          font-size: 17px;
+
+          line-height: 1.7;
+        }
+
+        .featureList {
+          display: grid;
+
+          grid-template-columns:
+            1fr 1fr;
+
+          gap: 10px;
+
+          margin: 20px 0;
+        }
+
+        .featureList div {
+          font-weight: bold;
+        }
+
+        .learnButton {
+          display: inline-block;
+
+          padding: 13px 22px;
+
+          border-radius: 25px;
+
+          background: #4caf50;
+
+          color: white;
+
+          text-decoration: none;
+
+          font-weight: bold;
+
+          transition:
+            transform 0.2s;
+        }
+
+        .featuredArt {
+          font-size: 105px;
+
+          text-align: center;
+        }
+
+        .featuredArt div {
+          font-size: 32px;
+
+          margin-top: 10px;
+        }
+
+        /* DAILY */
+
+        .daily {
+          max-width: 1000px;
+
+          margin: 20px auto 50px;
+
+          padding: 35px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 25px;
+
+          border-radius: 30px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff0b8,
+              #ffe1ea
             );
 
           box-shadow:
             0 7px 25px
-            rgba(0, 0, 0, 0.07);
+            rgba(0,0,0,0.06);
         }
 
-        .learningEmoji {
-          font-size: 80px;
+        .dailyIcon {
+          font-size: 70px;
         }
 
-        .learning h2 {
-          margin-top: 0;
-          font-size: 29px;
+        .daily span {
+          display: inline-block;
+
+          padding: 7px 13px;
+
+          border-radius: 20px;
+
+          background: white;
+
+          font-size: 13px;
+
+          font-weight: bold;
         }
 
-        .learning p {
-          font-size: 17px;
-          line-height: 1.7;
+        .daily h2 {
+          margin: 12px 0 8px;
+
+          font-size: 27px;
+        }
+
+        .daily p {
           color: #555;
+
+          line-height: 1.6;
+        }
+
+        .challengeButton {
+          display: inline-block;
+
+          margin-top: 8px;
+
+          padding: 13px 22px;
+
+          border-radius: 25px;
+
+          background: #ff6b6b;
+
+          color: white;
+
+          text-decoration: none;
+
+          font-weight: bold;
+
+          transition:
+            transform 0.2s;
         }
 
         /* WELCOME */
@@ -642,13 +874,17 @@ export default function Home() {
 
           text-align: center;
 
-          background: white;
-
           border-radius: 30px;
 
+          background: white;
+
           box-shadow:
-            0 5px 25px
-            rgba(0, 0, 0, 0.07);
+            0 6px 25px
+            rgba(0,0,0,0.07);
+        }
+
+        .welcomeIcon {
+          font-size: 60px;
         }
 
         .welcome h2 {
@@ -656,13 +892,21 @@ export default function Home() {
         }
 
         .welcome p {
-          font-size: 19px;
+          max-width: 800px;
+
+          margin: auto;
+
+          font-size: 18px;
+
+          line-height: 1.8;
+
           color: #555;
         }
 
         .welcomeIcons {
-          font-size: 35px;
-          margin-top: 20px;
+          margin-top: 25px;
+
+          font-size: 32px;
         }
 
         /* FOOTER */
@@ -682,101 +926,175 @@ export default function Home() {
         }
 
         footer p {
-          margin: 8px;
+          margin: 9px;
+        }
+
+        .footerLinks {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 18px;
+
+          flex-wrap: wrap;
+
+          margin: 18px 0;
+        }
+
+        .footerLinks a {
+          color: white;
+
+          text-decoration: none;
+
+          font-size: 14px;
+        }
+
+        .footerLinks a:hover {
+          color: #ffd84d;
         }
 
         /* TABLET */
 
         @media (max-width: 1050px) {
 
-          .cards {
+          .quickGrid {
             grid-template-columns:
-              repeat(2, 1fr);
+              repeat(3, 1fr);
+          }
+
+        }
+
+        @media (max-width: 850px) {
+
+          .header {
+            flex-direction: column;
+
+            gap: 15px;
+          }
+
+          nav {
+            justify-content: center;
+
+            gap: 12px;
+          }
+
+          .hero {
+            text-align: center;
+
+            flex-direction: column;
+
+            padding: 50px 20px;
+          }
+
+          .hero h1 {
+            font-size: 44px;
+          }
+
+          .buttons {
+            justify-content: center;
+          }
+
+          .heroArt {
+            margin-top: 35px;
+
+            font-size: 110px;
+          }
+
+          .featured {
+            margin-left: 20px;
+
+            margin-right: 20px;
+
+            flex-direction: column;
+
+            text-align: center;
+          }
+
+          .daily {
+            margin-left: 20px;
+
+            margin-right: 20px;
+
+            flex-direction: column;
+
+            text-align: center;
           }
 
         }
 
         /* MOBILE */
 
-        @media (max-width: 800px) {
+        @media (max-width: 600px) {
 
-          .header {
-            flex-direction: column;
-            gap: 15px;
+          .logo {
+            font-size: 21px;
           }
 
           nav {
-            justify-content: center;
-            gap: 12px;
+            gap: 10px;
           }
 
           nav a {
-            font-size: 13px;
-          }
-
-          .hero {
-            flex-direction: column;
-            text-align: center;
-            padding: 50px 20px;
-          }
-
-          .hero h1 {
-            font-size: 42px;
-          }
-
-          .hero p {
-            font-size: 17px;
-          }
-
-          .heroButtons {
-            justify-content: center;
-          }
-
-          .heroArt {
-            width: 100%;
-            margin-top: 35px;
-          }
-
-          .bigEmoji {
-            font-size: 120px;
-          }
-
-          .learning {
-            margin-left: 20px;
-            margin-right: 20px;
-
-            flex-direction: column;
-            text-align: center;
-
-            padding: 30px 20px;
-          }
-
-        }
-
-        /* SMALL MOBILE */
-
-        @media (max-width: 520px) {
-
-          .cards {
-            grid-template-columns: 1fr;
-          }
-
-          .explore {
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
-          .explore h2 {
-            font-size: 25px;
-          }
-
-          .welcome {
-            margin-left: 20px;
-            margin-right: 20px;
+            font-size: 12px;
           }
 
           .hero h1 {
             font-size: 36px;
+          }
+
+          .heroText p {
+            font-size: 16px;
+          }
+
+          .quickGrid {
+            grid-template-columns:
+              repeat(2, 1fr);
+          }
+
+          .quickCard {
+            min-height: 165px;
+          }
+
+          .featured {
+            padding: 30px 20px;
+          }
+
+          .featured h2 {
+            font-size: 27px;
+          }
+
+          .featureList {
+            grid-template-columns: 1fr;
+          }
+
+          .featuredArt {
+            font-size: 80px;
+          }
+
+          .welcome {
+            margin-left: 20px;
+
+            margin-right: 20px;
+          }
+
+        }
+
+        @media (max-width: 400px) {
+
+          .quickGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .buttons {
+            flex-direction: column;
+          }
+
+          .primary,
+          .secondary,
+          .dashboardButton {
+            width: 100%;
+
+            text-align: center;
           }
 
         }
@@ -784,4 +1102,4 @@ export default function Home() {
       `}</style>
     </>
   );
-            }
+          }
