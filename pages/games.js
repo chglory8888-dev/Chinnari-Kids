@@ -2,157 +2,126 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 
-const numberQuestions = [
-  {
-    q: "What number comes after 4?",
-    options: ["3", "5", "6", "7"],
-    answer: "5",
-  },
-  {
-    q: "What is 2 + 3?",
-    options: ["4", "5", "6", "7"],
-    answer: "5",
-  },
-  {
-    q: "How many stars? ⭐⭐⭐⭐⭐",
-    options: ["3", "4", "5", "6"],
-    answer: "5",
-  },
-];
+const memoryItems = ["🍎", "🐶", "⭐", "🚗", "🌈", "🦋"];
 
-const colourQuestions = [
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const oddItems = [
   {
-    q: "Which one is RED?",
-    options: ["🔵", "🔴", "🟢", "🟡"],
+    items: ["🍎", "🍎", "🍎", "🍌"],
+    answer: "🍌",
+  },
+  {
+    items: ["🐶", "🐶", "🐱", "🐶"],
+    answer: "🐱",
+  },
+  {
+    items: ["🔵", "🔵", "🔴", "🔵"],
     answer: "🔴",
   },
-  {
-    q: "Which one is BLUE?",
-    options: ["🟡", "🟢", "🔵", "🔴"],
-    answer: "🔵",
-  },
-  {
-    q: "Which one is GREEN?",
-    options: ["🟢", "🔴", "🟣", "🟡"],
-    answer: "🟢",
-  },
 ];
 
-const animals = ["🐶", "🐱", "🐸", "🦁"];
-
 export default function Games() {
-  const [game, setGame] = useState("menu");
+  const [game, setGame] = useState("memory");
 
-  const [numberIndex, setNumberIndex] = useState(0);
+  const [memoryCards, setMemoryCards] = useState([
+    ...memoryItems,
+    ...memoryItems,
+  ]);
+
+  const [flipped, setFlipped] = useState([]);
+
+  const [matched, setMatched] = useState([]);
+
+  const [target, setTarget] = useState(5);
+
   const [numberScore, setNumberScore] = useState(0);
-  const [numberFinished, setNumberFinished] = useState(false);
 
-  const [colourIndex, setColourIndex] = useState(0);
-  const [colourScore, setColourScore] = useState(0);
-  const [colourFinished, setColourFinished] = useState(false);
+  const [oddRound, setOddRound] = useState(0);
 
-  const [cards, setCards] = useState([]);
-  const [openCards, setOpenCards] = useState([]);
-  const [matchedCards, setMatchedCards] = useState([]);
-  const [moves, setMoves] = useState(0);
+  const [oddScore, setOddScore] = useState(0);
 
-  function startNumbers() {
-    setNumberIndex(0);
-    setNumberScore(0);
-    setNumberFinished(false);
-    setGame("numbers");
+  const [message, setMessage] = useState("");
+
+  function shuffleCards() {
+    const shuffled = [...memoryCards].sort(
+      () => Math.random() - 0.5
+    );
+
+    setMemoryCards(shuffled);
+    setFlipped([]);
+    setMatched([]);
+    setMessage("");
   }
 
-  function answerNumber(option) {
-    const current = numberQuestions[numberIndex];
-
-    if (option === current.answer) {
-      setNumberScore((s) => s + 1);
-    }
-
-    if (numberIndex === numberQuestions.length - 1) {
-      setNumberFinished(true);
-    } else {
-      setNumberIndex((i) => i + 1);
-    }
-  }
-
-  function startColours() {
-    setColourIndex(0);
-    setColourScore(0);
-    setColourFinished(false);
-    setGame("colours");
-  }
-
-  function answerColour(option) {
-    const current = colourQuestions[colourIndex];
-
-    if (option === current.answer) {
-      setColourScore((s) => s + 1);
-    }
-
-    if (colourIndex === colourQuestions.length - 1) {
-      setColourFinished(true);
-    } else {
-      setColourIndex((i) => i + 1);
-    }
-  }
-
-  function startMemory() {
-    const newCards = [...animals, ...animals]
-      .sort(() => Math.random() - 0.5)
-      .map((emoji, index) => ({
-        id: index,
-        emoji,
-      }));
-
-    setCards(newCards);
-    setOpenCards([]);
-    setMatchedCards([]);
-    setMoves(0);
-    setGame("memory");
-  }
-
-  function openCard(index) {
+  function flipCard(index) {
     if (
-      openCards.includes(index) ||
-      matchedCards.includes(index) ||
-      openCards.length === 2
+      flipped.includes(index) ||
+      matched.includes(index) ||
+      flipped.length === 2
     ) {
       return;
     }
 
-    const newOpen = [...openCards, index];
+    const newFlipped = [...flipped, index];
 
-    setOpenCards(newOpen);
+    setFlipped(newFlipped);
 
-    if (newOpen.length === 2) {
-      setMoves((m) => m + 1);
+    if (newFlipped.length === 2) {
+      const first = memoryCards[newFlipped[0]];
+      const second = memoryCards[newFlipped[1]];
 
-      const first = cards[newOpen[0]];
-      const second = cards[newOpen[1]];
+      if (first === second) {
+        setMatched((old) => [
+          ...old,
+          ...newFlipped,
+        ]);
 
-      if (first.emoji === second.emoji) {
-        const newMatched = [
-          ...matchedCards,
-          newOpen[0],
-          newOpen[1],
-        ];
-
-        setMatchedCards(newMatched);
-        setOpenCards([]);
-
-        if (newMatched.length === cards.length) {
-          setTimeout(() => {
-            setGame("memoryResult");
-          }, 500);
-        }
+        setFlipped([]);
       } else {
         setTimeout(() => {
-          setOpenCards([]);
+          setFlipped([]);
         }, 700);
       }
     }
+  }
+
+  function tapNumber(number) {
+    if (number === target) {
+      setNumberScore((value) => value + 1);
+      setMessage("🎉 Great! You found the correct number!");
+
+      const next =
+        Math.floor(Math.random() * 9) + 1;
+
+      setTarget(next);
+    } else {
+      setMessage("😊 Try again!");
+    }
+  }
+
+  function chooseOdd(item) {
+    if (item === oddItems[oddRound].answer) {
+      setOddScore((value) => value + 1);
+      setMessage("🎉 Correct! Excellent!");
+    } else {
+      setMessage("💪 Nice try!");
+    }
+
+    setTimeout(() => {
+      if (oddRound < oddItems.length - 1) {
+        setOddRound((value) => value + 1);
+        setMessage("");
+      } else {
+        setMessage("🏆 Game Complete!");
+      }
+    }, 700);
+  }
+
+  function resetOddGame() {
+    setOddRound(0);
+    setOddScore(0);
+    setMessage("");
   }
 
   return (
@@ -162,7 +131,7 @@ export default function Games() {
 
         <meta
           name="description"
-          content="Fun educational games for kids including numbers, colours and memory games."
+          content="Fun educational games for kids including memory, numbers and odd-one-out games."
         />
 
         <meta
@@ -173,6 +142,8 @@ export default function Games() {
 
       <main className="page">
 
+        {/* HEADER */}
+
         <header className="header">
 
           <Link href="/" className="logo">
@@ -181,15 +152,17 @@ export default function Games() {
 
           <nav>
             <Link href="/">Home</Link>
+            <Link href="/dashboard">🌟 Dashboard</Link>
             <Link href="/stories">📚 Stories</Link>
-            <Link href="/games" className="active">
-              🎮 Games
-            </Link>
+            <Link href="/games">🎮 Games</Link>
             <Link href="/puzzles">🧩 Puzzles</Link>
             <Link href="/colours">🎨 Colours</Link>
+            <Link href="/learn">🔤 Learn</Link>
           </nav>
 
         </header>
+
+        {/* HERO */}
 
         <section className="hero">
 
@@ -198,347 +171,310 @@ export default function Games() {
           </div>
 
           <h1>
-            Fun Learning Games!
+            Let's Play & Learn!
           </h1>
 
           <p>
-            Play, think, learn and have fun! 🌟
+            Fun games that make learning exciting.
           </p>
 
         </section>
 
-        {/* MENU */}
+        {/* GAME MENU */}
 
-        {game === "menu" && (
-          <section className="games">
+        <section className="gameMenu">
 
-            <h2>
-              🎯 Choose a Game
-            </h2>
+          <button
+            className={
+              game === "memory"
+                ? "menuButton active"
+                : "menuButton"
+            }
+            onClick={() => {
+              setGame("memory");
+              setMessage("");
+            }}
+          >
+            🧠 Memory Match
+          </button>
 
-            <p className="subtitle">
-              Pick a game and start learning!
-            </p>
+          <button
+            className={
+              game === "numbers"
+                ? "menuButton active"
+                : "menuButton"
+            }
+            onClick={() => {
+              setGame("numbers");
+              setMessage("");
+            }}
+          >
+            🔢 Number Tap
+          </button>
 
-            <div className="gameGrid">
+          <button
+            className={
+              game === "odd"
+                ? "menuButton active"
+                : "menuButton"
+            }
+            onClick={() => {
+              setGame("odd");
+              setMessage("");
+            }}
+          >
+            🕵️ Odd One Out
+          </button>
 
-              <button
-                className="gameCard pink"
-                onClick={startNumbers}
-              >
-                <div>🔢</div>
-
-                <h3>
-                  Number Quiz
-                </h3>
-
-                <p>
-                  Learn numbers and simple maths.
-                </p>
-
-                <strong>
-                  Play →
-                </strong>
-              </button>
-
-              <button
-                className="gameCard green"
-                onClick={startColours}
-              >
-                <div>🎨</div>
-
-                <h3>
-                  Colour Quiz
-                </h3>
-
-                <p>
-                  Learn and identify colours.
-                </p>
-
-                <strong>
-                  Play →
-                </strong>
-              </button>
-
-              <button
-                className="gameCard purple"
-                onClick={startMemory}
-              >
-                <div>🧠</div>
-
-                <h3>
-                  Memory Match
-                </h3>
-
-                <p>
-                  Find matching animals.
-                </p>
-
-                <strong>
-                  Play →
-                </strong>
-              </button>
-
-            </div>
-
-          </section>
-        )}
-
-        {/* NUMBER GAME */}
-
-        {game === "numbers" && !numberFinished && (
-          <section className="gameBox">
-
-            <div className="top">
-              <span>🔢 Number Quiz</span>
-
-              <span>
-                {numberIndex + 1} / {numberQuestions.length}
-              </span>
-            </div>
-
-            <h2>
-              {numberQuestions[numberIndex].q}
-            </h2>
-
-            <div className="options">
-
-              {numberQuestions[numberIndex].options.map(
-                (option) => (
-                  <button
-                    key={option}
-                    onClick={() => answerNumber(option)}
-                  >
-                    {option}
-                  </button>
-                )
-              )}
-
-            </div>
-
-            <button
-              className="backButton"
-              onClick={() => setGame("menu")}
-            >
-              ← Games
-            </button>
-
-          </section>
-        )}
-
-        {/* NUMBER RESULT */}
-
-        {game === "numbers" && numberFinished && (
-          <section className="result">
-
-            <div className="resultEmoji">
-              🏆
-            </div>
-
-            <h2>
-              Great Job!
-            </h2>
-
-            <p>
-              Your score:
-            </p>
-
-            <strong>
-              {numberScore} / {numberQuestions.length}
-            </strong>
-
-            <div className="resultButtons">
-
-              <button onClick={startNumbers}>
-                🔄 Play Again
-              </button>
-
-              <button onClick={() => setGame("menu")}>
-                🎮 More Games
-              </button>
-
-            </div>
-
-          </section>
-        )}
-
-        {/* COLOUR GAME */}
-
-        {game === "colours" && !colourFinished && (
-          <section className="gameBox">
-
-            <div className="top">
-              <span>🎨 Colour Quiz</span>
-
-              <span>
-                {colourIndex + 1} / {colourQuestions.length}
-              </span>
-            </div>
-
-            <h2>
-              {colourQuestions[colourIndex].q}
-            </h2>
-
-            <div className="colourOptions">
-
-              {colourQuestions[colourIndex].options.map(
-                (option) => (
-                  <button
-                    key={option}
-                    onClick={() => answerColour(option)}
-                  >
-                    {option}
-                  </button>
-                )
-              )}
-
-            </div>
-
-            <button
-              className="backButton"
-              onClick={() => setGame("menu")}
-            >
-              ← Games
-            </button>
-
-          </section>
-        )}
-
-        {/* COLOUR RESULT */}
-
-        {game === "colours" && colourFinished && (
-          <section className="result">
-
-            <div className="resultEmoji">
-              🎨🏆
-            </div>
-
-            <h2>
-              Colour Champion!
-            </h2>
-
-            <p>
-              Your score:
-            </p>
-
-            <strong>
-              {colourScore} / {colourQuestions.length}
-            </strong>
-
-            <div className="resultButtons">
-
-              <button onClick={startColours}>
-                🔄 Play Again
-              </button>
-
-              <button onClick={() => setGame("menu")}>
-                🎮 More Games
-              </button>
-
-            </div>
-
-          </section>
-        )}
+        </section>
 
         {/* MEMORY GAME */}
 
         {game === "memory" && (
-          <section className="memory">
 
-            <div className="top">
-              <span>🧠 Memory Match</span>
+          <section className="gameBox">
 
-              <span>
-                Moves: {moves}
-              </span>
+            <div className="gameIcon">
+              🧠
             </div>
 
             <h2>
-              Find the matching animals!
+              Memory Match
             </h2>
+
+            <p>
+              Find the matching pairs!
+            </p>
 
             <div className="memoryGrid">
 
-              {cards.map((card, index) => {
+              {memoryCards.map((item, index) => {
 
                 const visible =
-                  openCards.includes(index) ||
-                  matchedCards.includes(index);
+                  flipped.includes(index) ||
+                  matched.includes(index);
 
                 return (
                   <button
-                    key={card.id}
-                    className="memoryCard"
-                    onClick={() => openCard(index)}
+                    key={index}
+                    className={
+                      visible
+                        ? "memoryCard visible"
+                        : "memoryCard"
+                    }
+                    onClick={() =>
+                      flipCard(index)
+                    }
                   >
-                    {visible ? card.emoji : "❓"}
+                    {visible ? item : "❓"}
                   </button>
                 );
               })}
 
             </div>
 
+            {matched.length === memoryCards.length && (
+
+              <div className="success">
+                🎉 Amazing! You matched everything!
+                <br />
+                ⭐ Great memory!
+              </div>
+
+            )}
+
             <button
-              className="backButton"
-              onClick={() => setGame("menu")}
+              className="resetButton"
+              onClick={shuffleCards}
             >
-              ← Games
+              🔄 New Game
             </button>
 
           </section>
+
         )}
 
-        {/* MEMORY RESULT */}
+        {/* NUMBER GAME */}
 
-        {game === "memoryResult" && (
-          <section className="result">
+        {game === "numbers" && (
 
-            <div className="resultEmoji">
-              🧠🏆
+          <section className="gameBox">
+
+            <div className="gameIcon">
+              🔢
             </div>
 
             <h2>
-              Amazing Memory!
+              Number Tap
             </h2>
 
             <p>
-              Completed in:
+              Find number{" "}
+              <strong>
+                {target}
+              </strong>
+              !
             </p>
 
-            <strong>
-              {moves} moves
-            </strong>
+            <div className="numberGrid">
 
-            <div className="resultButtons">
+              {numbers.map((number) => (
 
-              <button onClick={startMemory}>
-                🔄 Play Again
-              </button>
+                <button
+                  key={number}
+                  className="numberButton"
+                  onClick={() =>
+                    tapNumber(number)
+                  }
+                >
+                  {number}
+                </button>
 
-              <button onClick={() => setGame("menu")}>
-                🎮 More Games
-              </button>
+              ))}
 
             </div>
 
+            <div className="scoreBox">
+              ⭐ Score: {numberScore}
+            </div>
+
+            {message && (
+              <div className="message">
+                {message}
+              </div>
+            )}
+
           </section>
+
         )}
 
-        <div className="homeButton">
-          <Link href="/">
-            🏠 Back to Home
+        {/* ODD ONE OUT */}
+
+        {game === "odd" && (
+
+          <section className="gameBox">
+
+            <div className="gameIcon">
+              🕵️
+            </div>
+
+            <h2>
+              Odd One Out
+            </h2>
+
+            <p>
+              Find the one that is different!
+            </p>
+
+            <div className="oddItems">
+
+              {oddItems[oddRound].items.map(
+                (item, index) => (
+
+                  <button
+                    key={index}
+                    className="oddButton"
+                    onClick={() =>
+                      chooseOdd(item)
+                    }
+                  >
+                    {item}
+                  </button>
+
+                )
+              )}
+
+            </div>
+
+            <div className="scoreBox">
+              ⭐ Score: {oddScore}
+            </div>
+
+            {message && (
+              <div className="message">
+                {message}
+              </div>
+            )}
+
+            {oddRound === oddItems.length - 1 &&
+              message === "🏆 Game Complete!" && (
+
+                <button
+                  className="resetButton"
+                  onClick={resetOddGame}
+                >
+                  🔄 Play Again
+                </button>
+
+            )}
+
+          </section>
+
+        )}
+
+        {/* LEARNING MESSAGE */}
+
+        <section className="learning">
+
+          <div className="learningEmoji">
+            🌟🧠🎯
+          </div>
+
+          <h2>
+            Play • Think • Learn!
+          </h2>
+
+          <p>
+            Every game helps children improve
+            memory, attention and problem-solving skills.
+          </p>
+
+        </section>
+
+        {/* NAVIGATION */}
+
+        <section className="navigation">
+
+          <Link href="/puzzles">
+            🧩 Puzzles
           </Link>
-        </div>
+
+          <Link href="/colours">
+            🎨 Colours
+          </Link>
+
+          <Link href="/learn">
+            🔤 Learn
+          </Link>
+
+          <Link href="/stories">
+            📚 Stories
+          </Link>
+
+        </section>
+
+        {/* FOOTER */}
 
         <footer>
-          <h3>🌈 Chinnaari Kids</h3>
-          <p>Learn • Play • Discover</p>
-          <p>© 2026 Chinnaari Kids</p>
+
+          <h3>
+            🌈 Chinnaari Kids
+          </h3>
+
+          <p>
+            Learn • Play • Discover
+          </p>
+
+          <p>
+            © 2026 Chinnaari Kids
+          </p>
+
         </footer>
 
       </main>
 
       <style jsx>{`
+
         * {
           box-sizing: border-box;
         }
@@ -550,14 +486,21 @@ export default function Games() {
           font-family: Arial, sans-serif;
         }
 
+        /* HEADER */
+
         .header {
           min-height: 70px;
           padding: 14px 6%;
+
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           background: white;
-          box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+
+          box-shadow:
+            0 2px 15px rgba(0,0,0,0.08);
+
           position: sticky;
           top: 0;
           z-index: 10;
@@ -566,31 +509,44 @@ export default function Games() {
         .logo {
           color: #333;
           text-decoration: none;
+
           font-size: 24px;
           font-weight: 800;
+
+          white-space: nowrap;
         }
 
         nav {
           display: flex;
-          gap: 18px;
+          gap: 15px;
           flex-wrap: wrap;
         }
 
         nav a {
           color: #444;
           text-decoration: none;
+
+          font-size: 14px;
           font-weight: 600;
         }
 
-        nav a:hover,
-        nav a.active {
+        nav a:hover {
           color: #ff6b6b;
         }
 
+        /* HERO */
+
         .hero {
           text-align: center;
-          padding: 55px 20px;
-          background: linear-gradient(135deg,#e7ddff,#dff5ff);
+
+          padding: 45px 20px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #ffe0ec,
+              #e3ddff
+            );
         }
 
         .heroEmoji {
@@ -598,213 +554,342 @@ export default function Games() {
         }
 
         .hero h1 {
-          font-size: 42px;
-          margin: 15px 0 10px;
+          font-size: 40px;
+
+          margin: 10px 0;
         }
 
         .hero p {
           font-size: 18px;
+
           color: #555;
         }
 
-        .games {
-          padding: 55px 7%;
-          text-align: center;
+        /* MENU */
+
+        .gameMenu {
+          max-width: 1000px;
+
+          margin: 35px auto 0;
+
+          padding: 0 20px;
+
+          display: flex;
+
+          justify-content: center;
+
+          gap: 12px;
+
+          flex-wrap: wrap;
         }
 
-        .games h2 {
-          font-size: 32px;
-        }
-
-        .subtitle {
-          color: #666;
-          margin-bottom: 35px;
-        }
-
-        .gameGrid {
-          max-width: 1100px;
-          margin: auto;
-          display: grid;
-          grid-template-columns: repeat(3,1fr);
-          gap: 25px;
-        }
-
-        .gameCard {
+        .menuButton {
           border: none;
-          border-radius: 28px;
-          padding: 35px 25px;
-          min-height: 300px;
+
+          padding: 13px 20px;
+
+          border-radius: 25px;
+
+          background: white;
+
+          box-shadow:
+            0 4px 15px
+            rgba(0,0,0,0.06);
+
+          font-weight: bold;
+
           cursor: pointer;
-          font-family: inherit;
-          color: #333;
-          box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-          transition: transform .2s;
         }
 
-        .gameCard:hover {
-          transform: translateY(-7px);
+        .menuButton.active {
+          background: #ff6b6b;
+
+          color: white;
         }
 
-        .gameCard div {
+        /* GAME BOX */
+
+        .gameBox {
+          max-width: 800px;
+
+          margin: 25px auto 50px;
+
+          padding: 40px 25px;
+
+          text-align: center;
+
+          border-radius: 32px;
+
+          background: white;
+
+          box-shadow:
+            0 8px 30px
+            rgba(0,0,0,0.08);
+        }
+
+        .gameIcon {
           font-size: 65px;
         }
 
-        .gameCard h3 {
-          font-size: 24px;
-          margin: 15px 0 8px;
+        .gameBox h2 {
+          font-size: 30px;
+
+          margin: 10px 0;
         }
 
-        .gameCard p {
-          line-height: 1.6;
-          color: #555;
-        }
-
-        .pink {
-          background: #ffe0e8;
-        }
-
-        .green {
-          background: #ddf5dc;
-        }
-
-        .purple {
-          background: #e5ddff;
-        }
-
-        .gameBox,
-        .result,
-        .memory {
-          max-width: 700px;
-          margin: 55px auto;
-          padding: 40px 30px;
-          background: white;
-          border-radius: 30px;
-          text-align: center;
-          box-shadow: 0 7px 25px rgba(0,0,0,0.08);
-        }
-
-        .top {
-          display: flex;
-          justify-content: space-between;
-          font-weight: bold;
+        .gameBox > p {
           color: #666;
+
+          font-size: 17px;
         }
 
-        .gameBox h2,
-        .memory h2 {
-          margin: 45px 0 30px;
-          font-size: 28px;
-        }
-
-        .options {
-          display: grid;
-          grid-template-columns: repeat(2,1fr);
-          gap: 15px;
-        }
-
-        .options button {
-          border: none;
-          padding: 18px;
-          border-radius: 20px;
-          background: #eee5ff;
-          font-size: 20px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .options button:hover {
-          transform: scale(1.03);
-        }
-
-        .colourOptions {
-          display: grid;
-          grid-template-columns: repeat(4,1fr);
-          gap: 15px;
-        }
-
-        .colourOptions button {
-          border: none;
-          padding: 20px;
-          border-radius: 20px;
-          background: #f2f2f2;
-          font-size: 45px;
-          cursor: pointer;
-        }
+        /* MEMORY */
 
         .memoryGrid {
+          max-width: 520px;
+
+          margin: 30px auto;
+
           display: grid;
-          grid-template-columns: repeat(4,1fr);
-          gap: 14px;
+
+          grid-template-columns:
+            repeat(4, 1fr);
+
+          gap: 12px;
         }
 
         .memoryCard {
-          aspect-ratio: 1;
+          height: 100px;
+
           border: none;
+
           border-radius: 20px;
-          background: #e5ddff;
-          font-size: 40px;
+
+          background: #e7ddff;
+
+          font-size: 38px;
+
           cursor: pointer;
+
+          transition:
+            transform 0.2s;
         }
 
-        .resultEmoji {
-          font-size: 75px;
+        .memoryCard:hover {
+          transform: scale(1.04);
         }
 
-        .result h2 {
-          font-size: 32px;
+        .memoryCard.visible {
+          background: #fff0b8;
         }
 
-        .result p {
-          font-size: 18px;
+        /* NUMBER */
+
+        .numberGrid {
+          max-width: 500px;
+
+          margin: 30px auto;
+
+          display: grid;
+
+          grid-template-columns:
+            repeat(3, 1fr);
+
+          gap: 15px;
         }
 
-        .result strong {
-          font-size: 30px;
-        }
+        .numberButton {
+          height: 90px;
 
-        .resultButtons {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          flex-wrap: wrap;
-          margin-top: 30px;
-        }
-
-        .resultButtons button,
-        .backButton {
           border: none;
-          padding: 13px 20px;
-          border-radius: 25px;
-          background: #ff6b6b;
-          color: white;
+
+          border-radius: 20px;
+
+          background: #dff2ff;
+
+          font-size: 30px;
+
           font-weight: bold;
+
           cursor: pointer;
         }
 
-        .backButton {
-          margin-top: 25px;
-          background: #333;
+        .numberButton:hover {
+          transform: translateY(-5px);
+
+          background: #c9ebff;
         }
 
-        .homeButton {
-          text-align: center;
-          margin: 40px 0 55px;
+        /* ODD */
+
+        .oddItems {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 15px;
+
+          margin: 35px auto;
+
+          flex-wrap: wrap;
         }
 
-        .homeButton a {
-          display: inline-block;
-          padding: 13px 22px;
+        .oddButton {
+          width: 100px;
+
+          height: 100px;
+
+          border: none;
+
           border-radius: 25px;
-          background: #333;
-          color: white;
-          text-decoration: none;
+
+          background: #e5f7df;
+
+          font-size: 45px;
+
+          cursor: pointer;
+        }
+
+        .oddButton:hover {
+          transform: scale(1.08);
+        }
+
+        /* SCORE */
+
+        .scoreBox {
+          display: inline-block;
+
+          margin-top: 15px;
+
+          padding: 10px 18px;
+
+          border-radius: 25px;
+
+          background: #fff0b8;
+
           font-weight: bold;
         }
+
+        .message {
+          margin-top: 18px;
+
+          padding: 13px;
+
+          border-radius: 20px;
+
+          background: #fff8df;
+
+          font-weight: bold;
+        }
+
+        .success {
+          margin: 20px auto;
+
+          padding: 18px;
+
+          border-radius: 22px;
+
+          background: #dcf6d9;
+
+          color: #247529;
+
+          font-weight: bold;
+
+          line-height: 1.7;
+        }
+
+        .resetButton {
+          margin-top: 20px;
+
+          padding: 13px 22px;
+
+          border: none;
+
+          border-radius: 25px;
+
+          background: #ff6b6b;
+
+          color: white;
+
+          font-weight: bold;
+
+          cursor: pointer;
+        }
+
+        /* LEARNING */
+
+        .learning {
+          max-width: 800px;
+
+          margin: 0 auto 50px;
+
+          padding: 40px 25px;
+
+          text-align: center;
+
+          border-radius: 30px;
+
+          background:
+            linear-gradient(
+              135deg,
+              #fff0b8,
+              #dff5ff
+            );
+        }
+
+        .learningEmoji {
+          font-size: 55px;
+        }
+
+        .learning h2 {
+          font-size: 28px;
+        }
+
+        .learning p {
+          color: #555;
+
+          line-height: 1.7;
+
+          font-size: 17px;
+        }
+
+        /* NAVIGATION */
+
+        .navigation {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 12px;
+
+          flex-wrap: wrap;
+
+          margin: 20px 20px 55px;
+        }
+
+        .navigation a {
+          padding: 13px 20px;
+
+          border-radius: 25px;
+
+          background: #333;
+
+          color: white;
+
+          text-decoration: none;
+
+          font-weight: bold;
+        }
+
+        /* FOOTER */
 
         footer {
           padding: 35px 20px;
+
           text-align: center;
+
           background: #333;
+
           color: white;
         }
 
@@ -813,50 +898,76 @@ export default function Games() {
         }
 
         footer p {
-          margin: 8px;
+          margin: 9px;
         }
 
+        /* TABLET */
+
         @media (max-width: 850px) {
+
           .header {
             flex-direction: column;
+
             gap: 15px;
           }
 
           nav {
             justify-content: center;
-            gap: 12px;
           }
 
-          .gameGrid {
-            grid-template-columns: 1fr 1fr;
-          }
         }
+
+        /* MOBILE */
 
         @media (max-width: 600px) {
+
+          .logo {
+            font-size: 21px;
+          }
+
+          nav {
+            gap: 10px;
+          }
+
+          nav a {
+            font-size: 12px;
+          }
+
           .hero h1 {
-            font-size: 34px;
+            font-size: 32px;
           }
 
-          .gameGrid {
-            grid-template-columns: 1fr;
+          .gameBox {
+            margin-left: 15px;
+            margin-right: 15px;
+
+            padding: 30px 18px;
           }
 
-          .gameBox,
-          .result,
-          .memory {
-            margin: 35px 20px;
-            padding: 30px 20px;
+          .memoryGrid {
+            grid-template-columns:
+              repeat(3, 1fr);
           }
 
-          .options {
-            grid-template-columns: 1fr 1fr;
+          .memoryCard {
+            height: 80px;
+
+            font-size: 30px;
           }
 
-          .colourOptions {
-            grid-template-columns: 1fr 1fr;
+          .numberGrid {
+            gap: 10px;
           }
+
+          .numberButton {
+            height: 75px;
+
+            font-size: 25px;
+          }
+
         }
+
       `}</style>
     </>
   );
-                  }
+                }
