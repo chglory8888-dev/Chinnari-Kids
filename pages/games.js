@@ -4,17 +4,17 @@ import { useState } from "react";
 
 const numberQuestions = [
   {
-    question: "What number comes after 4?",
-    options: ["3", "5", "6", "8"],
+    q: "What number comes after 4?",
+    options: ["3", "5", "6", "7"],
     answer: "5",
   },
   {
-    question: "What is 2 + 3?",
+    q: "What is 2 + 3?",
     options: ["4", "5", "6", "7"],
     answer: "5",
   },
   {
-    question: "How many stars? ⭐⭐⭐⭐⭐",
+    q: "How many stars? ⭐⭐⭐⭐⭐",
     options: ["3", "4", "5", "6"],
     answer: "5",
   },
@@ -22,44 +22,44 @@ const numberQuestions = [
 
 const colourQuestions = [
   {
-    question: "Which one is RED?",
+    q: "Which one is RED?",
     options: ["🔵", "🔴", "🟢", "🟡"],
     answer: "🔴",
   },
   {
-    question: "Which one is BLUE?",
+    q: "Which one is BLUE?",
     options: ["🟡", "🟢", "🔵", "🔴"],
     answer: "🔵",
   },
   {
-    question: "Which one is GREEN?",
+    q: "Which one is GREEN?",
     options: ["🟢", "🔴", "🟣", "🟡"],
     answer: "🟢",
   },
 ];
 
-const memoryItems = ["🐶", "🐱", "🐸", "🦁", "🐼", "🐵"];
+const animals = ["🐶", "🐱", "🐸", "🦁"];
 
 export default function Games() {
   const [game, setGame] = useState("menu");
 
   const [numberIndex, setNumberIndex] = useState(0);
   const [numberScore, setNumberScore] = useState(0);
-  const [numberMessage, setNumberMessage] = useState("");
+  const [numberFinished, setNumberFinished] = useState(false);
 
   const [colourIndex, setColourIndex] = useState(0);
   const [colourScore, setColourScore] = useState(0);
-  const [colourMessage, setColourMessage] = useState("");
+  const [colourFinished, setColourFinished] = useState(false);
 
-  const [memoryCards, setMemoryCards] = useState([]);
-  const [memoryOpen, setMemoryOpen] = useState([]);
-  const [memoryMatched, setMemoryMatched] = useState([]);
-  const [memoryMoves, setMemoryMoves] = useState(0);
+  const [cards, setCards] = useState([]);
+  const [openCards, setOpenCards] = useState([]);
+  const [matchedCards, setMatchedCards] = useState([]);
+  const [moves, setMoves] = useState(0);
 
-  function startNumberGame() {
+  function startNumbers() {
     setNumberIndex(0);
     setNumberScore(0);
-    setNumberMessage("");
+    setNumberFinished(false);
     setGame("numbers");
   }
 
@@ -67,29 +67,20 @@ export default function Games() {
     const current = numberQuestions[numberIndex];
 
     if (option === current.answer) {
-      setNumberScore((score) => score + 1);
-      setNumberMessage("🎉 Correct! Great job!");
-    } else {
-      setNumberMessage(
-        `💡 Nice try! The correct answer is ${current.answer}.`
-      );
+      setNumberScore((s) => s + 1);
     }
 
-    setTimeout(() => {
-      setNumberMessage("");
-
-      if (numberIndex < numberQuestions.length - 1) {
-        setNumberIndex((index) => index + 1);
-      } else {
-        setGame("numberResult");
-      }
-    }, 900);
+    if (numberIndex === numberQuestions.length - 1) {
+      setNumberFinished(true);
+    } else {
+      setNumberIndex((i) => i + 1);
+    }
   }
 
-  function startColourGame() {
+  function startColours() {
     setColourIndex(0);
     setColourScore(0);
-    setColourMessage("");
+    setColourFinished(false);
     setGame("colours");
   }
 
@@ -97,96 +88,81 @@ export default function Games() {
     const current = colourQuestions[colourIndex];
 
     if (option === current.answer) {
-      setColourScore((score) => score + 1);
-      setColourMessage("🌟 Correct! You know your colours!");
-    } else {
-      setColourMessage(
-        `💡 Try again next time! The answer was ${current.answer}.`
-      );
+      setColourScore((s) => s + 1);
     }
 
-    setTimeout(() => {
-      setColourMessage("");
-
-      if (colourIndex < colourQuestions.length - 1) {
-        setColourIndex((index) => index + 1);
-      } else {
-        setGame("colourResult");
-      }
-    }, 900);
+    if (colourIndex === colourQuestions.length - 1) {
+      setColourFinished(true);
+    } else {
+      setColourIndex((i) => i + 1);
+    }
   }
 
-  function startMemoryGame() {
-    const shuffled = [...memoryItems, ...memoryItems]
+  function startMemory() {
+    const newCards = [...animals, ...animals]
       .sort(() => Math.random() - 0.5)
       .map((emoji, index) => ({
         id: index,
         emoji,
       }));
 
-    setMemoryCards(shuffled);
-    setMemoryOpen([]);
-    setMemoryMatched([]);
-    setMemoryMoves(0);
+    setCards(newCards);
+    setOpenCards([]);
+    setMatchedCards([]);
+    setMoves(0);
     setGame("memory");
   }
 
-  function flipMemoryCard(index) {
+  function openCard(index) {
     if (
-      memoryOpen.includes(index) ||
-      memoryMatched.includes(index) ||
-      memoryOpen.length === 2
+      openCards.includes(index) ||
+      matchedCards.includes(index) ||
+      openCards.length === 2
     ) {
       return;
     }
 
-    const newOpen = [...memoryOpen, index];
+    const newOpen = [...openCards, index];
 
-    setMemoryOpen(newOpen);
+    setOpenCards(newOpen);
 
     if (newOpen.length === 2) {
-      setMemoryMoves((moves) => moves + 1);
+      setMoves((m) => m + 1);
 
-      const first = memoryCards[newOpen[0]];
-      const second = memoryCards[newOpen[1]];
+      const first = cards[newOpen[0]];
+      const second = cards[newOpen[1]];
 
       if (first.emoji === second.emoji) {
-        setMemoryMatched((matched) => [
-          ...matched,
+        const newMatched = [
+          ...matchedCards,
           newOpen[0],
           newOpen[1],
-        ]);
+        ];
 
-        setTimeout(() => {
-          setMemoryOpen([]);
+        setMatchedCards(newMatched);
+        setOpenCards([]);
 
-          if (
-            memoryMatched.length + 2 ===
-            memoryCards.length
-          ) {
+        if (newMatched.length === cards.length) {
+          setTimeout(() => {
             setGame("memoryResult");
-          }
-        }, 500);
+          }, 500);
+        }
       } else {
         setTimeout(() => {
-          setMemoryOpen([]);
+          setOpenCards([]);
         }, 700);
       }
     }
   }
 
-  function backToMenu() {
-    setGame("menu");
-  }
-
   return (
     <>
       <Head>
-        <title>Educational Games for Kids | Chinnaari Kids</title>
+        <title>Kids Games | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Fun educational games for children including number quizzes, colour learning and memory games."
+          content="Fun educational games for kids including numbers, colours and memory games."
         />
 
         <meta
@@ -197,8 +173,6 @@ export default function Games() {
 
       <main className="page">
 
-        {/* HEADER */}
-
         <header className="header">
 
           <Link href="/" className="logo">
@@ -207,32 +181,20 @@ export default function Games() {
 
           <nav>
             <Link href="/">Home</Link>
-
-            <Link href="/stories">
-              📚 Stories
-            </Link>
-
+            <Link href="/stories">📚 Stories</Link>
             <Link href="/games" className="active">
               🎮 Games
             </Link>
-
-            <Link href="/puzzles">
-              🧩 Puzzles
-            </Link>
-
-            <Link href="/colours">
-              🎨 Colours
-            </Link>
+            <Link href="/puzzles">🧩 Puzzles</Link>
+            <Link href="/colours">🎨 Colours</Link>
           </nav>
 
         </header>
 
-        {/* HERO */}
-
         <section className="hero">
 
-          <div className="heroIcon">
-            🎮
+          <div className="heroEmoji">
+            🎮✨
           </div>
 
           <h1>
@@ -240,33 +202,31 @@ export default function Games() {
           </h1>
 
           <p>
-            Play, think, answer and learn! 🌟
+            Play, think, learn and have fun! 🌟
           </p>
 
         </section>
 
-        {/* GAME MENU */}
+        {/* MENU */}
 
         {game === "menu" && (
-          <section className="gameSection">
+          <section className="games">
 
             <h2>
               🎯 Choose a Game
             </h2>
 
-            <p className="intro">
-              Pick your favourite learning game!
+            <p className="subtitle">
+              Pick a game and start learning!
             </p>
 
             <div className="gameGrid">
 
               <button
-                className="gameCard numbers"
-                onClick={startNumberGame}
+                className="gameCard pink"
+                onClick={startNumbers}
               >
-                <span className="gameEmoji">
-                  🔢
-                </span>
+                <div>🔢</div>
 
                 <h3>
                   Number Quiz
@@ -282,19 +242,17 @@ export default function Games() {
               </button>
 
               <button
-                className="gameCard colours"
-                onClick={startColourGame}
+                className="gameCard green"
+                onClick={startColours}
               >
-                <span className="gameEmoji">
-                  🎨
-                </span>
+                <div>🎨</div>
 
                 <h3>
                   Colour Quiz
                 </h3>
 
                 <p>
-                  Learn and identify different colours.
+                  Learn and identify colours.
                 </p>
 
                 <strong>
@@ -303,19 +261,17 @@ export default function Games() {
               </button>
 
               <button
-                className="gameCard memory"
-                onClick={startMemoryGame}
+                className="gameCard purple"
+                onClick={startMemory}
               >
-                <span className="gameEmoji">
-                  🧠
-                </span>
+                <div>🧠</div>
 
                 <h3>
                   Memory Match
                 </h3>
 
                 <p>
-                  Find matching animals and train your memory.
+                  Find matching animals.
                 </p>
 
                 <strong>
@@ -330,21 +286,19 @@ export default function Games() {
 
         {/* NUMBER GAME */}
 
-        {game === "numbers" && (
-          <section className="quizBox">
+        {game === "numbers" && !numberFinished && (
+          <section className="gameBox">
 
-            <div className="quizTop">
-              <span>
-                🔢 Number Quiz
-              </span>
+            <div className="top">
+              <span>🔢 Number Quiz</span>
 
               <span>
-                Question {numberIndex + 1} / {numberQuestions.length}
+                {numberIndex + 1} / {numberQuestions.length}
               </span>
             </div>
 
             <h2>
-              {numberQuestions[numberIndex].question}
+              {numberQuestions[numberIndex].q}
             </h2>
 
             <div className="options">
@@ -362,21 +316,22 @@ export default function Games() {
 
             </div>
 
-            {numberMessage && (
-              <div className="message">
-                {numberMessage}
-              </div>
-            )}
+            <button
+              className="backButton"
+              onClick={() => setGame("menu")}
+            >
+              ← Games
+            </button>
 
           </section>
         )}
 
         {/* NUMBER RESULT */}
 
-        {game === "numberResult" && (
-          <section className="resultBox">
+        {game === "numbers" && numberFinished && (
+          <section className="result">
 
-            <div>
+            <div className="resultEmoji">
               🏆
             </div>
 
@@ -385,22 +340,20 @@ export default function Games() {
             </h2>
 
             <p>
-              You got{" "}
-              <strong>
-                {numberScore}
-              </strong>{" "}
-              out of{" "}
-              {numberQuestions.length}
-              !
+              Your score:
             </p>
+
+            <strong>
+              {numberScore} / {numberQuestions.length}
+            </strong>
 
             <div className="resultButtons">
 
-              <button onClick={startNumberGame}>
+              <button onClick={startNumbers}>
                 🔄 Play Again
               </button>
 
-              <button onClick={backToMenu}>
+              <button onClick={() => setGame("menu")}>
                 🎮 More Games
               </button>
 
@@ -411,22 +364,19 @@ export default function Games() {
 
         {/* COLOUR GAME */}
 
-        {game === "colours" && (
-          <section className="quizBox">
+        {game === "colours" && !colourFinished && (
+          <section className="gameBox">
 
-            <div className="quizTop">
-              <span>
-                🎨 Colour Quiz
-              </span>
+            <div className="top">
+              <span>🎨 Colour Quiz</span>
 
               <span>
-                Question {colourIndex + 1} /{" "}
-                {colourQuestions.length}
+                {colourIndex + 1} / {colourQuestions.length}
               </span>
             </div>
 
             <h2>
-              {colourQuestions[colourIndex].question}
+              {colourQuestions[colourIndex].q}
             </h2>
 
             <div className="colourOptions">
@@ -444,22 +394,23 @@ export default function Games() {
 
             </div>
 
-            {colourMessage && (
-              <div className="message">
-                {colourMessage}
-              </div>
-            )}
+            <button
+              className="backButton"
+              onClick={() => setGame("menu")}
+            >
+              ← Games
+            </button>
 
           </section>
         )}
 
         {/* COLOUR RESULT */}
 
-        {game === "colourResult" && (
-          <section className="resultBox">
+        {game === "colours" && colourFinished && (
+          <section className="result">
 
-            <div>
-              🎨⭐
+            <div className="resultEmoji">
+              🎨🏆
             </div>
 
             <h2>
@@ -467,22 +418,20 @@ export default function Games() {
             </h2>
 
             <p>
-              You got{" "}
-              <strong>
-                {colourScore}
-              </strong>{" "}
-              out of{" "}
-              {colourQuestions.length}
-              !
+              Your score:
             </p>
+
+            <strong>
+              {colourScore} / {colourQuestions.length}
+            </strong>
 
             <div className="resultButtons">
 
-              <button onClick={startColourGame}>
+              <button onClick={startColours}>
                 🔄 Play Again
               </button>
 
-              <button onClick={backToMenu}>
+              <button onClick={() => setGame("menu")}>
                 🎮 More Games
               </button>
 
@@ -494,15 +443,13 @@ export default function Games() {
         {/* MEMORY GAME */}
 
         {game === "memory" && (
-          <section className="memorySection">
+          <section className="memory">
 
-            <div className="quizTop">
-              <span>
-                🧠 Memory Match
-              </span>
+            <div className="top">
+              <span>🧠 Memory Match</span>
 
               <span>
-                Moves: {memoryMoves}
+                Moves: {moves}
               </span>
             </div>
 
@@ -512,26 +459,31 @@ export default function Games() {
 
             <div className="memoryGrid">
 
-              {memoryCards.map((card, index) => {
+              {cards.map((card, index) => {
 
-                const isOpen =
-                  memoryOpen.includes(index) ||
-                  memoryMatched.includes(index);
+                const visible =
+                  openCards.includes(index) ||
+                  matchedCards.includes(index);
 
                 return (
                   <button
                     key={card.id}
                     className="memoryCard"
-                    onClick={() =>
-                      flipMemoryCard(index)
-                    }
+                    onClick={() => openCard(index)}
                   >
-                    {isOpen ? card.emoji : "❓"}
+                    {visible ? card.emoji : "❓"}
                   </button>
                 );
               })}
 
             </div>
+
+            <button
+              className="backButton"
+              onClick={() => setGame("menu")}
+            >
+              ← Games
+            </button>
 
           </section>
         )}
@@ -539,9 +491,9 @@ export default function Games() {
         {/* MEMORY RESULT */}
 
         {game === "memoryResult" && (
-          <section className="resultBox">
+          <section className="result">
 
-            <div>
+            <div className="resultEmoji">
               🧠🏆
             </div>
 
@@ -550,20 +502,20 @@ export default function Games() {
             </h2>
 
             <p>
-              You completed the game in{" "}
-              <strong>
-                {memoryMoves}
-              </strong>{" "}
-              moves.
+              Completed in:
             </p>
+
+            <strong>
+              {moves} moves
+            </strong>
 
             <div className="resultButtons">
 
-              <button onClick={startMemoryGame}>
+              <button onClick={startMemory}>
                 🔄 Play Again
               </button>
 
-              <button onClick={backToMenu}>
+              <button onClick={() => setGame("menu")}>
                 🎮 More Games
               </button>
 
@@ -572,38 +524,21 @@ export default function Games() {
           </section>
         )}
 
-        {/* HOME BUTTON */}
-
-        <div className="backHome">
-
+        <div className="homeButton">
           <Link href="/">
             🏠 Back to Home
           </Link>
-
         </div>
 
-        {/* FOOTER */}
-
         <footer>
-
-          <h3>
-            🌈 Chinnaari Kids
-          </h3>
-
-          <p>
-            Learn • Play • Discover
-          </p>
-
-          <p>
-            © 2026 Chinnaari Kids
-          </p>
-
+          <h3>🌈 Chinnaari Kids</h3>
+          <p>Learn • Play • Discover</p>
+          <p>© 2026 Chinnaari Kids</p>
         </footer>
 
       </main>
 
       <style jsx>{`
-
         * {
           box-sizing: border-box;
         }
@@ -615,44 +550,35 @@ export default function Games() {
           font-family: Arial, sans-serif;
         }
 
-        /* HEADER */
-
         .header {
           min-height: 70px;
           padding: 14px 6%;
-
           display: flex;
           align-items: center;
           justify-content: space-between;
-
           background: white;
-
-          box-shadow:
-            0 2px 15px rgba(0, 0, 0, 0.08);
-
+          box-shadow: 0 2px 15px rgba(0,0,0,0.08);
           position: sticky;
           top: 0;
-          z-index: 20;
+          z-index: 10;
         }
 
         .logo {
+          color: #333;
+          text-decoration: none;
           font-size: 24px;
           font-weight: 800;
-          text-decoration: none;
-          color: #333;
-          white-space: nowrap;
         }
 
         nav {
           display: flex;
-          gap: 20px;
-          align-items: center;
+          gap: 18px;
           flex-wrap: wrap;
         }
 
         nav a {
-          text-decoration: none;
           color: #444;
+          text-decoration: none;
           font-weight: 600;
         }
 
@@ -661,27 +587,19 @@ export default function Games() {
           color: #ff6b6b;
         }
 
-        /* HERO */
-
         .hero {
-          padding: 55px 20px;
           text-align: center;
-
-          background:
-            linear-gradient(
-              135deg,
-              #e7ddff,
-              #dff5ff
-            );
+          padding: 55px 20px;
+          background: linear-gradient(135deg,#e7ddff,#dff5ff);
         }
 
-        .heroIcon {
+        .heroEmoji {
           font-size: 70px;
         }
 
         .hero h1 {
-          font-size: 43px;
-          margin: 15px 0 8px;
+          font-size: 42px;
+          margin: 15px 0 10px;
         }
 
         .hero p {
@@ -689,19 +607,16 @@ export default function Games() {
           color: #555;
         }
 
-        /* GAME MENU */
-
-        .gameSection {
+        .games {
           padding: 55px 7%;
           text-align: center;
         }
 
-        .gameSection h2 {
+        .games h2 {
           font-size: 32px;
-          margin-bottom: 8px;
         }
 
-        .intro {
+        .subtitle {
           color: #666;
           margin-bottom: 35px;
         }
@@ -709,59 +624,28 @@ export default function Games() {
         .gameGrid {
           max-width: 1100px;
           margin: auto;
-
           display: grid;
-          grid-template-columns:
-            repeat(3, 1fr);
-
+          grid-template-columns: repeat(3,1fr);
           gap: 25px;
         }
 
         .gameCard {
           border: none;
-
-          padding: 35px 25px;
-
           border-radius: 28px;
-
-          min-height: 310px;
-
+          padding: 35px 25px;
+          min-height: 300px;
           cursor: pointer;
-
-          color: #333;
-
           font-family: inherit;
-
-          box-shadow:
-            0 6px 20px
-            rgba(0, 0, 0, 0.06);
-
-          transition:
-            transform 0.2s,
-            box-shadow 0.2s;
+          color: #333;
+          box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+          transition: transform .2s;
         }
 
         .gameCard:hover {
-          transform: translateY(-8px);
-
-          box-shadow:
-            0 12px 28px
-            rgba(0, 0, 0, 0.12);
+          transform: translateY(-7px);
         }
 
-        .numbers {
-          background: #ffe0e8;
-        }
-
-        .colours {
-          background: #dcf5dc;
-        }
-
-        .memory {
-          background: #e2ddff;
-        }
-
-        .gameEmoji {
+        .gameCard div {
           font-size: 65px;
         }
 
@@ -775,256 +659,204 @@ export default function Games() {
           color: #555;
         }
 
-        .gameCard strong {
-          display: inline-block;
-          margin-top: 10px;
+        .pink {
+          background: #ffe0e8;
         }
 
-        /* QUIZ */
+        .green {
+          background: #ddf5dc;
+        }
 
-        .quizBox {
+        .purple {
+          background: #e5ddff;
+        }
+
+        .gameBox,
+        .result,
+        .memory {
           max-width: 700px;
-
-          margin: 60px auto;
-
+          margin: 55px auto;
           padding: 40px 30px;
-
           background: white;
-
           border-radius: 30px;
-
           text-align: center;
-
-          box-shadow:
-            0 7px 25px
-            rgba(0, 0, 0, 0.08);
+          box-shadow: 0 7px 25px rgba(0,0,0,0.08);
         }
 
-        .quizTop {
+        .top {
           display: flex;
           justify-content: space-between;
-
-          gap: 15px;
-
           font-weight: bold;
-
           color: #666;
         }
 
-        .quizBox h2 {
-          font-size: 28px;
-
-          line-height: 1.4;
-
+        .gameBox h2,
+        .memory h2 {
           margin: 45px 0 30px;
+          font-size: 28px;
         }
 
         .options {
           display: grid;
-
-          grid-template-columns:
-            repeat(2, 1fr);
-
+          grid-template-columns: repeat(2,1fr);
           gap: 15px;
         }
 
         .options button {
-          padding: 18px;
-
           border: none;
-
+          padding: 18px;
           border-radius: 20px;
-
           background: #eee5ff;
-
           font-size: 20px;
-
           font-weight: bold;
-
           cursor: pointer;
-
-          transition:
-            transform 0.2s,
-            background 0.2s;
         }
 
         .options button:hover {
-          transform: scale(1.04);
-          background: #ddd0ff;
+          transform: scale(1.03);
         }
 
         .colourOptions {
           display: grid;
-
-          grid-template-columns:
-            repeat(4, 1fr);
-
+          grid-template-columns: repeat(4,1fr);
           gap: 15px;
         }
 
         .colourOptions button {
           border: none;
-
-          background: #f5f5f5;
-
-          border-radius: 20px;
-
           padding: 20px;
-
+          border-radius: 20px;
+          background: #f2f2f2;
           font-size: 45px;
-
           cursor: pointer;
-
-          transition:
-            transform 0.2s;
-        }
-
-        .colourOptions button:hover {
-          transform: scale(1.08);
-        }
-
-        .message {
-          margin-top: 25px;
-
-          padding: 15px;
-
-          border-radius: 18px;
-
-          background: #fff0bd;
-
-          font-weight: bold;
-        }
-
-        /* MEMORY */
-
-        .memorySection {
-          max-width: 650px;
-
-          margin: 50px auto;
-
-          padding: 35px 25px;
-
-          text-align: center;
-        }
-
-        .memorySection h2 {
-          margin: 30px 0;
         }
 
         .memoryGrid {
           display: grid;
-
-          grid-template-columns:
-            repeat(4, 1fr);
-
+          grid-template-columns: repeat(4,1fr);
           gap: 14px;
         }
 
         .memoryCard {
           aspect-ratio: 1;
-
           border: none;
-
           border-radius: 20px;
-
-          background: #e2ddff;
-
+          background: #e5ddff;
           font-size: 40px;
-
           cursor: pointer;
-
-          box-shadow:
-            0 4px 12px
-            rgba(0, 0, 0, 0.08);
-
-          transition:
-            transform 0.2s;
         }
 
-        .memoryCard:hover {
-          transform: scale(1.05);
-        }
-
-        /* RESULT */
-
-        .resultBox {
-          max-width: 650px;
-
-          margin: 70px auto;
-
-          padding: 50px 30px;
-
-          text-align: center;
-
-          background: white;
-
-          border-radius: 30px;
-
-          box-shadow:
-            0 7px 25px
-            rgba(0, 0, 0, 0.08);
-        }
-
-        .resultBox > div:first-child {
+        .resultEmoji {
           font-size: 75px;
         }
 
-        .resultBox h2 {
+        .result h2 {
           font-size: 32px;
         }
 
-        .resultBox p {
+        .result p {
           font-size: 18px;
-          color: #555;
+        }
+
+        .result strong {
+          font-size: 30px;
         }
 
         .resultButtons {
           display: flex;
-
           justify-content: center;
-
           gap: 12px;
-
           flex-wrap: wrap;
-
-          margin-top: 25px;
+          margin-top: 30px;
         }
 
-        .resultButtons button {
-          padding: 13px 20px;
-
+        .resultButtons button,
+        .backButton {
           border: none;
-
+          padding: 13px 20px;
           border-radius: 25px;
-
           background: #ff6b6b;
-
           color: white;
-
           font-weight: bold;
-
           cursor: pointer;
         }
 
-        /* BACK */
+        .backButton {
+          margin-top: 25px;
+          background: #333;
+        }
 
-        .backHome {
+        .homeButton {
           text-align: center;
-
           margin: 40px 0 55px;
         }
 
-        .backHome a {
+        .homeButton a {
           display: inline-block;
-
           padding: 13px 22px;
-
-          background: #333;
-
-          color: white;
-
-          text-decoration: none;
-
           border-radius: 25px;
+          background: #333;
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+        }
 
-          font-weight: b
+        footer {
+          padding: 35px 20px;
+          text-align: center;
+          background: #333;
+          color: white;
+        }
+
+        footer h3 {
+          margin-top: 0;
+        }
+
+        footer p {
+          margin: 8px;
+        }
+
+        @media (max-width: 850px) {
+          .header {
+            flex-direction: column;
+            gap: 15px;
+          }
+
+          nav {
+            justify-content: center;
+            gap: 12px;
+          }
+
+          .gameGrid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .hero h1 {
+            font-size: 34px;
+          }
+
+          .gameGrid {
+            grid-template-columns: 1fr;
+          }
+
+          .gameBox,
+          .result,
+          .memory {
+            margin: 35px 20px;
+            padding: 30px 20px;
+          }
+
+          .options {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .colourOptions {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+      `}</style>
+    </>
+  );
+                  }
