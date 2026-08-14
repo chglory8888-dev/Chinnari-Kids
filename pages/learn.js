@@ -7,7 +7,7 @@ const alphabet = [
   ["B", "⚽", "Ball"],
   ["C", "🐱", "Cat"],
   ["D", "🐶", "Dog"],
-  ["E", "🥚", "Egg"],
+  ["E", "🐘", "Elephant"],
   ["F", "🐟", "Fish"],
   ["G", "🍇", "Grapes"],
   ["H", "🏠", "House"],
@@ -38,28 +38,50 @@ const numbers = [
   ["3", "🍎🍎🍎"],
   ["4", "🍎🍎🍎🍎"],
   ["5", "🍎🍎🍎🍎🍎"],
-  ["6", "⭐️⭐️⭐️⭐️⭐️⭐️"],
-  ["7", "⭐️⭐️⭐️⭐️⭐️⭐️⭐️"],
-  ["8", "🟢🟢🟢🟢🟢🟢🟢🟢"],
-  ["9", "🔵🔵🔵🔵🔵🔵🔵🔵🔵"],
-  ["10", "❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️"],
+  ["6", "⭐".repeat(6)],
+  ["7", "⭐".repeat(7)],
+  ["8", "⭐".repeat(8)],
+  ["9", "⭐".repeat(9)],
+  ["10", "⭐".repeat(10)],
 ];
 
 export default function Learn() {
-  const [section, setSection] = useState("abc");
+  const [stars, setStars] = useState(0);
+  const [active, setActive] = useState(null);
+  const [completed, setCompleted] = useState({
+    abc: false,
+    telugu: false,
+    numbers: false,
+  });
 
-  const [selectedLetter, setSelectedLetter] = useState(null);
-  const [selectedTelugu, setSelectedTelugu] = useState(null);
-  const [selectedNumber, setSelectedNumber] = useState(null);
+  function earnStar(type, value) {
+    const key = `${type}-${value}`;
+
+    if (active !== key) {
+      setStars((old) => old + 1);
+      setActive(key);
+    }
+  }
+
+  function completeSection(type) {
+    if (!completed[type]) {
+      setStars((old) => old + 5);
+
+      setCompleted((old) => ({
+        ...old,
+        [type]: true,
+      }));
+    }
+  }
 
   return (
     <>
       <Head>
-        <title>Kids Learning | ABC, Telugu & Numbers | Chinnaari</title>
+        <title>Learn ABC, Telugu & Numbers | Chinnaari Kids</title>
 
         <meta
           name="description"
-          content="Fun learning for kids with English ABC, Telugu vowels and numbers."
+          content="Learn ABC, Telugu vowels and numbers with fun activities for kids."
         />
 
         <meta
@@ -80,26 +102,12 @@ export default function Learn() {
 
           <nav>
             <Link href="/">Home</Link>
-
-            <Link href="/stories">
-              📚 Stories
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
-            </Link>
-
-            <Link href="/puzzles">
-              🧩 Puzzles
-            </Link>
-
-            <Link href="/colours">
-              🎨 Colours
-            </Link>
-
-            <Link href="/learn" className="active">
-              🔤 Learn
-            </Link>
+            <Link href="/dashboard">🌟 Dashboard</Link>
+            <Link href="/stories">📚 Stories</Link>
+            <Link href="/games">🎮 Games</Link>
+            <Link href="/puzzles">🧩 Puzzles</Link>
+            <Link href="/colours">🎨 Colours</Link>
+            <Link href="/learn">🔤 Learn</Link>
           </nav>
 
         </header>
@@ -108,81 +116,63 @@ export default function Learn() {
 
         <section className="hero">
 
-          <div className="heroEmoji">
-            🧠📚✨
+          <div className="heroIcon">
+            🔤
           </div>
 
           <h1>
-            Let's Learn!
+            Little Learning Zone! 🌟
           </h1>
 
           <p>
-            ABC • తెలుగు అచ్చులు • Numbers
+            Learn letters, Telugu vowels and numbers
+            while collecting stars!
           </p>
+
+          <div className="stars">
+            ⭐ {stars} Stars
+          </div>
 
         </section>
 
-        {/* TABS */}
-
-        <div className="tabs">
-
-          <button
-            className={section === "abc" ? "selected" : ""}
-            onClick={() => {
-              setSection("abc");
-              setSelectedLetter(null);
-            }}
-          >
-            🔤 ABC
-          </button>
-
-          <button
-            className={section === "telugu" ? "selected" : ""}
-            onClick={() => {
-              setSection("telugu");
-              setSelectedTelugu(null);
-            }}
-          >
-            తెలుగు అచ్చులు
-          </button>
-
-          <button
-            className={section === "numbers" ? "selected" : ""}
-            onClick={() => {
-              setSection("numbers");
-              setSelectedNumber(null);
-            }}
-          >
-            🔢 Numbers
-          </button>
-
-        </div>
-
         {/* ABC */}
 
-        {section === "abc" && (
-          <section className="content">
+        <section className="section">
 
-            <h2>
-              🔤 Learn English Alphabet
-            </h2>
+          <div className="sectionTitle">
 
-            <p className="subtitle">
-              Tap a letter to learn!
-            </p>
+            <span className="sectionIcon">
+              🔤
+            </span>
 
-            <div className="letterGrid">
+            <div>
+              <h2>
+                Learn ABC
+              </h2>
 
-              {alphabet.map(([letter, emoji, word]) => (
+              <p>
+                Tap each letter to learn!
+              </p>
+            </div>
+
+          </div>
+
+          <div className="abcGrid">
+
+            {alphabet.map(([letter, emoji, word]) => {
+
+              const key = `abc-${letter}`;
+
+              return (
                 <button
-                  className="letterCard"
                   key={letter}
+                  className={
+                    active === key
+                      ? "abcCard active"
+                      : "abcCard"
+                  }
                   onClick={() =>
-                    setSelectedLetter({
-                      letter,
-                      emoji,
-                      word,
-                    })
+                    earnStar("abc", letter)
                   }
                 >
 
@@ -199,56 +189,60 @@ export default function Learn() {
                   </small>
 
                 </button>
-              ))}
+              );
+            })}
 
-            </div>
+          </div>
 
-            {selectedLetter && (
-              <div className="selectedBox">
+          <button
+            className="completeButton"
+            onClick={() => completeSection("abc")}
+          >
+            {completed.abc
+              ? "✅ ABC Completed"
+              : "🏆 Complete ABC +5 Stars"}
+          </button>
 
-                <div>
-                  {selectedLetter.letter}
-                </div>
-
-                <div>
-                  {selectedLetter.emoji}
-                </div>
-
-                <h3>
-                  {selectedLetter.letter} for{" "}
-                  {selectedLetter.word}
-                </h3>
-
-              </div>
-            )}
-
-          </section>
-        )}
+        </section>
 
         {/* TELUGU */}
 
-        {section === "telugu" && (
-          <section className="content">
+        <section className="section teluguSection">
 
-            <h2>
-              🇮🇳 తెలుగు అచ్చులు
-            </h2>
+          <div className="sectionTitle">
 
-            <p className="subtitle">
-              అచ్చులను సరదాగా నేర్చుకుందాం!
-            </p>
+            <span className="sectionIcon">
+              అ
+            </span>
 
-            <div className="teluguGrid">
+            <div>
+              <h2>
+                తెలుగు అచ్చులు
+              </h2>
 
-              {teluguLetters.map(([letter, word]) => (
+              <p>
+                తెలుగు అచ్చులను నేర్చుకుందాం!
+              </p>
+            </div>
+
+          </div>
+
+          <div className="teluguGrid">
+
+            {teluguLetters.map(([letter, word]) => {
+
+              const key = `telugu-${letter}`;
+
+              return (
                 <button
-                  className="teluguCard"
                   key={letter}
+                  className={
+                    active === key
+                      ? "teluguCard active"
+                      : "teluguCard"
+                  }
                   onClick={() =>
-                    setSelectedTelugu({
-                      letter,
-                      word,
-                    })
+                    earnStar("telugu", letter)
                   }
                 >
 
@@ -261,56 +255,60 @@ export default function Learn() {
                   </span>
 
                 </button>
-              ))}
+              );
+            })}
 
-            </div>
+          </div>
 
-            {selectedTelugu && (
-              <div className="selectedBox teluguSelected">
+          <button
+            className="completeButton"
+            onClick={() => completeSection("telugu")}
+          >
+            {completed.telugu
+              ? "✅ తెలుగు Completed"
+              : "🏆 Complete Telugu +5 Stars"}
+          </button>
 
-                <div>
-                  {selectedTelugu.letter}
-                </div>
-
-                <h3>
-                  {selectedTelugu.letter} —{" "}
-                  {selectedTelugu.word}
-                </h3>
-
-                <p>
-                  చాలా బాగా నేర్చుకుంటున్నారు! 🌟
-                </p>
-
-              </div>
-            )}
-
-          </section>
-        )}
+        </section>
 
         {/* NUMBERS */}
 
-        {section === "numbers" && (
-          <section className="content">
+        <section className="section">
 
-            <h2>
-              🔢 Learn Numbers
-            </h2>
+          <div className="sectionTitle">
 
-            <p className="subtitle">
-              Count the objects and learn numbers!
-            </p>
+            <span className="sectionIcon">
+              🔢
+            </span>
 
-            <div className="numberGrid">
+            <div>
+              <h2>
+                Learn Numbers
+              </h2>
 
-              {numbers.map(([number, objects]) => (
+              <p>
+                Count the objects!
+              </p>
+            </div>
+
+          </div>
+
+          <div className="numberGrid">
+
+            {numbers.map(([number, objects]) => {
+
+              const key = `number-${number}`;
+
+              return (
                 <button
-                  className="numberCard"
                   key={number}
+                  className={
+                    active === key
+                      ? "numberCard active"
+                      : "numberCard"
+                  }
                   onClick={() =>
-                    setSelectedNumber({
-                      number,
-                      objects,
-                    })
+                    earnStar("number", number)
                   }
                 >
 
@@ -323,65 +321,47 @@ export default function Learn() {
                   </span>
 
                 </button>
-              ))}
+              );
+            })}
 
-            </div>
-
-            {selectedNumber && (
-              <div className="selectedBox">
-
-                <div className="numberBig">
-                  {selectedNumber.number}
-                </div>
-
-                <div className="objects">
-                  {selectedNumber.objects}
-                </div>
-
-                <h3>
-                  Number {selectedNumber.number}
-                </h3>
-
-                <p>
-                  Count carefully! 👏
-                </p>
-
-              </div>
-            )}
-
-          </section>
-        )}
-
-        {/* LEARNING MESSAGE */}
-
-        <section className="learningMessage">
-
-          <div className="brain">
-            🧠
           </div>
 
-          <div>
-            <h2>
-              Learning is Fun! 🌟
-            </h2>
-
-            <p>
-              Practice a little every day and become
-              a super learner!
-            </p>
-          </div>
+          <button
+            className="completeButton"
+            onClick={() => completeSection("numbers")}
+          >
+            {completed.numbers
+              ? "✅ Numbers Completed"
+              : "🏆 Complete Numbers +5 Stars"}
+          </button>
 
         </section>
 
-        {/* HOME */}
+        {/* MOTIVATION */}
 
-        <div className="homeButton">
+        <section className="motivation">
 
-          <Link href="/">
-            🏠 Back to Home
+          <div className="motivationEmoji">
+            🧠✨
+          </div>
+
+          <h2>
+            Amazing Learning!
+          </h2>
+
+          <p>
+            Every new letter and number you learn
+            makes your brain stronger! 💪
+          </p>
+
+          <Link
+            href="/dashboard"
+            className="dashboardButton"
+          >
+            🌟 View My Stars
           </Link>
 
-        </div>
+        </section>
 
         {/* FOOTER */}
 
@@ -394,6 +374,30 @@ export default function Learn() {
           <p>
             Learn • Play • Discover
           </p>
+
+          <div className="footerLinks">
+
+            <Link href="/">
+              Home
+            </Link>
+
+            <Link href="/dashboard">
+              Dashboard
+            </Link>
+
+            <Link href="/games">
+              Games
+            </Link>
+
+            <Link href="/puzzles">
+              Puzzles
+            </Link>
+
+            <Link href="/colours">
+              Colours
+            </Link>
+
+          </div>
 
           <p>
             © 2026 Chinnaari Kids
@@ -455,11 +459,12 @@ export default function Learn() {
         nav a {
           color: #444;
           text-decoration: none;
+
+          font-size: 14px;
           font-weight: 600;
         }
 
-        nav a:hover,
-        nav a.active {
+        nav a:hover {
           color: #ff6b6b;
         }
 
@@ -468,114 +473,117 @@ export default function Learn() {
         .hero {
           text-align: center;
 
-          padding: 55px 20px;
+          padding: 45px 20px;
 
           background:
             linear-gradient(
               135deg,
-              #e4ddff,
-              #dff6ff
+              #e8ddff,
+              #dff5ff
             );
         }
 
-        .heroEmoji {
+        .heroIcon {
           font-size: 70px;
         }
 
         .hero h1 {
-          font-size: 42px;
-          margin: 15px 0 10px;
+          font-size: 40px;
+          margin: 10px 0;
         }
 
         .hero p {
           font-size: 18px;
           color: #555;
+          line-height: 1.6;
         }
 
-        /* TABS */
+        .stars {
+          display: inline-block;
 
-        .tabs {
-          display: flex;
+          margin-top: 10px;
 
-          justify-content: center;
-
-          gap: 12px;
-
-          margin: 35px 20px;
-
-          flex-wrap: wrap;
-        }
-
-        .tabs button {
-          border: none;
-
-          padding: 14px 22px;
+          padding: 9px 18px;
 
           border-radius: 25px;
 
-          background: white;
-
-          box-shadow:
-            0 3px 12px rgba(0,0,0,0.08);
+          background: #fff0b8;
 
           font-weight: bold;
-
-          cursor: pointer;
         }
 
-        .tabs button.selected {
-          background: #ff6b6b;
-          color: white;
-        }
+        /* SECTIONS */
 
-        /* CONTENT */
-
-        .content {
+        .section {
           max-width: 1050px;
 
-          margin: auto;
+          margin: 45px auto;
 
-          padding: 10px 20px 55px;
+          padding: 30px 20px;
 
           text-align: center;
         }
 
-        .content h2 {
+        .sectionTitle {
+          display: flex;
+
+          justify-content: center;
+
+          align-items: center;
+
+          gap: 15px;
+
+          margin-bottom: 30px;
+        }
+
+        .sectionIcon {
+          width: 65px;
+          height: 65px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 20px;
+
+          background: #fff0b8;
+
+          font-size: 38px;
+          font-weight: bold;
+        }
+
+        .sectionTitle h2 {
+          margin: 0;
+
           font-size: 30px;
         }
 
-        .subtitle {
+        .sectionTitle p {
+          margin: 6px 0 0;
+
           color: #666;
-          font-size: 17px;
         }
 
         /* ABC */
 
-        .letterGrid {
+        .abcGrid {
           display: grid;
 
           grid-template-columns:
             repeat(4, 1fr);
 
-          gap: 18px;
-
-          margin-top: 30px;
+          gap: 15px;
         }
 
-        .letterCard {
-          border: none;
-
+        .abcCard {
           min-height: 170px;
 
-          padding: 20px;
+          border: none;
 
           border-radius: 25px;
 
-          background: white;
-
-          box-shadow:
-            0 5px 18px
-            rgba(0,0,0,0.07);
+          background: #e9ddff;
 
           cursor: pointer;
 
@@ -587,30 +595,43 @@ export default function Learn() {
 
           justify-content: center;
 
-          gap: 8px;
+          gap: 7px;
 
           transition:
-            transform 0.2s;
+            transform 0.2s,
+            box-shadow 0.2s;
         }
 
-        .letterCard:hover {
-          transform: translateY(-6px);
+        .abcCard:hover,
+        .abcCard.active {
+          transform: translateY(-5px);
+
+          box-shadow:
+            0 0 0 4px #ffd84d,
+            0 8px 20px
+            rgba(0,0,0,0.1);
         }
 
-        .letterCard strong {
-          font-size: 42px;
+        .abcCard strong {
+          font-size: 45px;
         }
 
-        .letterCard span {
-          font-size: 42px;
+        .abcCard span {
+          font-size: 38px;
         }
 
-        .letterCard small {
+        .abcCard small {
           font-size: 16px;
-          color: #555;
+          font-weight: bold;
         }
 
         /* TELUGU */
+
+        .teluguSection {
+          background: #fff0f5;
+
+          border-radius: 30px;
+        }
 
         .teluguGrid {
           display: grid;
@@ -618,46 +639,49 @@ export default function Learn() {
           grid-template-columns:
             repeat(4, 1fr);
 
-          gap: 18px;
-
-          margin-top: 30px;
+          gap: 15px;
         }
 
         .teluguCard {
+          min-height: 125px;
+
           border: none;
 
-          padding: 25px 15px;
+          border-radius: 22px;
 
-          min-height: 130px;
-
-          border-radius: 25px;
-
-          background: #fff0c2;
-
-          box-shadow:
-            0 5px 18px
-            rgba(0,0,0,0.06);
+          background: white;
 
           cursor: pointer;
 
+          box-shadow:
+            0 4px 15px
+            rgba(0,0,0,0.06);
+
           transition:
-            transform 0.2s;
+            transform 0.2s,
+            box-shadow 0.2s;
         }
 
-        .teluguCard:hover {
-          transform: translateY(-6px);
+        .teluguCard:hover,
+        .teluguCard.active {
+          transform: translateY(-5px);
+
+          box-shadow:
+            0 0 0 4px #ffb6c8;
         }
 
         .teluguCard strong {
           display: block;
 
-          font-size: 45px;
+          font-size: 42px;
 
-          margin-bottom: 10px;
+          margin-bottom: 8px;
         }
 
         .teluguCard span {
-          font-size: 17px;
+          font-size: 15px;
+
+          color: #666;
         }
 
         /* NUMBERS */
@@ -668,138 +692,113 @@ export default function Learn() {
           grid-template-columns:
             repeat(5, 1fr);
 
-          gap: 18px;
-
-          margin-top: 30px;
+          gap: 15px;
         }
 
         .numberCard {
+          min-height: 150px;
+
           border: none;
 
-          min-height: 160px;
+          border-radius: 23px;
 
-          padding: 18px;
-
-          border-radius: 25px;
-
-          background: #ddf4ff;
-
-          box-shadow:
-            0 5px 18px
-            rgba(0,0,0,0.06);
+          background: #e0f2ff;
 
           cursor: pointer;
 
+          padding: 15px;
+
           transition:
-            transform 0.2s;
+            transform 0.2s,
+            box-shadow 0.2s;
         }
 
-        .numberCard:hover {
-          transform: translateY(-6px);
+        .numberCard:hover,
+        .numberCard.active {
+          transform: translateY(-5px);
+
+          box-shadow:
+            0 0 0 4px #80cfff;
         }
 
         .numberCard strong {
           display: block;
 
-          font-size: 42px;
+          font-size: 40px;
 
-          margin-bottom: 12px;
+          margin-bottom: 10px;
         }
 
         .numberCard span {
-          font-size: 20px;
+          display: block;
 
-          line-height: 1.6;
+          font-size: 16px;
+
+          line-height: 1.5;
+
+          word-break: break-word;
         }
 
-        /* SELECTED */
+        /* COMPLETE */
 
-        .selectedBox {
-          max-width: 600px;
+        .completeButton {
+          margin-top: 25px;
 
-          margin: 35px auto 0;
+          border: none;
 
-          padding: 30px;
+          padding: 14px 23px;
 
-          border-radius: 28px;
+          border-radius: 25px;
 
-          background:
-            linear-gradient(
-              135deg,
-              #fff0bf,
-              #e5ddff
-            );
+          background: #4caf50;
 
-          box-shadow:
-            0 5px 20px
-            rgba(0,0,0,0.06);
+          color: white;
+
+          font-weight: bold;
+
+          font-size: 15px;
+
+          cursor: pointer;
         }
 
-        .selectedBox > div {
-          font-size: 60px;
+        .completeButton:hover {
+          transform: scale(1.04);
         }
 
-        .selectedBox h3 {
-          font-size: 24px;
-        }
+        /* MOTIVATION */
 
-        .selectedBox p {
-          color: #555;
-        }
+        .motivation {
+          max-width: 800px;
 
-        .teluguSelected {
-          background:
-            linear-gradient(
-              135deg,
-              #ffe1ea,
-              #fff0bf
-            );
-        }
+          margin: 30px auto 55px;
 
-        .numberBig {
-          font-size: 65px !important;
-          font-weight: 800;
-        }
+          padding: 40px 25px;
 
-        .objects {
-          font-size: 24px !important;
-          line-height: 1.7;
-        }
-
-        /* LEARNING MESSAGE */
-
-        .learningMessage {
-          max-width: 900px;
-
-          margin: 10px auto 50px;
-
-          padding: 35px;
-
-          display: flex;
-
-          align-items: center;
-
-          gap: 25px;
+          text-align: center;
 
           border-radius: 30px;
 
           background:
             linear-gradient(
               135deg,
-              #dff5ff,
-              #e9ddff
+              #fff0b8,
+              #dff5ff
             );
+
+          box-shadow:
+            0 7px 25px
+            rgba(0,0,0,0.07);
         }
 
-        .brain {
-          font-size: 70px;
+        .motivationEmoji {
+          font-size: 65px;
         }
 
-        .learningMessage h2 {
-          margin-top: 0;
+        .motivation h2 {
+          font-size: 30px;
         }
 
-        .learningMessage p {
+        .motivation p {
           color: #555;
 
           font-size: 17px;
@@ -807,22 +806,16 @@ export default function Learn() {
           line-height: 1.7;
         }
 
-        /* HOME */
-
-        .homeButton {
-          text-align: center;
-
-          margin: 40px 0 55px;
-        }
-
-        .homeButton a {
+        .dashboardButton {
           display: inline-block;
 
-          padding: 13px 22px;
+          margin-top: 10px;
+
+          padding: 14px 23px;
 
           border-radius: 25px;
 
-          background: #333;
+          background: #ff6b6b;
 
           color: white;
 
@@ -848,7 +841,27 @@ export default function Learn() {
         }
 
         footer p {
-          margin: 8px;
+          margin: 9px;
+        }
+
+        .footerLinks {
+          display: flex;
+
+          justify-content: center;
+
+          gap: 18px;
+
+          flex-wrap: wrap;
+
+          margin: 18px 0;
+        }
+
+        .footerLinks a {
+          color: white;
+
+          text-decoration: none;
+
+          font-size: 14px;
         }
 
         /* TABLET */
@@ -857,6 +870,7 @@ export default function Learn() {
 
           .header {
             flex-direction: column;
+
             gap: 15px;
           }
 
@@ -864,7 +878,7 @@ export default function Learn() {
             justify-content: center;
           }
 
-          .letterGrid {
+          .abcGrid {
             grid-template-columns:
               repeat(3, 1fr);
           }
@@ -877,24 +891,35 @@ export default function Learn() {
           .numberGrid {
             grid-template-columns:
               repeat(3, 1fr);
-          }
-
-          .learningMessage {
-            margin-left: 20px;
-            margin-right: 20px;
           }
 
         }
 
         /* MOBILE */
 
-        @media (max-width: 550px) {
+        @media (max-width: 600px) {
 
-          .hero h1 {
-            font-size: 34px;
+          .logo {
+            font-size: 21px;
           }
 
-          .letterGrid {
+          nav {
+            gap: 10px;
+          }
+
+          nav a {
+            font-size: 12px;
+          }
+
+          .hero h1 {
+            font-size: 32px;
+          }
+
+          .sectionTitle {
+            flex-direction: column;
+          }
+
+          .abcGrid {
             grid-template-columns:
               repeat(2, 1fr);
           }
@@ -909,10 +934,8 @@ export default function Learn() {
               repeat(2, 1fr);
           }
 
-          .learningMessage {
-            flex-direction: column;
-            text-align: center;
-            padding: 25px 20px;
+          .section {
+            margin: 25px auto;
           }
 
         }
@@ -920,4 +943,4 @@ export default function Learn() {
       `}</style>
     </>
   );
-            }
+          }
