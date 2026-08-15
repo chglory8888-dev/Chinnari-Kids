@@ -1021,4 +1021,53 @@ export default function Dots() {
           .categoryGrid {
             grid-template-columns:
               repeat(3, 1fr);
+          }
+
+          .categoryIcon {
+            font-size: 30px;
+          }
+
+          .gameSection {
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 15px;
+          }
+
+          .gameTop {
+            font-size: 18px;
+          }
+
+          .targetIcon {
+            font-size: 32px;
+          }
+
+          .levels {
+            flex-wrap: wrap;
+          }
+
+          .learning {
+            margin-left: 15px;
+            margin-right: 15px;
+            flex-direction: column;
+            text-align: center;
+          }
+
+        }
+
+        @media (max-width: 420px) {
+
+          .categoryGrid {
+            grid-template-columns:
+              repeat(2, 1fr);
+          }
+
+          .heroMini {
+            font-size: 21px;
+          }
+
+        }
+
+      `}</style>
+    </>
+  );
 }
