@@ -36,10 +36,64 @@ export default function Quiz() {
   const [selected, setSelected] = useState("");
   const [finished, setFinished] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
-  const [showConfetti, setShowConfetti] = useState(false);
 
   const question = questions[currentQuestion];
 
+  // -----------------------------
+  // TEXT TO SPEECH
+  // -----------------------------
+  function speak(text) {
+    if (!soundOn) return;
+
+    if (typeof window === "undefined") return;
+
+    if (!("speechSynthesis" in window)) {
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    // Telugu / English detection
+    const hasTelugu = /[\u0C00-\u0C7F]/.test(text);
+
+    speech.lang = hasTelugu ? "te-IN" : "en-IN";
+
+    speech.rate = 0.8;
+    speech.pitch = 1.05;
+    speech.volume = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+
+    if (hasTelugu) {
+      const teluguVoice = voices.find(
+        (voice) =>
+          voice.lang &&
+          voice.lang.toLowerCase().startsWith("te")
+      );
+
+      if (teluguVoice) {
+        speech.voice = teluguVoice;
+      }
+    } else {
+      const englishVoice = voices.find(
+        (voice) =>
+          voice.lang &&
+          voice.lang.toLowerCase().startsWith("en-in")
+      );
+
+      if (englishVoice) {
+        speech.voice = englishVoice;
+      }
+    }
+
+    window.speechSynthesis.speak(speech);
+  }
+
+  // -----------------------------
+  // SOUND EFFECT
+  // -----------------------------
   function playSound(type) {
     if (!soundOn) return;
 
@@ -47,14 +101,18 @@ export default function Quiz() {
 
     try {
       const AudioContext =
-        window.AudioContext || window.webkitAudioContext;
+        window.AudioContext ||
+        window.webkitAudioContext;
 
       if (!AudioContext) return;
 
       const audioContext = new AudioContext();
 
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      const oscillator =
+        audioContext.createOscillator();
+
+      const gainNode =
+        audioContext.createGain();
 
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
@@ -76,7 +134,7 @@ export default function Quiz() {
         );
 
         gainNode.gain.setValueAtTime(
-          0.25,
+          0.2,
           audioContext.currentTime
         );
 
@@ -102,7 +160,7 @@ export default function Quiz() {
         );
 
         gainNode.gain.setValueAtTime(
-          0.25,
+          0.2,
           audioContext.currentTime
         );
 
@@ -122,22 +180,19 @@ export default function Quiz() {
     }
   }
 
-  function startConfetti() {
-    setShowConfetti(true);
-
-    setTimeout(() => {
-      setShowConfetti(false);
-    }, 1200);
-  }
-
+  // -----------------------------
+  // ANSWER
+  // -----------------------------
   function handleAnswer(option) {
     if (selected) return;
+
+    // First speak the selected word
+    speak(option);
 
     setSelected(option);
 
     if (option === question.answer) {
       playSound("correct");
-      startConfetti();
 
       setScore((prev) => prev + 1);
     } else {
@@ -151,15 +206,19 @@ export default function Quiz() {
       } else {
         setFinished(true);
       }
-    }, 1000);
+    }, 1800);
   }
 
+  // -----------------------------
+  // RESTART
+  // -----------------------------
   function restartQuiz() {
+    window.speechSynthesis?.cancel();
+
     setCurrentQuestion(0);
     setScore(0);
     setSelected("");
     setFinished(false);
-    setShowConfetti(false);
   }
 
   return (
@@ -169,7 +228,7 @@ export default function Quiz() {
 
         <meta
           name="description"
-          content="Fun Telugu quiz for kids"
+          content="Telugu and English learning quiz for kids"
         />
 
         <meta
@@ -178,26 +237,27 @@ export default function Quiz() {
         />
       </Head>
 
-      {showConfetti && (
-        <div className="confetti">
-          🎉 ⭐ 🎊 ✨ 🎈 🌟 🎉 ⭐ 🎊
-        </div>
-      )}
-
       <main className="quiz-page">
+
         <div className="quiz-card">
 
           <div className="top-bar">
+
             <Link href="/" className="home-link">
               🏠 Home
             </Link>
 
             <button
               className="sound-button"
-              onClick={() => setSoundOn(!soundOn)}
+              onClick={() =>
+                setSoundOn((prev) => !prev)
+              }
             >
-              {soundOn ? "🔊 Sound ON" : "🔇 Sound OFF"}
+              {soundOn
+                ? "🔊 Voice ON"
+                : "🔇 Voice OFF"}
             </button>
+
           </div>
 
           <h1>🎯 Chinnaari Quiz</h1>
@@ -210,17 +270,35 @@ export default function Quiz() {
               </p>
 
               <div className="question-box">
+
                 <h2>{question.question}</h2>
+
+                <button
+                  className="listen-button"
+                  onClick={() =>
+                    speak(question.question)
+                  }
+                >
+                  🔊 Listen
+                </button>
+
               </div>
 
               <div className="options">
+
                 {question.options.map((option) => {
+
                   let className = "option";
 
                   if (selected) {
-                    if (option === question.answer) {
+
+                    if (
+                      option === question.answer
+                    ) {
                       className += " correct";
-                    } else if (option === selected) {
+                    } else if (
+                      option === selected
+                    ) {
                       className += " wrong";
                     }
                   }
@@ -229,23 +307,29 @@ export default function Quiz() {
                     <button
                       key={option}
                       className={className}
-                      onClick={() => handleAnswer(option)}
+                      onClick={() =>
+                        handleAnswer(option)
+                      }
                       disabled={!!selected}
                     >
                       {option}
                     </button>
                   );
                 })}
+
               </div>
             </>
           ) : (
+
             <div className="result">
 
               <div className="trophy">
                 🏆
               </div>
 
-              <h2>Quiz Complete!</h2>
+              <h2>
+                Quiz Complete!
+              </h2>
 
               <div className="score">
                 {score} / {questions.length}
@@ -253,15 +337,15 @@ export default function Quiz() {
 
               {score === questions.length ? (
                 <p className="message">
-                  🌟 Perfect Score! You are a Star! 🌟
+                  🌟 Perfect Score!
                 </p>
               ) : score >= 3 ? (
                 <p className="message">
-                  👏 Very Good! Keep Learning!
+                  👏 Very Good!
                 </p>
               ) : (
                 <p className="message">
-                  😊 Good Try! Try Again!
+                  😊 Good Try!
                 </p>
               )}
 
@@ -274,12 +358,16 @@ export default function Quiz() {
 
             </div>
           )}
+
         </div>
+
       </main>
 
       <style jsx>{`
+
         .quiz-page {
           min-height: 100vh;
+
           padding: 25px 15px;
 
           background: linear-gradient(
@@ -290,7 +378,9 @@ export default function Quiz() {
           );
 
           display: flex;
+
           justify-content: center;
+
           align-items: center;
 
           font-family: Arial, sans-serif;
@@ -298,6 +388,7 @@ export default function Quiz() {
 
         .quiz-card {
           width: 100%;
+
           max-width: 600px;
 
           background: white;
@@ -315,12 +406,12 @@ export default function Quiz() {
 
         .top-bar {
           display: flex;
+
           justify-content: space-between;
+
           align-items: center;
 
           gap: 10px;
-
-          margin-bottom: 10px;
         }
 
         .home-link {
@@ -340,15 +431,9 @@ export default function Quiz() {
 
           background: #f1f1f1;
 
-          color: #333;
-
           font-weight: bold;
 
           cursor: pointer;
-        }
-
-        .sound-button:hover {
-          background: #e5d4ff;
         }
 
         h1 {
@@ -356,15 +441,13 @@ export default function Quiz() {
 
           font-size: 34px;
 
-          margin: 15px 0 20px;
+          margin: 20px 0;
         }
 
         .progress {
           color: #777;
 
           font-weight: bold;
-
-          margin-bottom: 20px;
         }
 
         .question-box {
@@ -372,17 +455,31 @@ export default function Quiz() {
 
           border-radius: 20px;
 
-          padding: 10px 15px;
+          padding: 15px;
 
-          margin-bottom: 25px;
+          margin: 20px 0 25px;
         }
 
         h2 {
           color: #333;
 
           font-size: 24px;
+        }
 
-          margin: 20px 0;
+        .listen-button {
+          border: none;
+
+          border-radius: 12px;
+
+          padding: 10px 18px;
+
+          background: #ffca3a;
+
+          color: #333;
+
+          font-weight: bold;
+
+          cursor: pointer;
         }
 
         .options {
@@ -419,10 +516,6 @@ export default function Quiz() {
           background: #e5d4ff;
         }
 
-        .option:disabled {
-          cursor: default;
-        }
-
         .option.correct {
           background: #9be7a7;
 
@@ -441,14 +534,10 @@ export default function Quiz() {
 
         .trophy {
           font-size: 75px;
-
-          animation: bounce 1s infinite;
         }
 
         .result h2 {
           color: #7b2cbf;
-
-          font-size: 30px;
         }
 
         .score {
@@ -458,13 +547,11 @@ export default function Quiz() {
 
           color: #ff6b35;
 
-          margin: 15px 0;
+          margin: 15px;
         }
 
         .message {
           font-size: 20px;
-
-          color: #444;
 
           font-weight: bold;
         }
@@ -487,82 +574,12 @@ export default function Quiz() {
           background: #7b2cbf;
 
           color: white;
-
-          transition: 0.2s;
-        }
-
-        .restart:hover {
-          background: #5a189a;
-
-          transform: scale(1.03);
-        }
-
-        .confetti {
-          position: fixed;
-
-          top: 20%;
-
-          left: 50%;
-
-          transform: translateX(-50%);
-
-          font-size: 38px;
-
-          z-index: 9999;
-
-          animation: confettiPop 1.2s ease-out;
-
-          pointer-events: none;
-
-          white-space: nowrap;
-        }
-
-        @keyframes confettiPop {
-          0% {
-            transform: translateX(-50%) scale(0.3);
-
-            opacity: 0;
-          }
-
-          30% {
-            transform: translateX(-50%) scale(1.3);
-
-            opacity: 1;
-          }
-
-          100% {
-            transform: translateX(-50%) scale(1);
-
-            opacity: 0;
-          }
-        }
-
-        @keyframes bounce {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-
-          50% {
-            transform: translateY(-10px);
-          }
         }
 
         @media (max-width: 480px) {
-          .quiz-page {
-            padding: 20px 10px;
-          }
 
           .quiz-card {
             padding: 25px 15px;
-          }
-
-          .top-bar {
-            align-items: stretch;
-          }
-
-          .sound-button {
-            font-size: 12px;
           }
 
           h1 {
@@ -575,18 +592,17 @@ export default function Quiz() {
 
           .option {
             font-size: 16px;
-
-            padding: 14px;
           }
 
-          .score {
-            font-size: 42px;
+          .top-bar {
+            align-items: stretch;
           }
 
-          .confetti {
-            font-size: 28px;
+          .sound-button {
+            font-size: 12px;
           }
         }
+
       `}</style>
     </>
   );
