@@ -65,6 +65,46 @@ const quizData = {
     ["Queen of flowers?", ["Rose", "Lotus", "Tulip", "Daisy"], "Rose", "🌹"],
     ["Flower commonly grows in ponds?", ["Lotus", "Rose", "Tulip", "Sunflower"], "Lotus", "🌸"],
     ["Flower associated with love?", ["Rose", "Daisy", "Lily", "Marigold"], "Rose", "❤️"]
+  ],
+
+  Numbers: [
+    ["What comes after 9?", ["8", "10", "11", "7"], "10", "🔢"],
+    ["What comes before 20?", ["18", "19", "21", "17"], "19", "🔢"],
+    ["How many fingers on one hand?", ["4", "5", "6", "10"], "5", "✋"],
+    ["What is 2 + 3?", ["4", "5", "6", "7"], "5", "➕"],
+    ["What is 5 + 5?", ["8", "9", "10", "11"], "10", "➕"]
+  ],
+
+  ABC: [
+    ["Letter after A?", ["B", "C", "D", "E"], "B", "🔤"],
+    ["Letter after C?", ["A", "B", "D", "E"], "D", "🔤"],
+    ["Letter before Z?", ["X", "Y", "W", "V"], "Y", "🔤"],
+    ["First letter of Apple?", ["A", "B", "C", "D"], "A", "🍎"],
+    ["First letter of Ball?", ["A", "B", "C", "D"], "B", "⚽"]
+  ],
+
+  Telugu: [
+    ["తెలుగు అచ్చులలో మొదటి అక్షరం ఏది?", ["అ", "ఆ", "ఇ", "ఈ"], "అ", "అ"],
+    ["అ తర్వాత వచ్చే అక్షరం ఏది?", ["ఇ", "ఆ", "ఉ", "ఎ"], "ఆ", "ఆ"],
+    ["ఆ తర్వాత వచ్చే అక్షరం ఏది?", ["అ", "ఇ", "ఈ", "ఉ"], "ఇ", "ఇ"],
+    ["ఇ తర్వాత వచ్చే అక్షరం ఏది?", ["ఆ", "ఈ", "ఉ", "ఊ"], "ఈ", "ఈ"],
+    ["ఉ తర్వాత వచ్చే అక్షరం ఏది?", ["ఊ", "ఇ", "ఎ", "ఏ"], "ఊ", "ఊ"]
+  ],
+
+  "Famous Places": [
+    ["Taj Mahal is in?", ["Agra", "Delhi", "Mumbai", "Jaipur"], "Agra", "🕌"],
+    ["Eiffel Tower is in?", ["Paris", "Rome", "London", "Berlin"], "Paris", "🗼"],
+    ["Statue of Liberty is in?", ["New York", "London", "Paris", "Tokyo"], "New York", "🗽"],
+    ["Great Pyramids are in?", ["Egypt", "India", "Brazil", "China"], "Egypt", "🏜️"],
+    ["Great Wall is in?", ["China", "Japan", "India", "Korea"], "China", "🏯"]
+  ],
+
+  "General Knowledge": [
+    ["Days in a week?", ["5", "6", "7", "8"], "7", "📅"],
+    ["Colors in a rainbow?", ["5", "6", "7", "8"], "7", "🌈"],
+    ["Planet we live on?", ["Mars", "Earth", "Venus", "Jupiter"], "Earth", "🌍"],
+    ["Star that gives Earth light?", ["Moon", "Sun", "Mars", "Venus"], "Sun", "☀️"],
+    ["Months in a year?", ["10", "11", "12", "13"], "12", "📆"]
   ]
 };
 
@@ -76,7 +116,12 @@ const categories = [
   ["Birds", "🐦"],
   ["Insects", "🦋"],
   ["Fruits", "🍎"],
-  ["Flowers", "🌸"]
+  ["Flowers", "🌸"],
+  ["Numbers", "🔢"],
+  ["ABC", "🔤"],
+  ["Telugu", "అ"],
+  ["Famous Places", "🗺️"],
+  ["General Knowledge", "🧠"]
 ];
 
 export default function Quiz() {
@@ -161,10 +206,17 @@ export default function Quiz() {
         <section className="hero">
           <div className="heroIcon">🧠❓🎯</div>
           <h1>Mega Quiz</h1>
-          <p>Learn, Think and Have Fun!</p>
+          <p>Learn • Think • Play • Discover</p>
           <div className="heroMini">
-            🌍 🇮🇳 🐶 🐦 🍎 🔤 🧠
+            🌍 🇮🇳 🐶 🐦 🦋 🍎 🔤 🧠
           </div>
+        </section>
+
+        <section className="special">
+          <Link href="/flags" className="flagLink">
+            🏳️ Flags Quiz
+            <span>Learn World Flags →</span>
+          </Link>
         </section>
 
         <section className="categories">
@@ -189,7 +241,6 @@ export default function Quiz() {
         </section>
 
         <section className="quizCard">
-
           {!finished ? (
             <>
               <div className="quizTop">
@@ -214,12 +265,9 @@ export default function Quiz() {
               </div>
 
               <div className="options">
-
                 {question[1].map((option) => {
-
                   const isCorrect =
-                    answered &&
-                    option === question[2];
+                    answered && option === question[2];
 
                   const isWrong =
                     answered &&
@@ -236,9 +284,7 @@ export default function Quiz() {
                           ? "option wrong"
                           : "option"
                       }
-                      onClick={() =>
-                        answerQuestion(option)
-                      }
+                      onClick={() => answerQuestion(option)}
                     >
                       <span>{option}</span>
 
@@ -247,7 +293,6 @@ export default function Quiz() {
                     </button>
                   );
                 })}
-
               </div>
 
               {answered && (
@@ -265,7 +310,6 @@ export default function Quiz() {
               )}
 
               <div className="bottom">
-
                 <div className="score">
                   ⭐ Score: {score}
                 </div>
@@ -280,12 +324,10 @@ export default function Quiz() {
                       : "Next ➡️"}
                   </button>
                 )}
-
               </div>
             </>
           ) : (
             <div className="result">
-
               <div className="resultIcon">
                 {score === questions.length
                   ? "🏆"
@@ -314,10 +356,8 @@ export default function Quiz() {
               >
                 🔄 Play Again
               </button>
-
             </div>
           )}
-
         </section>
       </main>
 
@@ -382,7 +422,6 @@ export default function Quiz() {
 
         .heroIcon {
           font-size: 55px;
-          letter-spacing: 5px;
         }
 
         .hero h1 {
@@ -400,9 +439,34 @@ export default function Quiz() {
           margin-top: 20px;
         }
 
+        .special {
+          text-align: center;
+          padding: 25px 20px 5px;
+        }
+
+        .flagLink {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 5px;
+          padding: 16px 30px;
+          background: #ff9d42;
+          color: white;
+          text-decoration: none;
+          border-radius: 25px;
+          font-size: 20px;
+          font-weight: bold;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .flagLink span {
+          font-size: 13px;
+          font-weight: normal;
+        }
+
         .categories {
           max-width: 1100px;
-          margin: 35px auto;
+          margin: 30px auto;
           padding: 0 20px;
           text-align: center;
         }
@@ -605,28 +669,7 @@ export default function Quiz() {
           font-size: 24px;
         }
 
-        .learning {
-          max-width: 850px;
-          margin: 30px auto 50px;
-          padding: 30px;
-          background: white;
-          border-radius: 30px;
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .learning > div {
-          font-size: 70px;
-        }
-
-        .learning p {
-          color: #666;
-          line-height: 1.6;
-        }
-
-        .links {
+        .bottomLinks {
           display: flex;
           justify-content: center;
           flex-wrap: wrap;
@@ -634,7 +677,7 @@ export default function Quiz() {
           margin: 20px 20px 50px;
         }
 
-        .links a {
+        .bottomLinks a {
           background: #333;
           color: white;
           text-decoration: none;
@@ -665,13 +708,6 @@ export default function Quiz() {
 
           .options {
             grid-template-columns: 1fr;
-          }
-
-          .learning {
-            margin-left: 15px;
-            margin-right: 15px;
-            flex-direction: column;
-            text-align: center;
           }
         }
 
@@ -724,9 +760,12 @@ export default function Quiz() {
             width: 100%;
             text-align: center;
           }
+
+          .flagLink {
+            width: 90%;
+          }
         }
       `}</style>
     </>
   );
-                 }
-            
+}
