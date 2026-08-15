@@ -35,11 +35,14 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("");
   const [finished, setFinished] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const question = questions[currentQuestion];
 
-  // Browser generated sound
   function playSound(type) {
+    if (!soundOn) return;
+
     if (typeof window === "undefined") return;
 
     try {
@@ -57,7 +60,6 @@ export default function Quiz() {
       gainNode.connect(audioContext.destination);
 
       if (type === "correct") {
-        // Happy sound 🎉
         oscillator.frequency.setValueAtTime(
           523.25,
           audioContext.currentTime
@@ -89,7 +91,6 @@ export default function Quiz() {
           audioContext.currentTime + 0.45
         );
       } else {
-        // Wrong sound 🔔
         oscillator.frequency.setValueAtTime(
           220,
           audioContext.currentTime
@@ -121,6 +122,14 @@ export default function Quiz() {
     }
   }
 
+  function startConfetti() {
+    setShowConfetti(true);
+
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 1200);
+  }
+
   function handleAnswer(option) {
     if (selected) return;
 
@@ -128,6 +137,7 @@ export default function Quiz() {
 
     if (option === question.answer) {
       playSound("correct");
+      startConfetti();
 
       setScore((prev) => prev + 1);
     } else {
@@ -149,6 +159,7 @@ export default function Quiz() {
     setScore(0);
     setSelected("");
     setFinished(false);
+    setShowConfetti(false);
   }
 
   return (
@@ -167,12 +178,27 @@ export default function Quiz() {
         />
       </Head>
 
+      {showConfetti && (
+        <div className="confetti">
+          🎉 ⭐ 🎊 ✨ 🎈 🌟 🎉 ⭐ 🎊
+        </div>
+      )}
+
       <main className="quiz-page">
         <div className="quiz-card">
 
-          <Link href="/" className="home-link">
-            🏠 Home
-          </Link>
+          <div className="top-bar">
+            <Link href="/" className="home-link">
+              🏠 Home
+            </Link>
+
+            <button
+              className="sound-button"
+              onClick={() => setSoundOn(!soundOn)}
+            >
+              {soundOn ? "🔊 Sound ON" : "🔇 Sound OFF"}
+            </button>
+          </div>
 
           <h1>🎯 Chinnaari Quiz</h1>
 
@@ -227,7 +253,7 @@ export default function Quiz() {
 
               {score === questions.length ? (
                 <p className="message">
-                  🌟 Super! You are a Star!
+                  🌟 Perfect Score! You are a Star! 🌟
                 </p>
               ) : score >= 3 ? (
                 <p className="message">
@@ -254,7 +280,7 @@ export default function Quiz() {
       <style jsx>{`
         .quiz-page {
           min-height: 100vh;
-          padding: 30px 15px;
+          padding: 25px 15px;
 
           background: linear-gradient(
             135deg,
@@ -287,11 +313,17 @@ export default function Quiz() {
             rgba(0, 0, 0, 0.15);
         }
 
-        .home-link {
-          display: inline-block;
+        .top-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          gap: 10px;
 
           margin-bottom: 10px;
+        }
 
+        .home-link {
           text-decoration: none;
 
           color: #7b2cbf;
@@ -299,12 +331,32 @@ export default function Quiz() {
           font-weight: bold;
         }
 
+        .sound-button {
+          border: none;
+
+          border-radius: 12px;
+
+          padding: 9px 12px;
+
+          background: #f1f1f1;
+
+          color: #333;
+
+          font-weight: bold;
+
+          cursor: pointer;
+        }
+
+        .sound-button:hover {
+          background: #e5d4ff;
+        }
+
         h1 {
           color: #ff6b35;
 
           font-size: 34px;
 
-          margin: 10px 0 20px;
+          margin: 15px 0 20px;
         }
 
         .progress {
@@ -445,6 +497,46 @@ export default function Quiz() {
           transform: scale(1.03);
         }
 
+        .confetti {
+          position: fixed;
+
+          top: 20%;
+
+          left: 50%;
+
+          transform: translateX(-50%);
+
+          font-size: 38px;
+
+          z-index: 9999;
+
+          animation: confettiPop 1.2s ease-out;
+
+          pointer-events: none;
+
+          white-space: nowrap;
+        }
+
+        @keyframes confettiPop {
+          0% {
+            transform: translateX(-50%) scale(0.3);
+
+            opacity: 0;
+          }
+
+          30% {
+            transform: translateX(-50%) scale(1.3);
+
+            opacity: 1;
+          }
+
+          100% {
+            transform: translateX(-50%) scale(1);
+
+            opacity: 0;
+          }
+        }
+
         @keyframes bounce {
           0%,
           100% {
@@ -465,6 +557,14 @@ export default function Quiz() {
             padding: 25px 15px;
           }
 
+          .top-bar {
+            align-items: stretch;
+          }
+
+          .sound-button {
+            font-size: 12px;
+          }
+
           h1 {
             font-size: 28px;
           }
@@ -481,6 +581,10 @@ export default function Quiz() {
 
           .score {
             font-size: 42px;
+          }
+
+          .confetti {
+            font-size: 28px;
           }
         }
       `}</style>
