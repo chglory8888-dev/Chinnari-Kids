@@ -2,23 +2,65 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 
-const flagQuiz = [
-  ["🇮🇳", "Which country does this flag belong to?", ["India", "Japan", "France", "Brazil"], "India"],
-  ["🇯🇵", "Which country does this flag belong to?", ["China", "Japan", "Korea", "Thailand"], "Japan"],
-  ["🇺🇸", "Which country does this flag belong to?", ["USA", "Canada", "Mexico", "Brazil"], "USA"],
-  ["🇬🇧", "Which country does this flag belong to?", ["France", "UK", "Germany", "Italy"], "UK"],
-  ["🇫🇷", "Which country does this flag belong to?", ["France", "Spain", "Italy", "Belgium"], "France"],
-  ["🇩🇪", "Which country does this flag belong to?", ["Germany", "Austria", "Poland", "Belgium"], "Germany"],
-  ["🇮🇹", "Which country does this flag belong to?", ["Italy", "Ireland", "Mexico", "France"], "Italy"],
-  ["🇨🇦", "Which country does this flag belong to?", ["Canada", "USA", "Denmark", "Sweden"], "Canada"],
-  ["🇦🇺", "Which country does this flag belong to?", ["Australia", "New Zealand", "UK", "Fiji"], "Australia"],
-  ["🇧🇷", "Which country does this flag belong to?", ["Brazil", "Portugal", "Argentina", "Mexico"], "Brazil"],
-  ["🇨🇳", "Which country does this flag belong to?", ["China", "Japan", "Vietnam", "Korea"], "China"],
-  ["🇰🇷", "Which country does this flag belong to?", ["Japan", "South Korea", "China", "Singapore"], "South Korea"],
-  ["🇷🇺", "Which country does this flag belong to?", ["Russia", "Ukraine", "Serbia", "Romania"], "Russia"],
-  ["🇮🇩", "Which country does this flag belong to?", ["Indonesia", "Monaco", "Poland", "Singapore"], "Indonesia"],
-  ["🇲🇽", "Which country does this flag belong to?", ["Mexico", "Italy", "Ireland", "India"], "Mexico"]
+const countries = [
+  ["🇮🇳", "India", "New Delhi", "Rupee"],
+  ["🇺🇸", "USA", "Washington, D.C.", "Dollar"],
+  ["🇬🇧", "United Kingdom", "London", "Pound"],
+  ["🇯🇵", "Japan", "Tokyo", "Yen"],
+  ["🇫🇷", "France", "Paris", "Euro"],
+  ["🇩🇪", "Germany", "Berlin", "Euro"],
+  ["🇨🇦", "Canada", "Ottawa", "Canadian Dollar"],
+  ["🇦🇺", "Australia", "Canberra", "Australian Dollar"],
+  ["🇧🇷", "Brazil", "Brasília", "Real"],
+  ["🇨🇳", "China", "Beijing", "Yuan"],
+  ["🇰🇷", "South Korea", "Seoul", "Won"],
+  ["🇷🇺", "Russia", "Moscow", "Ruble"],
+  ["🇮🇹", "Italy", "Rome", "Euro"],
+  ["🇪🇸", "Spain", "Madrid", "Euro"],
+  ["🇲🇽", "Mexico", "Mexico City", "Peso"],
+  ["🇿🇦", "South Africa", "Pretoria", "Rand"],
+  ["🇪🇬", "Egypt", "Cairo", "Egyptian Pound"],
+  ["🇸🇦", "Saudi Arabia", "Riyadh", "Riyal"],
+  ["🇦🇪", "UAE", "Abu Dhabi", "Dirham"],
+  ["🇸🇬", "Singapore", "Singapore", "Singapore Dollar"],
+  ["🇹🇭", "Thailand", "Bangkok", "Baht"],
+  ["🇮🇩", "Indonesia", "Jakarta", "Rupiah"],
+  ["🇲🇾", "Malaysia", "Kuala Lumpur", "Ringgit"],
+  ["🇳🇵", "Nepal", "Kathmandu", "Rupee"],
+  ["🇱🇰", "Sri Lanka", "Sri Jayawardenepura Kotte", "Rupee"],
+  ["🇧🇩", "Bangladesh", "Dhaka", "Taka"],
+  ["🇵🇰", "Pakistan", "Islamabad", "Rupee"],
+  ["🇳🇿", "New Zealand", "Wellington", "Dollar"],
+  ["🇹🇷", "Turkey", "Ankara", "Lira"],
+  ["🇬🇷", "Greece", "Athens", "Euro"],
+  ["🇳🇱", "Netherlands", "Amsterdam", "Euro"],
+  ["🇨🇭", "Switzerland", "Bern", "Franc"],
+  ["🇸🇪", "Sweden", "Stockholm", "Krona"],
+  ["🇳🇴", "Norway", "Oslo", "Krone"],
+  ["🇩🇰", "Denmark", "Copenhagen", "Krone"],
+  ["🇫🇮", "Finland", "Helsinki", "Euro"],
+  ["🇵🇹", "Portugal", "Lisbon", "Euro"],
+  ["🇮🇪", "Ireland", "Dublin", "Euro"],
+  ["🇦🇷", "Argentina", "Buenos Aires", "Peso"],
+  ["🇨🇱", "Chile", "Santiago", "Peso"],
+  ["🇨🇴", "Colombia", "Bogotá", "Peso"],
+  ["🇵🇪", "Peru", "Lima", "Sol"],
+  ["🇵🇭", "Philippines", "Manila", "Peso"],
+  ["🇻🇳", "Vietnam", "Hanoi", "Dong"],
+  ["🇵🇱", "Poland", "Warsaw", "Zloty"],
+  ["🇺🇦", "Ukraine", "Kyiv", "Hryvnia"],
+  ["🇮🇱", "Israel", "Jerusalem", "Shekel"],
+  ["🇰🇪", "Kenya", "Nairobi", "Shilling"],
+  ["🇳🇬", "Nigeria", "Abuja", "Naira"],
+  ["🇲🇦", "Morocco", "Rabat", "Dirham"],
+  ["🇮🇸", "Iceland", "Reykjavík", "Krona"],
+  ["🇨🇿", "Czech Republic", "Prague", "Koruna"]
 ];
+
+function makeQuestion(country, index) {
+  const types = ["flag", "country", "capital", "currency"];
+  return types[index % types.length];
+}
 
 export default function FlagsQuiz() {
   const [index, setIndex] = useState(0);
@@ -27,7 +69,36 @@ export default function FlagsQuiz() {
   const [answered, setAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
 
-  const current = flagQuiz[index];
+  const current = countries[index];
+  const type = makeQuestion(current, index);
+
+  const getOptions = () => {
+    let correct;
+
+    if (type === "flag") correct = current[1];
+    if (type === "country") correct = current[0];
+    if (type === "capital") correct = current[2];
+    if (type === "currency") correct = current[3];
+
+    const values = countries
+      .map((item) => {
+        if (type === "flag") return item[1];
+        if (type === "country") return item[0];
+        if (type === "capital") return item[2];
+        return item[3];
+      })
+      .filter((value) => value !== correct);
+
+    const random = values
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
+    return [correct, ...random].sort(
+      () => Math.random() - 0.5
+    );
+  };
+
+  const [options, setOptions] = useState(() => getOptions());
 
   function answer(option) {
     if (answered) return;
@@ -35,18 +106,54 @@ export default function FlagsQuiz() {
     setSelected(option);
     setAnswered(true);
 
-    if (option === current[2][0]) {
+    let correct;
+
+    if (type === "flag") correct = current[1];
+    if (type === "country") correct = current[0];
+    if (type === "capital") correct = current[2];
+    if (type === "currency") correct = current[3];
+
+    if (option === correct) {
       setScore((value) => value + 1);
     }
   }
 
   function next() {
-    if (index === flagQuiz.length - 1) {
+    if (index === countries.length - 1) {
       setFinished(true);
       return;
     }
 
-    setIndex((value) => value + 1);
+    const nextIndex = index + 1;
+    const nextCountry = countries[nextIndex];
+    const nextType = makeQuestion(nextCountry, nextIndex);
+
+    let correct;
+
+    if (nextType === "flag") correct = nextCountry[1];
+    if (nextType === "country") correct = nextCountry[0];
+    if (nextType === "capital") correct = nextCountry[2];
+    if (nextType === "currency") correct = nextCountry[3];
+
+    const values = countries
+      .map((item) => {
+        if (nextType === "flag") return item[1];
+        if (nextType === "country") return item[0];
+        if (nextType === "capital") return item[2];
+        return item[3];
+      })
+      .filter((value) => value !== correct);
+
+    const newOptions = [correct]
+      .concat(
+        values
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3)
+      )
+      .sort(() => Math.random() - 0.5);
+
+    setIndex(nextIndex);
+    setOptions(newOptions);
     setSelected("");
     setAnswered(false);
   }
@@ -57,15 +164,39 @@ export default function FlagsQuiz() {
     setSelected("");
     setAnswered(false);
     setFinished(false);
+    setOptions(getOptions());
+  }
+
+  function questionText() {
+    if (type === "flag") {
+      return "Which country does this flag belong to?";
+    }
+
+    if (type === "country") {
+      return "Which flag belongs to this country?";
+    }
+
+    if (type === "capital") {
+      return `What is the capital of ${current[1]}?`;
+    }
+
+    return `What is the currency of ${current[1]}?`;
+  }
+
+  function correctAnswer() {
+    if (type === "flag") return current[1];
+    if (type === "country") return current[0];
+    if (type === "capital") return current[2];
+    return current[3];
   }
 
   return (
     <>
       <Head>
-        <title>Flags Quiz | Chinnaari Kids</title>
+        <title>World Flags Quiz | Chinnaari Kids</title>
         <meta
           name="description"
-          content="Learn world flags and countries with a fun quiz."
+          content="Learn world flags, countries, capitals and currencies."
         />
         <meta
           name="viewport"
@@ -74,7 +205,6 @@ export default function FlagsQuiz() {
       </Head>
 
       <main className="page">
-
         <header className="header">
           <Link href="/" className="logo">
             🌈 Chinnaari Kids
@@ -88,94 +218,110 @@ export default function FlagsQuiz() {
         </header>
 
         <section className="hero">
-          <div className="titleEmoji">🌍🏳️🎯</div>
-
-          <h1>Flags Quiz</h1>
-
+          <div className="globe">🌍</div>
+          <h1>World Flags Quiz</h1>
           <p>
-            Learn the flags of the world!
+            Flags • Countries • Capitals • Currencies
           </p>
 
-          <div className="miniFlags">
-            🇮🇳 🇺🇸 🇬🇧 🇯🇵 🇫🇷 🇩🇪 🇧🇷
+          <div className="flags">
+            🇮🇳 🇺🇸 🇬🇧 🇯🇵 🇫🇷 🇩🇪 🇧🇷 🇨🇳
           </div>
         </section>
 
         {!finished ? (
           <section className="quizCard">
-
             <div className="top">
               <span>
-                Question {index + 1}
+                Question {index + 1} / {countries.length}
               </span>
 
-              <span>
-                ⭐ Score: {score}
-              </span>
+              <span>⭐ Score: {score}</span>
             </div>
 
             <div className="progress">
               <div
                 style={{
-                  width: `${((index + 1) / flagQuiz.length) * 100}%`
+                  width: `${
+                    ((index + 1) / countries.length) * 100
+                  }%`
                 }}
               />
             </div>
 
-            <div className="flagBox">
-              <div className="flag">
-                {current[0]}
-              </div>
+            <div className="questionBox">
+              {type === "flag" && (
+                <div className="bigFlag">
+                  {current[0]}
+                </div>
+              )}
 
-              <h2>{current[1]}</h2>
+              {type === "country" && (
+                <div className="countryName">
+                  {current[1]}
+                </div>
+              )}
+
+              {type === "capital" && (
+                <div className="countryName">
+                  🏛️ {current[1]}
+                </div>
+              )}
+
+              {type === "currency" && (
+                <div className="countryName">
+                  💰 {current[1]}
+                </div>
+              )}
+
+              <h2>{questionText()}</h2>
             </div>
 
             <div className="options">
-
-              {current[2].map((option) => {
-
+              {options.map((option) => {
                 const correct =
-                  answered &&
-                  option === current[2][0];
+                  option === correctAnswer();
 
-                const wrong =
+                const isCorrect =
+                  answered && correct;
+
+                const isWrong =
                   answered &&
                   option === selected &&
-                  option !== current[2][0];
+                  !correct;
 
                 return (
                   <button
                     key={option}
-                    onClick={() => answer(option)}
                     className={
-                      correct
+                      isCorrect
                         ? "option correct"
-                        : wrong
+                        : isWrong
                         ? "option wrong"
                         : "option"
                     }
+                    onClick={() => answer(option)}
                   >
                     {option}
 
-                    {correct && <span> ✅</span>}
-                    {wrong && <span> ❌</span>}
+                    {isCorrect && " ✅"}
+                    {isWrong && " ❌"}
                   </button>
                 );
               })}
-
             </div>
 
             {answered && (
               <div
                 className={
-                  selected === current[2][0]
+                  selected === correctAnswer()
                     ? "message good"
                     : "message bad"
                 }
               >
-                {selected === current[2][0]
-                  ? "🎉 Correct! Great job!"
-                  : `😊 Correct answer: ${current[2][0]}`}
+                {selected === correctAnswer()
+                  ? "🎉 Correct! Excellent!"
+                  : `😊 Correct answer: ${correctAnswer()}`}
               </div>
             )}
 
@@ -184,31 +330,29 @@ export default function FlagsQuiz() {
                 className="next"
                 onClick={next}
               >
-                {index === flagQuiz.length - 1
+                {index === countries.length - 1
                   ? "🏆 See Result"
                   : "Next ➡️"}
               </button>
             )}
-
           </section>
         ) : (
           <section className="result">
-
             <div className="trophy">🏆</div>
 
-            <h2>Quiz Complete!</h2>
+            <h2>World Quiz Complete!</h2>
 
             <div className="score">
-              {score} / {flagQuiz.length}
+              {score} / {countries.length}
             </div>
 
             <p>
-              {score === flagQuiz.length
-                ? "🌟 Perfect! You know your flags!"
-                : score >= 10
-                ? "👏 Excellent work!"
-                : score >= 6
-                ? "😊 Good job! Keep learning!"
+              {score === countries.length
+                ? "🌟 Perfect! You are a World Explorer!"
+                : score >= 35
+                ? "👏 Amazing knowledge!"
+                : score >= 20
+                ? "😊 Great job! Keep learning!"
                 : "💪 Keep practicing!"}
             </p>
 
@@ -218,16 +362,11 @@ export default function FlagsQuiz() {
             >
               🔄 Play Again
             </button>
-
           </section>
         )}
       </main>
 
       <style jsx>{`
-        * {
-          box-sizing: border-box;
-        }
-
         .page {
           min-height: 100vh;
           background: #fffaf3;
@@ -254,7 +393,6 @@ export default function FlagsQuiz() {
           text-decoration: none;
           font-size: 23px;
           font-weight: bold;
-          white-space: nowrap;
         }
 
         nav {
@@ -281,28 +419,28 @@ export default function FlagsQuiz() {
           );
         }
 
-        .titleEmoji {
-          font-size: 55px;
+        .globe {
+          font-size: 70px;
         }
 
         .hero h1 {
-          font-size: 44px;
-          margin: 12px 0;
+          font-size: 42px;
+          margin: 10px 0;
         }
 
         .hero p {
-          font-size: 19px;
+          font-size: 18px;
           color: #555;
         }
 
-        .miniFlags {
+        .flags {
           margin-top: 20px;
           font-size: 30px;
           letter-spacing: 5px;
         }
 
         .quizCard {
-          max-width: 800px;
+          max-width: 850px;
           margin: 40px auto;
           padding: 30px;
           background: white;
@@ -333,7 +471,7 @@ export default function FlagsQuiz() {
           transition: width 0.3s ease;
         }
 
-        .flagBox {
+        .questionBox {
           padding: 30px 15px;
           background: linear-gradient(
             135deg,
@@ -344,14 +482,21 @@ export default function FlagsQuiz() {
           margin-bottom: 25px;
         }
 
-        .flag {
+        .bigFlag {
           font-size: 110px;
           line-height: 1.2;
           margin-bottom: 15px;
         }
 
-        .flagBox h2 {
+        .countryName {
+          font-size: 42px;
+          font-weight: bold;
+          margin: 20px 0;
+        }
+
+        .questionBox h2 {
           font-size: 23px;
+          line-height: 1.5;
         }
 
         .options {
@@ -361,11 +506,11 @@ export default function FlagsQuiz() {
         }
 
         .option {
-          min-height: 60px;
+          min-height: 62px;
           border: 2px solid #e5e5e5;
           background: white;
           border-radius: 18px;
-          padding: 15px;
+          padding: 14px;
           font-size: 17px;
           font-weight: bold;
           cursor: pointer;
@@ -415,11 +560,6 @@ export default function FlagsQuiz() {
           cursor: pointer;
         }
 
-        .next:hover,
-        .restart:hover {
-          transform: scale(1.03);
-        }
-
         .result {
           max-width: 700px;
           margin: 50px auto;
@@ -435,7 +575,7 @@ export default function FlagsQuiz() {
         }
 
         .result h2 {
-          font-size: 35px;
+          font-size: 32px;
         }
 
         .score {
@@ -453,7 +593,7 @@ export default function FlagsQuiz() {
           margin: 15px 0 30px;
         }
 
-        @media (max-width: 650px) {
+        @media (max-width: 700px) {
           .header {
             flex-direction: column;
           }
@@ -462,13 +602,8 @@ export default function FlagsQuiz() {
             font-size: 34px;
           }
 
-          .titleEmoji {
-            font-size: 45px;
-          }
-
-          .miniFlags {
-            font-size: 22px;
-            letter-spacing: 2px;
+          .options {
+            grid-template-columns: 1fr;
           }
 
           .quizCard {
@@ -476,34 +611,35 @@ export default function FlagsQuiz() {
             padding: 20px 15px;
           }
 
-          .options {
-            grid-template-columns: 1fr;
-          }
-
-          .flag {
+          .bigFlag {
             font-size: 85px;
           }
 
-          .top {
-            font-size: 14px;
+          .countryName {
+            font-size: 30px;
+          }
+
+          .flags {
+            font-size: 22px;
+            letter-spacing: 2px;
           }
         }
 
         @media (max-width: 400px) {
           nav {
-            gap: 9px;
+            gap: 8px;
           }
 
           nav a {
             font-size: 12px;
           }
 
-          .flag {
+          .bigFlag {
             font-size: 70px;
           }
 
-          .hero h1 {
-            font-size: 30px;
+          .questionBox h2 {
+            font-size: 19px;
           }
         }
       `}</style>
