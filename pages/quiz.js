@@ -1,608 +1,196 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const quizData = {
   Countries: [
-    {
-      question: "What is the largest country in the world by area?",
-      options: ["India", "Russia", "China", "Canada"],
-      answer: "Russia",
-      emoji: "🌍",
-    },
-    {
-      question: "Which country is famous for the Eiffel Tower?",
-      options: ["France", "Italy", "Spain", "Germany"],
-      answer: "France",
-      emoji: "🗼",
-    },
-    {
-      question: "Which country is known as the Land of the Rising Sun?",
-      options: ["China", "Japan", "Korea", "Thailand"],
-      answer: "Japan",
-      emoji: "🇯🇵",
-    },
-    {
-      question: "Which country has the Great Pyramids of Giza?",
-      options: ["Egypt", "India", "Mexico", "Peru"],
-      answer: "Egypt",
-      emoji: "🇪🇬",
-    },
-    {
-      question: "Which country is shaped like a boot?",
-      options: ["France", "Italy", "Brazil", "Greece"],
-      answer: "Italy",
-      emoji: "🇮🇹",
-    },
+    ["What is the largest country in the world?", ["India", "Russia", "China", "Brazil"], "Russia", "🌍"],
+    ["Which country has the Eiffel Tower?", ["France", "Italy", "Spain", "Germany"], "France", "🗼"],
+    ["Which country is called the Land of the Rising Sun?", ["India", "Japan", "China", "Korea"], "Japan", "🇯🇵"],
+    ["Where are the Great Pyramids?", ["Egypt", "India", "Mexico", "Peru"], "Egypt", "🏜️"],
+    ["Which country is shaped like a boot?", ["France", "Italy", "Spain", "Greece"], "Italy", "🇮🇹"],
   ],
 
   Capitals: [
-    {
-      question: "What is the capital of India?",
-      options: ["Mumbai", "New Delhi", "Chennai", "Kolkata"],
-      answer: "New Delhi",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of France?",
-      options: ["London", "Rome", "Paris", "Madrid"],
-      answer: "Paris",
-      emoji: "🇫🇷",
-    },
-    {
-      question: "What is the capital of Japan?",
-      options: ["Tokyo", "Kyoto", "Osaka", "Hiroshima"],
-      answer: "Tokyo",
-      emoji: "🇯🇵",
-    },
-    {
-      question: "What is the capital of Australia?",
-      options: ["Sydney", "Melbourne", "Canberra", "Perth"],
-      answer: "Canberra",
-      emoji: "🇦🇺",
-    },
-    {
-      question: "What is the capital of the United Kingdom?",
-      options: ["London", "Manchester", "Liverpool", "Birmingham"],
-      answer: "London",
-      emoji: "🇬🇧",
-    },
+    ["What is the capital of India?", ["Mumbai", "New Delhi", "Chennai", "Kolkata"], "New Delhi", "🇮🇳"],
+    ["What is the capital of France?", ["Paris", "London", "Rome", "Madrid"], "Paris", "🇫🇷"],
+    ["What is the capital of Japan?", ["Tokyo", "Kyoto", "Osaka", "Hiroshima"], "Tokyo", "🇯🇵"],
+    ["What is the capital of Australia?", ["Sydney", "Melbourne", "Canberra", "Perth"], "Canberra", "🇦🇺"],
+    ["What is the capital of the UK?", ["London", "Manchester", "Liverpool", "Birmingham"], "London", "🇬🇧"],
   ],
 
   Currencies: [
-    {
-      question: "What is the currency of India?",
-      options: ["Dollar", "Rupee", "Euro", "Pound"],
-      answer: "Rupee",
-      emoji: "💰",
-    },
-    {
-      question: "What is the currency of Japan?",
-      options: ["Yen", "Won", "Dollar", "Yuan"],
-      answer: "Yen",
-      emoji: "💴",
-    },
-    {
-      question: "What is the currency of the United States?",
-      options: ["Euro", "Dollar", "Pound", "Franc"],
-      answer: "Dollar",
-      emoji: "💵",
-    },
-    {
-      question: "What is the currency of the United Kingdom?",
-      options: ["Euro", "Dollar", "Pound", "Yen"],
-      answer: "Pound",
-      emoji: "💷",
-    },
-    {
-      question: "What is the currency of Europe?",
-      options: ["Euro", "Dollar", "Rupee", "Yen"],
-      answer: "Euro",
-      emoji: "💶",
-    },
+    ["What is the currency of India?", ["Rupee", "Dollar", "Euro", "Pound"], "Rupee", "💰"],
+    ["What is the currency of Japan?", ["Yen", "Won", "Dollar", "Yuan"], "Yen", "💴"],
+    ["What is the currency of USA?", ["Euro", "Dollar", "Pound", "Yen"], "Dollar", "💵"],
+    ["What is the currency of UK?", ["Euro", "Dollar", "Pound", "Yen"], "Pound", "💷"],
+    ["What is the currency used by many European countries?", ["Euro", "Dollar", "Rupee", "Yen"], "Euro", "💶"],
   ],
 
   "Indian States": [
-    {
-      question: "What is the capital of Andhra Pradesh?",
-      options: ["Vijayawada", "Visakhapatnam", "Amaravati", "Tirupati"],
-      answer: "Amaravati",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Telangana?",
-      options: ["Warangal", "Hyderabad", "Nizamabad", "Karimnagar"],
-      answer: "Hyderabad",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Karnataka?",
-      options: ["Mysuru", "Bengaluru", "Mangaluru", "Hubballi"],
-      answer: "Bengaluru",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Tamil Nadu?",
-      options: ["Madurai", "Coimbatore", "Chennai", "Salem"],
-      answer: "Chennai",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Kerala?",
-      options: ["Kochi", "Kozhikode", "Kannur", "Thiruvananthapuram"],
-      answer: "Thiruvananthapuram",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Maharashtra?",
-      options: ["Pune", "Mumbai", "Nagpur", "Nashik"],
-      answer: "Mumbai",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Rajasthan?",
-      options: ["Jodhpur", "Udaipur", "Jaipur", "Kota"],
-      answer: "Jaipur",
-      emoji: "🇮🇳",
-    },
-    {
-      question: "What is the capital of Gujarat?",
-      options: ["Surat", "Ahmedabad", "Gandhinagar", "Rajkot"],
-      answer: "Gandhinagar",
-      emoji: "🇮🇳",
-    },
+    ["What is the capital of Andhra Pradesh?", ["Amaravati", "Vijayawada", "Tirupati", "Visakhapatnam"], "Amaravati", "🇮🇳"],
+    ["What is the capital of Telangana?", ["Warangal", "Hyderabad", "Nizamabad", "Karimnagar"], "Hyderabad", "🇮🇳"],
+    ["What is the capital of Karnataka?", ["Mysuru", "Bengaluru", "Mangaluru", "Hubballi"], "Bengaluru", "🇮🇳"],
+    ["What is the capital of Tamil Nadu?", ["Madurai", "Chennai", "Salem", "Coimbatore"], "Chennai", "🇮🇳"],
+    ["What is the capital of Kerala?", ["Kochi", "Kannur", "Kollam", "Thiruvananthapuram"], "Thiruvananthapuram", "🇮🇳"],
   ],
 
   Animals: [
-    {
-      question: "Which animal is known as the King of the Jungle?",
-      options: ["Tiger", "Lion", "Elephant", "Bear"],
-      answer: "Lion",
-      emoji: "🦁",
-    },
-    {
-      question: "Which is the largest land animal?",
-      options: ["Giraffe", "Elephant", "Rhino", "Hippo"],
-      answer: "Elephant",
-      emoji: "🐘",
-    },
-    {
-      question: "Which animal gives us wool?",
-      options: ["Cow", "Sheep", "Horse", "Goat"],
-      answer: "Sheep",
-      emoji: "🐑",
-    },
-    {
-      question: "Which animal is called man's best friend?",
-      options: ["Cat", "Dog", "Horse", "Rabbit"],
-      answer: "Dog",
-      emoji: "🐶",
-    },
-    {
-      question: "Which animal has a very long neck?",
-      options: ["Zebra", "Giraffe", "Tiger", "Deer"],
-      answer: "Giraffe",
-      emoji: "🦒",
-    },
+    ["Which animal is called the King of the Jungle?", ["Tiger", "Lion", "Elephant", "Bear"], "Lion", "🦁"],
+    ["Which is the largest land animal?", ["Elephant", "Giraffe", "Rhino", "Hippo"], "Elephant", "🐘"],
+    ["Which animal gives us wool?", ["Cow", "Sheep", "Horse", "Goat"], "Sheep", "🐑"],
+    ["Which animal is known as man's best friend?", ["Cat", "Dog", "Horse", "Rabbit"], "Dog", "🐶"],
+    ["Which animal has a very long neck?", ["Zebra", "Giraffe", "Tiger", "Deer"], "Giraffe", "🦒"],
   ],
 
   Birds: [
-    {
-      question: "Which bird is known for its colorful feathers?",
-      options: ["Crow", "Peacock", "Sparrow", "Duck"],
-      answer: "Peacock",
-      emoji: "🦚",
-    },
-    {
-      question: "Which bird can mimic human speech?",
-      options: ["Parrot", "Penguin", "Eagle", "Owl"],
-      answer: "Parrot",
-      emoji: "🦜",
-    },
-    {
-      question: "Which bird is a symbol of peace?",
-      options: ["Dove", "Crow", "Eagle", "Owl"],
-      answer: "Dove",
-      emoji: "🕊️",
-    },
-    {
-      question: "Which bird cannot fly?",
-      options: ["Eagle", "Sparrow", "Penguin", "Parrot"],
-      answer: "Penguin",
-      emoji: "🐧",
-    },
-    {
-      question: "Which bird is known for its sharp eyesight?",
-      options: ["Eagle", "Duck", "Hen", "Pigeon"],
-      answer: "Eagle",
-      emoji: "🦅",
-    },
+    ["Which bird is famous for colorful feathers?", ["Crow", "Peacock", "Sparrow", "Duck"], "Peacock", "🦚"],
+    ["Which bird can mimic human speech?", ["Parrot", "Penguin", "Eagle", "Owl"], "Parrot", "🦜"],
+    ["Which bird represents peace?", ["Dove", "Crow", "Eagle", "Owl"], "Dove", "🕊️"],
+    ["Which bird cannot fly?", ["Eagle", "Sparrow", "Penguin", "Parrot"], "Penguin", "🐧"],
+    ["Which bird has excellent eyesight?", ["Eagle", "Duck", "Hen", "Pigeon"], "Eagle", "🦅"],
   ],
 
   Insects: [
-    {
-      question: "Which insect makes honey?",
-      options: ["Ant", "Bee", "Fly", "Mosquito"],
-      answer: "Bee",
-      emoji: "🐝",
-    },
-    {
-      question: "Which insect has beautiful colorful wings?",
-      options: ["Butterfly", "Ant", "Beetle", "Fly"],
-      answer: "Butterfly",
-      emoji: "🦋",
-    },
-    {
-      question: "Which insect is famous for carrying food?",
-      options: ["Ant", "Bee", "Butterfly", "Moth"],
-      answer: "Ant",
-      emoji: "🐜",
-    },
-    {
-      question: "Which insect is often called a ladybird?",
-      options: ["Ladybug", "Dragonfly", "Bee", "Cricket"],
-      answer: "Ladybug",
-      emoji: "🐞",
-    },
-    {
-      question: "Which insect can jump very far?",
-      options: ["Grasshopper", "Ant", "Butterfly", "Bee"],
-      answer: "Grasshopper",
-      emoji: "🦗",
-    },
+    ["Which insect makes honey?", ["Ant", "Bee", "Fly", "Mosquito"], "Bee", "🐝"],
+    ["Which insect has colorful wings?", ["Butterfly", "Ant", "Beetle", "Fly"], "Butterfly", "🦋"],
+    ["Which insect lives in colonies and carries food?", ["Ant", "Bee", "Moth", "Fly"], "Ant", "🐜"],
+    ["Which insect is also called a ladybird?", ["Ladybug", "Bee", "Cricket", "Fly"], "Ladybug", "🐞"],
+    ["Which insect can jump far?", ["Grasshopper", "Ant", "Bee", "Butterfly"], "Grasshopper", "🦗"],
   ],
 
   Fruits: [
-    {
-      question: "Which fruit is known as the king of fruits in India?",
-      options: ["Apple", "Mango", "Banana", "Orange"],
-      answer: "Mango",
-      emoji: "🥭",
-    },
-    {
-      question: "Which fruit is yellow and curved?",
-      options: ["Banana", "Apple", "Grape", "Orange"],
-      answer: "Banana",
-      emoji: "🍌",
-    },
-    {
-      question: "Which fruit is famous for having many seeds on its outside?",
-      options: ["Strawberry", "Apple", "Mango", "Pear"],
-      answer: "Strawberry",
-      emoji: "🍓",
-    },
-    {
-      question: "Which fruit is usually red or green and grows on trees?",
-      options: ["Apple", "Banana", "Watermelon", "Pineapple"],
-      answer: "Apple",
-      emoji: "🍎",
-    },
-    {
-      question: "Which fruit is large, green outside and red inside?",
-      options: ["Watermelon", "Orange", "Grape", "Mango"],
-      answer: "Watermelon",
-      emoji: "🍉",
-    },
+    ["Which fruit is called the king of fruits in India?", ["Apple", "Mango", "Banana", "Orange"], "Mango", "🥭"],
+    ["Which fruit is yellow and curved?", ["Banana", "Apple", "Grape", "Orange"], "Banana", "🍌"],
+    ["Which fruit has seeds on its outside?", ["Strawberry", "Apple", "Mango", "Pear"], "Strawberry", "🍓"],
+    ["Which fruit is usually red or green?", ["Apple", "Banana", "Watermelon", "Pineapple"], "Apple", "🍎"],
+    ["Which fruit is green outside and red inside?", ["Watermelon", "Orange", "Grape", "Mango"], "Watermelon", "🍉"],
   ],
 
   Flowers: [
-    {
-      question: "Which flower is the national flower of India?",
-      options: ["Rose", "Lotus", "Sunflower", "Jasmine"],
-      answer: "Lotus",
-      emoji: "🪷",
-    },
-    {
-      question: "Which flower is famous for following the sun?",
-      options: ["Rose", "Sunflower", "Lily", "Lotus"],
-      answer: "Sunflower",
-      emoji: "🌻",
-    },
-    {
-      question: "Which flower is often called the queen of flowers?",
-      options: ["Rose", "Lotus", "Tulip", "Daisy"],
-      answer: "Rose",
-      emoji: "🌹",
-    },
-    {
-      question: "Which flower commonly grows in ponds?",
-      options: ["Lotus", "Rose", "Tulip", "Sunflower"],
-      answer: "Lotus",
-      emoji: "🌸",
-    },
-    {
-      question: "Which flower is commonly associated with love?",
-      options: ["Rose", "Daisy", "Marigold", "Lily"],
-      answer: "Rose",
-      emoji: "❤️",
-    },
+    ["What is the national flower of India?", ["Rose", "Lotus", "Sunflower", "Jasmine"], "Lotus", "🪷"],
+    ["Which flower follows the sun?", ["Rose", "Sunflower", "Lily", "Lotus"], "Sunflower", "🌻"],
+    ["Which flower is often called the queen of flowers?", ["Rose", "Lotus", "Tulip", "Daisy"], "Rose", "🌹"],
+    ["Which flower commonly grows in ponds?", ["Lotus", "Rose", "Tulip", "Sunflower"], "Lotus", "🌸"],
+    ["Which flower is commonly associated with love?", ["Rose", "Daisy", "Lily", "Marigold"], "Rose", "❤️"],
   ],
 
   Numbers: [
-    {
-      question: "What comes after 9?",
-      options: ["8", "10", "11", "7"],
-      answer: "10",
-      emoji: "🔢",
-    },
-    {
-      question: "What comes before 20?",
-      options: ["18", "19", "21", "17"],
-      answer: "19",
-      emoji: "🔢",
-    },
-    {
-      question: "How many fingers are on one hand?",
-      options: ["4", "5", "6", "10"],
-      answer: "5",
-      emoji: "✋",
-    },
-    {
-      question: "What is 2 + 3?",
-      options: ["4", "5", "6", "7"],
-      answer: "5",
-      emoji: "➕",
-    },
-    {
-      question: "What is 5 + 5?",
-      options: ["8", "9", "10", "11"],
-      answer: "10",
-      emoji: "➕",
-    },
+    ["What comes after 9?", ["8", "10", "11", "7"], "10", "🔢"],
+    ["What comes before 20?", ["18", "19", "21", "17"], "19", "🔢"],
+    ["How many fingers are on one hand?", ["4", "5", "6", "10"], "5", "✋"],
+    ["What is 2 + 3?", ["4", "5", "6", "7"], "5", "➕"],
+    ["What is 5 + 5?", ["8", "9", "10", "11"], "10", "➕"],
   ],
 
   ABC: [
-    {
-      question: "Which letter comes after A?",
-      options: ["B", "C", "D", "E"],
-      answer: "B",
-      emoji: "🔤",
-    },
-    {
-      question: "Which letter comes after C?",
-      options: ["A", "B", "D", "E"],
-      answer: "D",
-      emoji: "🔤",
-    },
-    {
-      question: "Which letter comes before Z?",
-      options: ["X", "Y", "W", "V"],
-      answer: "Y",
-      emoji: "🔤",
-    },
-    {
-      question: "Which is the first letter of Apple?",
-      options: ["A", "B", "C", "D"],
-      answer: "A",
-      emoji: "🍎",
-    },
-    {
-      question: "Which is the first letter of Ball?",
-      options: ["A", "B", "C", "D"],
-      answer: "B",
-      emoji: "⚽",
-    },
+    ["Which letter comes after A?", ["B", "C", "D", "E"], "B", "🔤"],
+    ["Which letter comes after C?", ["A", "B", "D", "E"], "D", "🔤"],
+    ["Which letter comes before Z?", ["X", "Y", "W", "V"], "Y", "🔤"],
+    ["What is the first letter of Apple?", ["A", "B", "C", "D"], "A", "🍎"],
+    ["What is the first letter of Ball?", ["A", "B", "C", "D"], "B", "⚽"],
   ],
 
   Telugu: [
-    {
-      question: "తెలుగు అచ్చులలో మొదటి అక్షరం ఏది?",
-      options: ["అ", "ఆ", "ఇ", "ఈ"],
-      answer: "అ",
-      emoji: "అ",
-    },
-    {
-      question: "అ తర్వాత వచ్చే అక్షరం ఏది?",
-      options: ["ఇ", "ఆ", "ఉ", "ఎ"],
-      answer: "ఆ",
-      emoji: "ఆ",
-    },
-    {
-      question: "ఆ తర్వాత వచ్చే అక్షరం ఏది?",
-      options: ["అ", "ఇ", "ఈ", "ఉ"],
-      answer: "ఇ",
-      emoji: "ఇ",
-    },
-    {
-      question: "ఇ తర్వాత వచ్చే అక్షరం ఏది?",
-      options: ["ఆ", "ఈ", "ఉ", "ఊ"],
-      answer: "ఈ",
-      emoji: "ఈ",
-    },
-    {
-      question: "ఉ తర్వాత వచ్చే అక్షరం ఏది?",
-      options: ["ఊ", "ఇ", "ఎ", "ఏ"],
-      answer: "ఊ",
-      emoji: "ఊ",
-    },
+    ["తెలుగు అచ్చులలో మొదటి అక్షరం ఏది?", ["అ", "ఆ", "ఇ", "ఈ"], "అ", "అ"],
+    ["అ తర్వాత వచ్చే అక్షరం ఏది?", ["ఇ", "ఆ", "ఉ", "ఎ"], "ఆ", "ఆ"],
+    ["ఆ తర్వాత వచ్చే అక్షరం ఏది?", ["అ", "ఇ", "ఈ", "ఉ"], "ఇ", "ఇ"],
+    ["ఇ తర్వాత వచ్చే అక్షరం ఏది?", ["ఆ", "ఈ", "ఉ", "ఊ"], "ఈ", "ఈ"],
+    ["ఉ తర్వాత వచ్చే అక్షరం ఏది?", ["ఊ", "ఇ", "ఎ", "ఏ"], "ఊ", "ఊ"],
   ],
 
   "Famous Places": [
-    {
-      question: "Where is the Taj Mahal?",
-      options: ["Agra", "Delhi", "Mumbai", "Jaipur"],
-      answer: "Agra",
-      emoji: "🕌",
-    },
-    {
-      question: "Where is the Eiffel Tower?",
-      options: ["Paris", "Rome", "London", "Berlin"],
-      answer: "Paris",
-      emoji: "🗼",
-    },
-    {
-      question: "Where is the Statue of Liberty?",
-      options: ["New York", "London", "Paris", "Tokyo"],
-      answer: "New York",
-      emoji: "🗽",
-    },
-    {
-      question: "Where are the Great Pyramids of Giza?",
-      options: ["Egypt", "India", "Brazil", "China"],
-      answer: "Egypt",
-      emoji: "🏜️",
-    },
-    {
-      question: "Where is the Great Wall?",
-      options: ["China", "Japan", "India", "Korea"],
-      answer: "China",
-      emoji: "🏯",
-    },
+    ["Where is the Taj Mahal?", ["Agra", "Delhi", "Mumbai", "Jaipur"], "Agra", "🕌"],
+    ["Where is the Eiffel Tower?", ["Paris", "Rome", "London", "Berlin"], "Paris", "🗼"],
+    ["Where is the Statue of Liberty?", ["New York", "London", "Paris", "Tokyo"], "New York", "🗽"],
+    ["Where are the Great Pyramids?", ["Egypt", "India", "Brazil", "China"], "Egypt", "🏜️"],
+    ["Where is the Great Wall?", ["China", "Japan", "India", "Korea"], "China", "🏯"],
   ],
 
   "General Knowledge": [
-    {
-      question: "How many days are there in a week?",
-      options: ["5", "6", "7", "8"],
-      answer: "7",
-      emoji: "📅",
-    },
-    {
-      question: "How many colors are traditionally seen in a rainbow?",
-      options: ["5", "6", "7", "8"],
-      answer: "7",
-      emoji: "🌈",
-    },
-    {
-      question: "Which planet do we live on?",
-      options: ["Mars", "Earth", "Venus", "Jupiter"],
-      answer: "Earth",
-      emoji: "🌍",
-    },
-    {
-      question: "Which star gives Earth light and heat?",
-      options: ["Moon", "Sun", "Mars", "Venus"],
-      answer: "Sun",
-      emoji: "☀️",
-    },
-    {
-      question: "How many months are there in a year?",
-      options: ["10", "11", "12", "13"],
-      answer: "12",
-      emoji: "📆",
-    },
+    ["How many days are in a week?", ["5", "6", "7", "8"], "7", "📅"],
+    ["How many colors are traditionally in a rainbow?", ["5", "6", "7", "8"], "7", "🌈"],
+    ["Which planet do we live on?", ["Mars", "Earth", "Venus", "Jupiter"], "Earth", "🌍"],
+    ["Which star gives Earth light and heat?", ["Moon", "Sun", "Mars", "Venus"], "Sun", "☀️"],
+    ["How many months are in a year?", ["10", "11", "12", "13"], "12", "📆"],
   ],
 };
 
 const categories = [
-  { name: "Countries", icon: "🌍" },
-  { name: "Capitals", icon: "🏛️" },
-  { name: "Currencies", icon: "💰" },
-  { name: "Indian States", icon: "🇮🇳" },
-  { name: "Animals", icon: "🐶" },
-  { name: "Birds", icon: "🐦" },
-  { name: "Insects", icon: "🦋" },
-  { name: "Fruits", icon: "🍎" },
-  { name: "Flowers", icon: "🌸" },
-  { name: "Numbers", icon: "🔢" },
-  { name: "ABC", icon: "🔤" },
-  { name: "Telugu", icon: "అ" },
-  { name: "Famous Places", icon: "🗺️" },
-  { name: "General Knowledge", icon: "🧠" },
+  ["Countries", "🌍"],
+  ["Capitals", "🏛️"],
+  ["Currencies", "💰"],
+  ["Indian States", "🇮🇳"],
+  ["Animals", "🐶"],
+  ["Birds", "🐦"],
+  ["Insects", "🦋"],
+  ["Fruits", "🍎"],
+  ["Flowers", "🌸"],
+  ["Numbers", "🔢"],
+  ["ABC", "🔤"],
+  ["Telugu", "అ"],
+  ["Famous Places", "🗺️"],
+  ["General Knowledge", "🧠"],
 ];
-
-function shuffle(array) {
-  return [...array].sort(() => Math.random() - 0.5);
-}
 
 export default function Quiz() {
   const [category, setCategory] = useState("Countries");
-  const [questions, setQuestions] = useState(
-    quizData.Countries
-  );
-  const [current, setCurrent] = useState(0);
+  const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("");
   const [answered, setAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [started, setStarted] = useState(false);
-  const [level, setLevel] = useState("Easy");
 
-  useEffect(() => {
-    startQuiz("Countries");
-  }, []);
+  const questions = quizData[category];
+  const question = questions[questionIndex];
 
-  function startQuiz(selectedCategory) {
-    const data =
-      quizData[selectedCategory] || [];
-
-    const selectedQuestions = shuffle(data).slice(
-      0,
-      Math.min(5, data.length)
-    );
-
-    setCategory(selectedCategory);
-    setQuestions(selectedQuestions);
-    setCurrent(0);
+  function changeCategory(name) {
+    setCategory(name);
+    setQuestionIndex(0);
     setScore(0);
     setSelected("");
     setAnswered(false);
     setFinished(false);
-    setStarted(true);
   }
 
-  function chooseAnswer(option) {
+  function answerQuestion(option) {
     if (answered) return;
 
     setSelected(option);
     setAnswered(true);
 
-    if (
-      option === questions[current].answer
-    ) {
-      setScore((old) => old + 1);
+    if (option === question[2]) {
+      setScore((value) => value + 1);
     }
   }
 
   function nextQuestion() {
-    if (
-      current + 1 >=
-      questions.length
-    ) {
+    if (questionIndex === questions.length - 1) {
       setFinished(true);
       return;
     }
 
-    setCurrent((old) => old + 1);
+    setQuestionIndex((value) => value + 1);
     setSelected("");
     setAnswered(false);
   }
 
-  function getResultMessage() {
-    const percentage =
-      (score / questions.length) * 100;
-
-    if (percentage === 100) {
-      return "🏆 Perfect Score!";
-    }
-
-    if (percentage >= 80) {
-      return "🌟 Excellent!";
-    }
-
-    if (percentage >= 60) {
-      return "👏 Great Job!";
-    }
-
-    if (percentage >= 40) {
-      return "😊 Good Try!";
-    }
-
-    return "💪 Keep Learning!";
+  function restart() {
+    setQuestionIndex(0);
+    setScore(0);
+    setSelected("");
+    setAnswered(false);
+    setFinished(false);
   }
 
   return (
     <>
       <Head>
-        <title>
-          Mega Quiz | Chinnaari Kids
-        </title>
-
+        <title>Mega Quiz | Chinnaari Kids</title>
         <meta
           name="description"
-          content="Fun educational quiz for kids covering countries, capitals, currencies, Indian states, animals, birds, insects, fruits, flowers, numbers, ABC, Telugu and famous places."
+          content="Fun educational quiz for kids."
         />
-
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
@@ -610,222 +198,460 @@ export default function Quiz() {
       </Head>
 
       <main className="page">
-
         <header className="header">
-
-          <Link
-            href="/"
-            className="logo"
-          >
+          <Link href="/" className="logo">
             🌈 Chinnaari Kids
           </Link>
 
           <nav>
-            <Link href="/">
-              Home
-            </Link>
-
-            <Link href="/games">
-              🎮 Games
-            </Link>
-
-            <Link href="/puzzles">
-              🧩 Puzzles
-            </Link>
-
-            <Link href="/dots">
-              🔵 Dot-to-Dot
-            </Link>
-
-            <Link href="/drawing">
-              🎨 Drawing
-            </Link>
-
-            <Link href="/world">
-              🌍 World Explorer
-            </Link>
+            <Link href="/">Home</Link>
+            <Link href="/games">🎮 Games</Link>
+            <Link href="/dots">🔵 Dot-to-Dot</Link>
+            <Link href="/drawing">🎨 Drawing</Link>
+            <Link href="/writing">✏️ Writing</Link>
+            <Link href="/world">🌍 World Explorer</Link>
           </nav>
-
         </header>
 
         <section className="hero">
-
-          <div className="heroEmoji">
-            🧠❓🎯
-          </div>
-
-          <h1>
-            Mega Quiz
-          </h1>
-
-          <p>
-            Learn, think and have fun!
-          </p>
-
+          <div className="heroIcon">🧠❓🎯</div>
+          <h1>Mega Quiz</h1>
+          <p>Learn, think and have fun!</p>
           <div className="heroMini">
             🌍 🇮🇳 🐶 🐦 🍎 🔤 🧠
           </div>
-
         </section>
 
-        <section className="categorySection">
-
-          <h2>
-            📚 Choose a Quiz
-          </h2>
+        <section className="categories">
+          <h2>📚 Choose a Quiz</h2>
 
           <div className="categoryGrid">
-
-            {categories.map((item) => (
+            {categories.map(([name, icon]) => (
               <button
-                key={item.name}
+                key={name}
                 className={
-                  category === item.name
-                    ? "category activeCategory"
+                  category === name
+                    ? "category active"
                     : "category"
                 }
-                onClick={() =>
-                  startQuiz(item.name)
-                }
+                onClick={() => changeCategory(name)}
               >
-
-                <span className="categoryIcon">
-                  {item.icon}
-                </span>
-
-                <span>
-                  {item.name}
-                </span>
-
+                <span>{icon}</span>
+                <small>{name}</small>
               </button>
             ))}
-
           </div>
-
         </section>
 
-        <section className="quizSection">
-
-          {!started && (
-            <div className="startBox">
-
-              <div className="bigEmoji">
-                🧠
-              </div>
-
-              <h2>
-                Ready to Learn?
-              </h2>
-
-              <p>
-                Choose a category above and start
-                your quiz!
-              </p>
-
-              <button
-                className="startButton"
-                onClick={() =>
-                  startQuiz(category)
-                }
-              >
-                🚀 Start Quiz
-              </button>
-
-            </div>
-          )}
-
-          {started && !finished && (
+        <section className="quizCard">
+          {!finished ? (
             <>
-
-              <div className="quizHeader">
-
+              <div className="quizTop">
                 <div>
-                  <span className="questionIcon">
-                    {questions[current].emoji}
+                  <span className="quizEmoji">
+                    {question[3]}
                   </span>
-
-                  <strong>
-                    {category}
-                  </strong>
+                  <strong>{category}</strong>
                 </div>
 
-                <div className="questionCount">
-                  Question{" "}
-                  {current + 1} /{" "}
-                  {questions.length}
-                </div>
-
+                <span className="counter">
+                  {questionIndex + 1} / {questions.length}
+                </span>
               </div>
 
-              <div className="levelRow">
-
-                <button
-                  className={
-                    level === "Easy"
-                      ? "level activeLevel"
-                      : "level"
-                  }
-                  onClick={() =>
-                    setLevel("Easy")
-                  }
-                >
-                  🟢 Easy
-                </button>
-
-                <button
-                  className={
-                    level === "Medium"
-                      ? "level activeLevel"
-                      : "level"
-                  }
-                  onClick={() =>
-                    setLevel("Medium")
-                  }
-                >
-                  🟡 Medium
-                </button>
-
-                <button
-                  className={
-                    level === "Hard"
-                      ? "level activeLevel"
-                      : "level"
-                  }
-                  onClick={() =>
-                    setLevel("Hard")
-                  }
-                >
-                  🔴 Hard
-                </button>
-
-              </div>
-
-              <div className="questionBox">
-
-                <div className="questionNumber">
-                  Q{current + 1}
+              <div className="question">
+                <div className="qNumber">
+                  Q{questionIndex + 1}
                 </div>
 
-                <h2>
-                  {questions[current].question}
-                </h2>
-
+                <h2>{question[0]}</h2>
               </div>
 
               <div className="options">
+                {question[1].map((option) => {
+                  const isCorrect =
+                    answered && option === question[2];
 
-                {questions[current].options.map(
-                  (option) => {
+                  const isWrong =
+                    answered &&
+                    option === selected &&
+                    option !== question[2];
 
-                    let className =
-                      "option";
+                  return (
+                    <button
+                      key={option}
+                      className={
+                        isCorrect
+                          ? "option correct"
+                          : isWrong
+                          ? "option wrong"
+                          : "option"
+                      }
+                      onClick={() =>
+                        answerQuestion(option)
+                      }
+                    >
+                      <span>{option}</span>
 
-                    if (
-                      answered &&
-                      option ===
-                        questions[current]
-                          .answer
-                    ) {
-                      className +=
-                        " correct";
- 
+                      {isCorrect && <b>✅</b>}
+                      {isWrong && <b>❌</b>}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {answered && (
+                <div
+                  className={
+                    selected === question[2]
+                      ? "feedback good"
+                      : "feedback bad"
+                  }
+                >
+                  {selected === question[2]
+                    ? "🎉 Correct! Well done!"
+                    : `😊 Correct answer: ${question[2]}`}
+                </div>
+              )}
+
+              <div className="bottom">
+                <div className="score">
+                  ⭐ Score: {score}
+                </div>
+
+                {answered && (
+                  <button
+                    className="next"
+                    onClick={nextQuestion}
+                  >
+                    {questionIndex === questions.length - 1
+                      ? "🏆 Result"
+                      : "Next ➡️"}
+                  </button>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="result">
+              <div className="resultIcon">
+                {score === questions.length
+                  ? "🏆"
+                  : score >= 3
+                  ? "🌟"
+                  : "💪"}
+              </div>
+
+              <h2>Quiz Complete!</h2>
+
+              <div className="resultScore">
+                {score} / {questions.length}
+              </div>
+
+              <h3>
+                {score === questions.length
+                  ? "🏆 Perfect Score!"
+                  : score >= 3
+                  ? "🌟 Excellent!"
+                  : score >= 2
+                  ? "👏 Good Job!"
+                  : "💪 Keep Learning!"}
+              </h3>
+
+              <button
+                className="restart"
+                onClick={restart}
+              >
+                🔄 Play Again
+              </button>
+            </div>
+          )}
+        </section>
+
+        <section className="learning">
+          <div>🌟</div>
+
+          <article>
+            <h2>Learn While Playing!</h2>
+
+            <p>
+              Explore countries, capitals, currencies,
+              Indian states, animals, birds, insects,
+              fruits, flowers, numbers, ABC, Telugu
+              and famous places.
+            </p>
+
+            <p>
+              ఆడుతూ పాడుతూ కొత్త విషయాలు
+              నేర్చుకుందాం!
+            </p>
+          </article>
+        </section>
+
+        <section className="links">
+          <Link href="/dots">🔵 Dot-to-Dot</Link>
+          <Link href="/drawing">🎨 Drawing</Link>
+          <Link href="/writing">✏️ Writing</Link>
+          <Link href="/games">🎮 Games</Link>
+          <Link href="/world">🌍 World Explorer</Link>
+        </section>
+
+        <footer>
+          <h3>🌈 Chinnaari Kids</h3>
+          <p>Learn • Play • Discover</p>
+          <p>© 2026 Chinnaari Kids</p>
+        </footer>
+      </main>
+
+      <style jsx>{`
+        * {
+          box-sizing: border-box;
+        }
+
+        .page {
+          min-height: 100vh;
+          background: #fffaf3;
+          color: #333;
+          font-family: Arial, sans-serif;
+        }
+
+        .header {
+          min-height: 70px;
+          padding: 15px 6%;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 15px;
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+          color: #333;
+          text-decoration: none;
+          font-size: 23px;
+          font-weight: bold;
+          white-space: nowrap;
+        }
+
+        nav {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        nav a {
+          color: #444;
+          text-decoration: none;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .hero {
+          text-align: center;
+          padding: 55px 20px;
+          background: linear-gradient(
+            135deg,
+            #e3f2ff,
+            #fff0c9,
+            #f8ddff
+          );
+        }
+
+        .heroIcon {
+          font-size: 55px;
+          letter-spacing: 5px;
+        }
+
+        .hero h1 {
+          font-size: 44px;
+          margin: 12px 0;
+        }
+
+        .hero p {
+          font-size: 19px;
+          color: #555;
+        }
+
+        .heroMini {
+          font-size: 27px;
+          margin-top: 20px;
+        }
+
+        .categories {
+          max-width: 1100px;
+          margin: 35px auto;
+          padding: 0 20px;
+          text-align: center;
+        }
+
+        .categories h2 {
+          font-size: 28px;
+        }
+
+        .categoryGrid {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 10px;
+          margin-top: 20px;
+        }
+
+        .category {
+          min-height: 85px;
+          border: 2px solid #eee;
+          background: #fff;
+          border-radius: 18px;
+          padding: 10px 5px;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+
+        .category:hover {
+          transform: translateY(-3px);
+        }
+
+        .category span {
+          display: block;
+          font-size: 31px;
+          margin-bottom: 5px;
+        }
+
+        .category small {
+          font-weight: bold;
+        }
+
+        .active {
+          background: #fff0d0;
+          border-color: #ff9d42;
+        }
+
+        .quizCard {
+          max-width: 850px;
+          margin: 25px auto 55px;
+          padding: 28px;
+          background: #fff;
+          border-radius: 30px;
+          box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .quizTop {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 21px;
+        }
+
+        .quizEmoji {
+          font-size: 40px;
+          margin-right: 10px;
+        }
+
+        .counter {
+          background: #fff0c9;
+          padding: 8px 14px;
+          border-radius: 20px;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .question {
+          margin: 25px 0;
+          padding: 30px 20px;
+          text-align: center;
+          border-radius: 25px;
+          background: linear-gradient(
+            135deg,
+            #f3f9ff,
+            #fff8df
+          );
+        }
+
+        .qNumber {
+          display: inline-block;
+          padding: 7px 13px;
+          background: #333;
+          color: #fff;
+          border-radius: 18px;
+          font-size: 13px;
+          font-weight: bold;
+        }
+
+        .question h2 {
+          font-size: 25px;
+          line-height: 1.5;
+        }
+
+        .options {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 14px;
+        }
+
+        .option {
+          min-height: 62px;
+          border: 2px solid #e5e5e5;
+          background: #fff;
+          border-radius: 20px;
+          padding: 14px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .option:hover {
+          border-color: #ffb347;
+          background: #fffaf0;
+        }
+
+        .correct {
+          background: #e3f8e3 !important;
+          border-color: #4caf50 !important;
+        }
+
+        .wrong {
+          background: #ffe4e4 !important;
+          border-color: #f44336 !important;
+        }
+
+        .feedback {
+          margin-top: 18px;
+          padding: 14px;
+          border-radius: 20px;
+          text-align: center;
+          font-weight: bold;
+        }
+
+        .good {
+          background: #e3f8e3;
+        }
+
+        .bad {
+          background: #ffe4e4;
+        }
+
+        .bottom {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 25px;
+        }
+
+        .score {
+          padding: 10px 18px;
+          background: #fff0c9;
+          border-radius: 20px;
+          font-weight: bold;
+        }
+
+        .next,
+        .restart {
+          border: none;
+          background: #4caf50;
+          color: white;
+    
