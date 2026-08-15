@@ -1,202 +1,606 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-const english = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const telugu = [
-  "అ", "ఆ", "ఇ", "ఈ", "ఉ", "ఊ", "ఋ", "ఎ", "ఏ", "ఐ",
-  "ఒ", "ఓ", "ఔ", "అం", "అః",
-  "క", "ఖ", "గ", "ఘ", "ఙ",
-  "చ", "ఛ", "జ", "ఝ", "ఞ",
-  "ట", "ఠ", "డ", "ఢ", "ణ",
-  "త", "థ", "ద", "ధ", "న",
-  "ప", "ఫ", "బ", "భ", "మ",
-  "య", "ర", "ల", "వ", "శ", "ష", "స", "హ"
+const quizData = {
+  Countries: [
+    {
+      question: "What is the largest country in the world by area?",
+      options: ["India", "Russia", "China", "Canada"],
+      answer: "Russia",
+      emoji: "🌍",
+    },
+    {
+      question: "Which country is famous for the Eiffel Tower?",
+      options: ["France", "Italy", "Spain", "Germany"],
+      answer: "France",
+      emoji: "🗼",
+    },
+    {
+      question: "Which country is known as the Land of the Rising Sun?",
+      options: ["China", "Japan", "Korea", "Thailand"],
+      answer: "Japan",
+      emoji: "🇯🇵",
+    },
+    {
+      question: "Which country has the Great Pyramids of Giza?",
+      options: ["Egypt", "India", "Mexico", "Peru"],
+      answer: "Egypt",
+      emoji: "🇪🇬",
+    },
+    {
+      question: "Which country is shaped like a boot?",
+      options: ["France", "Italy", "Brazil", "Greece"],
+      answer: "Italy",
+      emoji: "🇮🇹",
+    },
+  ],
+
+  Capitals: [
+    {
+      question: "What is the capital of India?",
+      options: ["Mumbai", "New Delhi", "Chennai", "Kolkata"],
+      answer: "New Delhi",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of France?",
+      options: ["London", "Rome", "Paris", "Madrid"],
+      answer: "Paris",
+      emoji: "🇫🇷",
+    },
+    {
+      question: "What is the capital of Japan?",
+      options: ["Tokyo", "Kyoto", "Osaka", "Hiroshima"],
+      answer: "Tokyo",
+      emoji: "🇯🇵",
+    },
+    {
+      question: "What is the capital of Australia?",
+      options: ["Sydney", "Melbourne", "Canberra", "Perth"],
+      answer: "Canberra",
+      emoji: "🇦🇺",
+    },
+    {
+      question: "What is the capital of the United Kingdom?",
+      options: ["London", "Manchester", "Liverpool", "Birmingham"],
+      answer: "London",
+      emoji: "🇬🇧",
+    },
+  ],
+
+  Currencies: [
+    {
+      question: "What is the currency of India?",
+      options: ["Dollar", "Rupee", "Euro", "Pound"],
+      answer: "Rupee",
+      emoji: "💰",
+    },
+    {
+      question: "What is the currency of Japan?",
+      options: ["Yen", "Won", "Dollar", "Yuan"],
+      answer: "Yen",
+      emoji: "💴",
+    },
+    {
+      question: "What is the currency of the United States?",
+      options: ["Euro", "Dollar", "Pound", "Franc"],
+      answer: "Dollar",
+      emoji: "💵",
+    },
+    {
+      question: "What is the currency of the United Kingdom?",
+      options: ["Euro", "Dollar", "Pound", "Yen"],
+      answer: "Pound",
+      emoji: "💷",
+    },
+    {
+      question: "What is the currency of Europe?",
+      options: ["Euro", "Dollar", "Rupee", "Yen"],
+      answer: "Euro",
+      emoji: "💶",
+    },
+  ],
+
+  "Indian States": [
+    {
+      question: "What is the capital of Andhra Pradesh?",
+      options: ["Vijayawada", "Visakhapatnam", "Amaravati", "Tirupati"],
+      answer: "Amaravati",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Telangana?",
+      options: ["Warangal", "Hyderabad", "Nizamabad", "Karimnagar"],
+      answer: "Hyderabad",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Karnataka?",
+      options: ["Mysuru", "Bengaluru", "Mangaluru", "Hubballi"],
+      answer: "Bengaluru",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Tamil Nadu?",
+      options: ["Madurai", "Coimbatore", "Chennai", "Salem"],
+      answer: "Chennai",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Kerala?",
+      options: ["Kochi", "Kozhikode", "Kannur", "Thiruvananthapuram"],
+      answer: "Thiruvananthapuram",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Maharashtra?",
+      options: ["Pune", "Mumbai", "Nagpur", "Nashik"],
+      answer: "Mumbai",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Rajasthan?",
+      options: ["Jodhpur", "Udaipur", "Jaipur", "Kota"],
+      answer: "Jaipur",
+      emoji: "🇮🇳",
+    },
+    {
+      question: "What is the capital of Gujarat?",
+      options: ["Surat", "Ahmedabad", "Gandhinagar", "Rajkot"],
+      answer: "Gandhinagar",
+      emoji: "🇮🇳",
+    },
+  ],
+
+  Animals: [
+    {
+      question: "Which animal is known as the King of the Jungle?",
+      options: ["Tiger", "Lion", "Elephant", "Bear"],
+      answer: "Lion",
+      emoji: "🦁",
+    },
+    {
+      question: "Which is the largest land animal?",
+      options: ["Giraffe", "Elephant", "Rhino", "Hippo"],
+      answer: "Elephant",
+      emoji: "🐘",
+    },
+    {
+      question: "Which animal gives us wool?",
+      options: ["Cow", "Sheep", "Horse", "Goat"],
+      answer: "Sheep",
+      emoji: "🐑",
+    },
+    {
+      question: "Which animal is called man's best friend?",
+      options: ["Cat", "Dog", "Horse", "Rabbit"],
+      answer: "Dog",
+      emoji: "🐶",
+    },
+    {
+      question: "Which animal has a very long neck?",
+      options: ["Zebra", "Giraffe", "Tiger", "Deer"],
+      answer: "Giraffe",
+      emoji: "🦒",
+    },
+  ],
+
+  Birds: [
+    {
+      question: "Which bird is known for its colorful feathers?",
+      options: ["Crow", "Peacock", "Sparrow", "Duck"],
+      answer: "Peacock",
+      emoji: "🦚",
+    },
+    {
+      question: "Which bird can mimic human speech?",
+      options: ["Parrot", "Penguin", "Eagle", "Owl"],
+      answer: "Parrot",
+      emoji: "🦜",
+    },
+    {
+      question: "Which bird is a symbol of peace?",
+      options: ["Dove", "Crow", "Eagle", "Owl"],
+      answer: "Dove",
+      emoji: "🕊️",
+    },
+    {
+      question: "Which bird cannot fly?",
+      options: ["Eagle", "Sparrow", "Penguin", "Parrot"],
+      answer: "Penguin",
+      emoji: "🐧",
+    },
+    {
+      question: "Which bird is known for its sharp eyesight?",
+      options: ["Eagle", "Duck", "Hen", "Pigeon"],
+      answer: "Eagle",
+      emoji: "🦅",
+    },
+  ],
+
+  Insects: [
+    {
+      question: "Which insect makes honey?",
+      options: ["Ant", "Bee", "Fly", "Mosquito"],
+      answer: "Bee",
+      emoji: "🐝",
+    },
+    {
+      question: "Which insect has beautiful colorful wings?",
+      options: ["Butterfly", "Ant", "Beetle", "Fly"],
+      answer: "Butterfly",
+      emoji: "🦋",
+    },
+    {
+      question: "Which insect is famous for carrying food?",
+      options: ["Ant", "Bee", "Butterfly", "Moth"],
+      answer: "Ant",
+      emoji: "🐜",
+    },
+    {
+      question: "Which insect is often called a ladybird?",
+      options: ["Ladybug", "Dragonfly", "Bee", "Cricket"],
+      answer: "Ladybug",
+      emoji: "🐞",
+    },
+    {
+      question: "Which insect can jump very far?",
+      options: ["Grasshopper", "Ant", "Butterfly", "Bee"],
+      answer: "Grasshopper",
+      emoji: "🦗",
+    },
+  ],
+
+  Fruits: [
+    {
+      question: "Which fruit is known as the king of fruits in India?",
+      options: ["Apple", "Mango", "Banana", "Orange"],
+      answer: "Mango",
+      emoji: "🥭",
+    },
+    {
+      question: "Which fruit is yellow and curved?",
+      options: ["Banana", "Apple", "Grape", "Orange"],
+      answer: "Banana",
+      emoji: "🍌",
+    },
+    {
+      question: "Which fruit is famous for having many seeds on its outside?",
+      options: ["Strawberry", "Apple", "Mango", "Pear"],
+      answer: "Strawberry",
+      emoji: "🍓",
+    },
+    {
+      question: "Which fruit is usually red or green and grows on trees?",
+      options: ["Apple", "Banana", "Watermelon", "Pineapple"],
+      answer: "Apple",
+      emoji: "🍎",
+    },
+    {
+      question: "Which fruit is large, green outside and red inside?",
+      options: ["Watermelon", "Orange", "Grape", "Mango"],
+      answer: "Watermelon",
+      emoji: "🍉",
+    },
+  ],
+
+  Flowers: [
+    {
+      question: "Which flower is the national flower of India?",
+      options: ["Rose", "Lotus", "Sunflower", "Jasmine"],
+      answer: "Lotus",
+      emoji: "🪷",
+    },
+    {
+      question: "Which flower is famous for following the sun?",
+      options: ["Rose", "Sunflower", "Lily", "Lotus"],
+      answer: "Sunflower",
+      emoji: "🌻",
+    },
+    {
+      question: "Which flower is often called the queen of flowers?",
+      options: ["Rose", "Lotus", "Tulip", "Daisy"],
+      answer: "Rose",
+      emoji: "🌹",
+    },
+    {
+      question: "Which flower commonly grows in ponds?",
+      options: ["Lotus", "Rose", "Tulip", "Sunflower"],
+      answer: "Lotus",
+      emoji: "🌸",
+    },
+    {
+      question: "Which flower is commonly associated with love?",
+      options: ["Rose", "Daisy", "Marigold", "Lily"],
+      answer: "Rose",
+      emoji: "❤️",
+    },
+  ],
+
+  Numbers: [
+    {
+      question: "What comes after 9?",
+      options: ["8", "10", "11", "7"],
+      answer: "10",
+      emoji: "🔢",
+    },
+    {
+      question: "What comes before 20?",
+      options: ["18", "19", "21", "17"],
+      answer: "19",
+      emoji: "🔢",
+    },
+    {
+      question: "How many fingers are on one hand?",
+      options: ["4", "5", "6", "10"],
+      answer: "5",
+      emoji: "✋",
+    },
+    {
+      question: "What is 2 + 3?",
+      options: ["4", "5", "6", "7"],
+      answer: "5",
+      emoji: "➕",
+    },
+    {
+      question: "What is 5 + 5?",
+      options: ["8", "9", "10", "11"],
+      answer: "10",
+      emoji: "➕",
+    },
+  ],
+
+  ABC: [
+    {
+      question: "Which letter comes after A?",
+      options: ["B", "C", "D", "E"],
+      answer: "B",
+      emoji: "🔤",
+    },
+    {
+      question: "Which letter comes after C?",
+      options: ["A", "B", "D", "E"],
+      answer: "D",
+      emoji: "🔤",
+    },
+    {
+      question: "Which letter comes before Z?",
+      options: ["X", "Y", "W", "V"],
+      answer: "Y",
+      emoji: "🔤",
+    },
+    {
+      question: "Which is the first letter of Apple?",
+      options: ["A", "B", "C", "D"],
+      answer: "A",
+      emoji: "🍎",
+    },
+    {
+      question: "Which is the first letter of Ball?",
+      options: ["A", "B", "C", "D"],
+      answer: "B",
+      emoji: "⚽",
+    },
+  ],
+
+  Telugu: [
+    {
+      question: "తెలుగు అచ్చులలో మొదటి అక్షరం ఏది?",
+      options: ["అ", "ఆ", "ఇ", "ఈ"],
+      answer: "అ",
+      emoji: "అ",
+    },
+    {
+      question: "అ తర్వాత వచ్చే అక్షరం ఏది?",
+      options: ["ఇ", "ఆ", "ఉ", "ఎ"],
+      answer: "ఆ",
+      emoji: "ఆ",
+    },
+    {
+      question: "ఆ తర్వాత వచ్చే అక్షరం ఏది?",
+      options: ["అ", "ఇ", "ఈ", "ఉ"],
+      answer: "ఇ",
+      emoji: "ఇ",
+    },
+    {
+      question: "ఇ తర్వాత వచ్చే అక్షరం ఏది?",
+      options: ["ఆ", "ఈ", "ఉ", "ఊ"],
+      answer: "ఈ",
+      emoji: "ఈ",
+    },
+    {
+      question: "ఉ తర్వాత వచ్చే అక్షరం ఏది?",
+      options: ["ఊ", "ఇ", "ఎ", "ఏ"],
+      answer: "ఊ",
+      emoji: "ఊ",
+    },
+  ],
+
+  "Famous Places": [
+    {
+      question: "Where is the Taj Mahal?",
+      options: ["Agra", "Delhi", "Mumbai", "Jaipur"],
+      answer: "Agra",
+      emoji: "🕌",
+    },
+    {
+      question: "Where is the Eiffel Tower?",
+      options: ["Paris", "Rome", "London", "Berlin"],
+      answer: "Paris",
+      emoji: "🗼",
+    },
+    {
+      question: "Where is the Statue of Liberty?",
+      options: ["New York", "London", "Paris", "Tokyo"],
+      answer: "New York",
+      emoji: "🗽",
+    },
+    {
+      question: "Where are the Great Pyramids of Giza?",
+      options: ["Egypt", "India", "Brazil", "China"],
+      answer: "Egypt",
+      emoji: "🏜️",
+    },
+    {
+      question: "Where is the Great Wall?",
+      options: ["China", "Japan", "India", "Korea"],
+      answer: "China",
+      emoji: "🏯",
+    },
+  ],
+
+  "General Knowledge": [
+    {
+      question: "How many days are there in a week?",
+      options: ["5", "6", "7", "8"],
+      answer: "7",
+      emoji: "📅",
+    },
+    {
+      question: "How many colors are traditionally seen in a rainbow?",
+      options: ["5", "6", "7", "8"],
+      answer: "7",
+      emoji: "🌈",
+    },
+    {
+      question: "Which planet do we live on?",
+      options: ["Mars", "Earth", "Venus", "Jupiter"],
+      answer: "Earth",
+      emoji: "🌍",
+    },
+    {
+      question: "Which star gives Earth light and heat?",
+      options: ["Moon", "Sun", "Mars", "Venus"],
+      answer: "Sun",
+      emoji: "☀️",
+    },
+    {
+      question: "How many months are there in a year?",
+      options: ["10", "11", "12", "13"],
+      answer: "12",
+      emoji: "📆",
+    },
+  ],
+};
+
+const categories = [
+  { name: "Countries", icon: "🌍" },
+  { name: "Capitals", icon: "🏛️" },
+  { name: "Currencies", icon: "💰" },
+  { name: "Indian States", icon: "🇮🇳" },
+  { name: "Animals", icon: "🐶" },
+  { name: "Birds", icon: "🐦" },
+  { name: "Insects", icon: "🦋" },
+  { name: "Fruits", icon: "🍎" },
+  { name: "Flowers", icon: "🌸" },
+  { name: "Numbers", icon: "🔢" },
+  { name: "ABC", icon: "🔤" },
+  { name: "Telugu", icon: "అ" },
+  { name: "Famous Places", icon: "🗺️" },
+  { name: "General Knowledge", icon: "🧠" },
 ];
 
-export default function Writing() {
-  const [section, setSection] = useState("english");
-  const [number, setNumber] = useState(1);
-  const [letter, setLetter] = useState("A");
-  const [teluguLetter, setTeluguLetter] = useState("అ");
-  const [message, setMessage] = useState("");
+function shuffle(array) {
+  return [...array].sort(() => Math.random() - 0.5);
+}
 
-  const canvasRef = useRef(null);
-  const drawing = useRef(false);
+export default function Quiz() {
+  const [category, setCategory] = useState("Countries");
+  const [questions, setQuestions] = useState(
+    quizData.Countries
+  );
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState("");
+  const [answered, setAnswered] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [level, setLevel] = useState("Easy");
 
   useEffect(() => {
-    setupCanvas();
-  }, [section, number, letter, teluguLetter]);
+    startQuiz("Countries");
+  }, []);
 
-  function setupCanvas() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  function startQuiz(selectedCategory) {
+    const data =
+      quizData[selectedCategory] || [];
 
-    const ctx = canvas.getContext("2d");
-    const rect = canvas.getBoundingClientRect();
+    const selectedQuestions = shuffle(data).slice(
+      0,
+      Math.min(5, data.length)
+    );
 
-    const ratio = window.devicePixelRatio || 1;
-
-    canvas.width = rect.width * ratio;
-    canvas.height = rect.height * ratio;
-
-    ctx.scale(ratio, ratio);
-
-    ctx.clearRect(0, 0, rect.width, rect.height);
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, rect.width, rect.height);
-
-    ctx.strokeStyle = "#e5e5e5";
-    ctx.lineWidth = 2;
-
-    for (let y = 70; y < rect.height; y += 70) {
-      ctx.beginPath();
-      ctx.moveTo(20, y);
-      ctx.lineTo(rect.width - 20, y);
-      ctx.stroke();
-    }
-
-    ctx.fillStyle = "#d4d4d4";
-    ctx.font = "bold 130px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    let value = "";
-
-    if (section === "english") value = letter;
-    if (section === "numbers") value = number;
-    if (section === "telugu") value = teluguLetter;
-
-    ctx.fillText(value, rect.width / 2, rect.height / 2);
-
-    ctx.setLineDash([4, 8]);
-    ctx.strokeStyle = "#999";
-    ctx.lineWidth = 3;
-
-    ctx.strokeRect(20, 20, rect.width - 40, rect.height - 40);
-
-    ctx.setLineDash([]);
+    setCategory(selectedCategory);
+    setQuestions(selectedQuestions);
+    setCurrent(0);
+    setScore(0);
+    setSelected("");
+    setAnswered(false);
+    setFinished(false);
+    setStarted(true);
   }
 
-  function getPosition(event) {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
+  function chooseAnswer(option) {
+    if (answered) return;
 
-    if (event.touches) {
-      return {
-        x: event.touches[0].clientX - rect.left,
-        y: event.touches[0].clientY - rect.top
-      };
+    setSelected(option);
+    setAnswered(true);
+
+    if (
+      option === questions[current].answer
+    ) {
+      setScore((old) => old + 1);
     }
-
-    return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    };
   }
 
-  function startDrawing(event) {
-    event.preventDefault();
+  function nextQuestion() {
+    if (
+      current + 1 >=
+      questions.length
+    ) {
+      setFinished(true);
+      return;
+    }
 
-    drawing.current = true;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const pos = getPosition(event);
-
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
+    setCurrent((old) => old + 1);
+    setSelected("");
+    setAnswered(false);
   }
 
-  function draw(event) {
-    event.preventDefault();
+  function getResultMessage() {
+    const percentage =
+      (score / questions.length) * 100;
 
-    if (!drawing.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const pos = getPosition(event);
-
-    ctx.lineWidth = 7;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#ff6b6b";
-
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-  }
-
-  function stopDrawing(event) {
-    if (event) event.preventDefault();
-    drawing.current = false;
-  }
-
-  function clearCanvas() {
-    setupCanvas();
-    setMessage("");
-  }
-
-  function nextItem() {
-    clearCanvas();
-
-    if (section === "english") {
-      const index = english.indexOf(letter);
-      const next = english[(index + 1) % english.length];
-      setLetter(next);
+    if (percentage === 100) {
+      return "🏆 Perfect Score!";
     }
 
-    if (section === "numbers") {
-      setNumber((old) => (old >= 100 ? 1 : old + 1));
+    if (percentage >= 80) {
+      return "🌟 Excellent!";
     }
 
-    if (section === "telugu") {
-      const index = telugu.indexOf(teluguLetter);
-      const next = telugu[(index + 1) % telugu.length];
-      setTeluguLetter(next);
+    if (percentage >= 60) {
+      return "👏 Great Job!";
     }
 
-    setMessage("⭐ Great! Try the next one!");
-  }
-
-  function previousItem() {
-    clearCanvas();
-
-    if (section === "english") {
-      const index = english.indexOf(letter);
-      const previous =
-        english[
-          (index - 1 + english.length) % english.length
-        ];
-
-      setLetter(previous);
+    if (percentage >= 40) {
+      return "😊 Good Try!";
     }
 
-    if (section === "numbers") {
-      setNumber((old) => (old <= 1 ? 100 : old - 1));
-    }
-
-    if (section === "telugu") {
-      const index = telugu.indexOf(teluguLetter);
-      const previous =
-        telugu[
-          (index - 1 + telugu.length) % telugu.length
-        ];
-
-      setTeluguLetter(previous);
-    }
-
-    setMessage("✏️ Keep practicing!");
+    return "💪 Keep Learning!";
   }
 
   return (
     <>
       <Head>
-        <title>Writing Practice | Chinnaari Kids</title>
+        <title>
+          Mega Quiz | Chinnaari Kids
+        </title>
 
         <meta
           name="description"
-          content="Practice English letters, numbers and Telugu letters with fun dotted tracing activities for kids."
+          content="Fun educational quiz for kids covering countries, capitals, currencies, Indian states, animals, birds, insects, fruits, flowers, numbers, ABC, Telugu and famous places."
         />
 
         <meta
@@ -209,620 +613,219 @@ export default function Writing() {
 
         <header className="header">
 
-          <Link href="/" className="logo">
+          <Link
+            href="/"
+            className="logo"
+          >
             🌈 Chinnaari Kids
           </Link>
 
           <nav>
-            <Link href="/">Home</Link>
-            <Link href="/abc">🔤 ABC</Link>
-            <Link href="/numbers">🔢 Numbers</Link>
-            <Link href="/colours">🎨 Colours</Link>
-            <Link href="/games">🎮 Games</Link>
+            <Link href="/">
+              Home
+            </Link>
+
+            <Link href="/games">
+              🎮 Games
+            </Link>
+
+            <Link href="/puzzles">
+              🧩 Puzzles
+            </Link>
+
+            <Link href="/dots">
+              🔵 Dot-to-Dot
+            </Link>
+
+            <Link href="/drawing">
+              🎨 Drawing
+            </Link>
+
+            <Link href="/world">
+              🌍 World Explorer
+            </Link>
           </nav>
 
         </header>
 
         <section className="hero">
 
-          <div className="pencil">
-            ✏️
+          <div className="heroEmoji">
+            🧠❓🎯
           </div>
 
           <h1>
-            Writing Practice
+            Mega Quiz
           </h1>
 
           <p>
-            Trace the dotted letters and numbers!
+            Learn, think and have fun!
           </p>
 
-          <div className="heroLetters">
-            🔤 🔢 అ ✏️ ⭐
+          <div className="heroMini">
+            🌍 🇮🇳 🐶 🐦 🍎 🔤 🧠
           </div>
 
         </section>
 
-        <section className="tabs">
+        <section className="categorySection">
 
-          <button
-            className={section === "english" ? "active" : ""}
-            onClick={() => {
-              setSection("english");
-              setMessage("");
-            }}
-          >
-            🔤 English
-          </button>
+          <h2>
+            📚 Choose a Quiz
+          </h2>
 
-          <button
-            className={section === "numbers" ? "active" : ""}
-            onClick={() => {
-              setSection("numbers");
-              setMessage("");
-            }}
-          >
-            🔢 Numbers
-          </button>
+          <div className="categoryGrid">
 
-          <button
-            className={section === "telugu" ? "active" : ""}
-            onClick={() => {
-              setSection("telugu");
-              setMessage("");
-            }}
-          >
-            అ తెలుగు
-          </button>
+            {categories.map((item) => (
+              <button
+                key={item.name}
+                className={
+                  category === item.name
+                    ? "category activeCategory"
+                    : "category"
+                }
+                onClick={() =>
+                  startQuiz(item.name)
+                }
+              >
+
+                <span className="categoryIcon">
+                  {item.icon}
+                </span>
+
+                <span>
+                  {item.name}
+                </span>
+
+              </button>
+            ))}
+
+          </div>
 
         </section>
 
-        <section className="practice">
+        <section className="quizSection">
 
-          <div className="practiceTitle">
+          {!started && (
+            <div className="startBox">
 
-            <span>
-              {section === "english" && "🔤 Trace the Letter"}
-              {section === "numbers" && "🔢 Trace the Number"}
-              {section === "telugu" && "అ తెలుగు అక్షరం రాయండి"}
-            </span>
+              <div className="bigEmoji">
+                🧠
+              </div>
 
-            <span className="counter">
-              {section === "english" &&
-                `${english.indexOf(letter) + 1} / ${english.length}`}
+              <h2>
+                Ready to Learn?
+              </h2>
 
-              {section === "numbers" &&
-                `${number} / 100`}
+              <p>
+                Choose a category above and start
+                your quiz!
+              </p>
 
-              {section === "telugu" &&
-                `${telugu.indexOf(teluguLetter) + 1} / ${telugu.length}`}
-            </span>
+              <button
+                className="startButton"
+                onClick={() =>
+                  startQuiz(category)
+                }
+              >
+                🚀 Start Quiz
+              </button>
 
-          </div>
-
-          <div className="instruction">
-            👆 Follow the dotted guide and practice writing
-          </div>
-
-          <div className="canvasBox">
-
-            <canvas
-              ref={canvasRef}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-            />
-
-          </div>
-
-          <div className="buttons">
-
-            <button
-              className="clear"
-              onClick={clearCanvas}
-            >
-              🗑️ Clear
-            </button>
-
-            <button
-              className="previous"
-              onClick={previousItem}
-            >
-              ⬅️ Previous
-            </button>
-
-            <button
-              className="next"
-              onClick={nextItem}
-            >
-              Next ➡️
-            </button>
-
-          </div>
-
-          {message && (
-            <div className="message">
-              {message}
             </div>
           )}
 
-        </section>
-
-        <section className="preview">
-
-          <h2>
-            📚 Choose What You Want to Practice
-          </h2>
-
-          <div className="previewGrid">
-
-            <div
-              className="previewCard"
-              onClick={() => setSection("english")}
-            >
-              <div>🔤</div>
-              <h3>English Letters</h3>
-              <p>A B C D E ... Z</p>
-            </div>
-
-            <div
-              className="previewCard"
-              onClick={() => setSection("numbers")}
-            >
-              <div>🔢</div>
-              <h3>Numbers</h3>
-              <p>1 2 3 ... 100</p>
-            </div>
-
-            <div
-              className="previewCard"
-              onClick={() => setSection("telugu")}
-            >
-              <div>అ</div>
-              <h3>Telugu Letters</h3>
-              <p>అ ఆ ఇ ఈ ...</p>
-            </div>
-
-          </div>
-
-        </section>
-
-        <section className="tip">
-
-          <div className="tipIcon">
-            🌟
-          </div>
-
-          <div>
-
-            <h2>
-              Practice Makes Perfect!
-            </h2>
-
-            <p>
-              Trace slowly and carefully.
-              Practice every day to improve
-              your handwriting.
-            </p>
-
-            <p className="telugu">
-              ప్రతిరోజూ కొంచెం కొంచెంగా
-              సాధన చేస్తే మీ రాత మరింత అందంగా
-              మారుతుంది!
-            </p>
-
-          </div>
-
-        </section>
-
-        <section className="links">
-
-          <Link href="/abc">
-            🔤 ABC
-          </Link>
-
-          <Link href="/numbers">
-            🔢 Numbers
-          </Link>
-
-          <Link href="/colours">
-            🎨 Colours
-          </Link>
-
-          <Link href="/stories">
-            📖 Stories
-          </Link>
-
-          <Link href="/games">
-            🎮 Games
-          </Link>
-
-        </section>
-
-        <footer>
-
-          <h3>
-            🌈 Chinnaari Kids
-          </h3>
-
-          <p>
-            Learn • Play • Discover
-          </p>
-
-          <p>
-            © 2026 Chinnaari Kids
-          </p>
-
-        </footer>
-
-      </main>
-
-      <style jsx>{`
-
-        * {
-          box-sizing: border-box;
-        }
-
-        .page {
-          min-height: 100vh;
-          background: #fffaf3;
-          color: #333;
-          font-family: Arial, sans-serif;
-        }
-
-        .header {
-          min-height: 70px;
-          padding: 15px 6%;
-          background: white;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 15px;
-          position: sticky;
-          top: 0;
-          z-index: 10;
-          box-shadow: 0 2px 15px rgba(0,0,0,.08);
-        }
-
-        .logo {
-          color: #333;
-          text-decoration: none;
-          font-size: 23px;
-          font-weight: bold;
-          white-space: nowrap;
-        }
-
-        nav {
-          display: flex;
-          gap: 14px;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-
-        nav a {
-          color: #444;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: bold;
-        }
-
-        nav a:hover {
-          color: #ff6b6b;
-        }
-
-        .hero {
-          text-align: center;
-          padding: 55px 20px;
-          background:
-            linear-gradient(
-              135deg,
-              #fff0c9,
-              #e5e0ff,
-              #dff7ff
-            );
-        }
-
-        .pencil {
-          font-size: 85px;
-        }
-
-        .hero h1 {
-          font-size: 44px;
-          margin: 10px 0;
-        }
-
-        .hero p {
-          font-size: 18px;
-          color: #555;
-        }
-
-        .heroLetters {
-          margin-top: 20px;
-          font-size: 35px;
-          letter-spacing: 7px;
-        }
-
-        .tabs {
-          max-width: 800px;
-          margin: 35px auto 20px;
-          padding: 0 20px;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-        }
-
-        .tabs button {
-          border: none;
-          padding: 16px 10px;
-          border-radius: 22px;
-          background: white;
-          box-shadow: 0 4px 15px rgba(0,0,0,.07);
-          font-size: 16px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .tabs button.active {
-          background: #ffcf70;
-          transform: scale(1.03);
-        }
-
-        .practice {
-          max-width: 850px;
-          margin: 25px auto 55px;
-          padding: 30px 25px;
-          text-align: center;
-          background: white;
-          border-radius: 30px;
-          box-shadow: 0 7px 25px rgba(0,0,0,.08);
-        }
-
-        .practiceTitle {
-          display: flex;
-          justify-content: space-between;
-          gap: 15px;
-          font-size: 21px;
-          font-weight: bold;
-        }
-
-        .counter {
-          padding: 7px 14px;
-          background: #fff1ca;
-          border-radius: 20px;
-          font-size: 14px;
-        }
-
-        .instruction {
-          margin: 20px 0;
-          color: #777;
-        }
-
-        .canvasBox {
-          width: 100%;
-          height: 430px;
-          border-radius: 25px;
-          overflow: hidden;
-          background: white;
-          border: 3px solid #eee;
-          touch-action: none;
-        }
-
-        canvas {
-          width: 100%;
-          height: 100%;
-          display: block;
-          touch-action: none;
-          cursor: crosshair;
-        }
-
-        .buttons {
-          margin-top: 22px;
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          flex-wrap: wrap;
-        }
-
-        .buttons button {
-          border: none;
-          padding: 13px 22px;
-          border-radius: 25px;
-          font-size: 15px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .clear {
-          background: #ffe1e1;
-        }
-
-        .previous {
-          background: #e5e5ff;
-        }
-
-        .next {
-          background: #4caf50;
-          color: white;
-        }
-
-        .buttons button:hover {
-          transform: translateY(-2px);
-        }
-
-        .message {
-          margin-top: 20px;
-          padding: 12px;
-          border-radius: 20px;
-          background: #eaffdf;
-          font-weight: bold;
-        }
-
-        .preview {
-          max-width: 1000px;
-          margin: 30px auto 50px;
-          padding: 0 20px;
-          text-align: center;
-        }
-
-        .preview h2 {
-          font-size: 28px;
-        }
-
-        .previewGrid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
-          margin-top: 25px;
-        }
-
-        .previewCard {
-          padding: 25px 15px;
-          background: white;
-          border-radius: 25px;
-          box-shadow: 0 5px 18px rgba(0,0,0,.06);
-          cursor: pointer;
-          transition: .2s;
-        }
-
-        .previewCard:hover {
-          transform: translateY(-6px);
-        }
-
-        .previewCard div {
-          font-size: 60px;
-          font-weight: bold;
-        }
-
-        .previewCard h3 {
-          margin: 12px 0 5px;
-        }
-
-        .previewCard p {
-          color: #777;
-        }
-
-        .tip {
-          max-width: 850px;
-          margin: 30px auto 50px;
-          padding: 30px;
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          background: #fff;
-          border-radius: 30px;
-          box-shadow: 0 6px 20px rgba(0,0,0,.06);
-        }
-
-        .tipIcon {
-          font-size: 70px;
-        }
-
-        .tip p {
-          color: #666;
-          line-height: 1.6;
-        }
-
-        .telugu {
-          font-weight: bold;
-        }
-
-        .links {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 12px;
-          margin: 20px 20px 50px;
-        }
-
-        .links a {
-          padding: 13px 20px;
-          border-radius: 25px;
-          background: #333;
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-        }
-
-        footer {
-          padding: 35px 20px;
-          text-align: center;
-          background: #333;
-          color: white;
-        }
-
-        footer p {
-          margin: 8px;
-        }
-
-        @media (max-width: 700px) {
-
-          .header {
-            flex-direction: column;
-          }
-
-          .hero h1 {
-            font-size: 35px;
-          }
-
-          .tabs {
-            grid-template-columns: 1fr;
-          }
-
-          .previewGrid {
-            grid-template-columns: 1fr;
-          }
-
-          .tip {
-            margin-left: 15px;
-            margin-right: 15px;
-            flex-direction: column;
-            text-align: center;
-          }
-
-          .canvasBox {
-            height: 360px;
-          }
-
-        }
-
-        @media (max-width: 500px) {
-
-          nav {
-            gap: 8px;
-          }
-
-          nav a {
-            font-size: 12px;
-          }
-
-          .hero h1 {
-            font-size: 29px;
-          }
-
-          .pencil {
-            font-size: 70px;
-          }
-
-          .heroLetters {
-            font-size: 26px;
-            letter-spacing: 3px;
-          }
-
-          .practiceTitle {
-            font-size: 17px;
-          }
-
-          .canvasBox {
-            height: 330px;
-          }
-
-        }
-
-      `}</style>
-    </>
-  );
-                       }
+          {started && !finished && (
+            <>
+
+              <div className="quizHeader">
+
+                <div>
+                  <span className="questionIcon">
+                    {questions[current].emoji}
+                  </span>
+
+                  <strong>
+                    {category}
+                  </strong>
+                </div>
+
+                <div className="questionCount">
+                  Question{" "}
+                  {current + 1} /{" "}
+                  {questions.length}
+                </div>
+
+              </div>
+
+              <div className="levelRow">
+
+                <button
+                  className={
+                    level === "Easy"
+                      ? "level activeLevel"
+                      : "level"
+                  }
+                  onClick={() =>
+                    setLevel("Easy")
+                  }
+                >
+                  🟢 Easy
+                </button>
+
+                <button
+                  className={
+                    level === "Medium"
+                      ? "level activeLevel"
+                      : "level"
+                  }
+                  onClick={() =>
+                    setLevel("Medium")
+                  }
+                >
+                  🟡 Medium
+                </button>
+
+                <button
+                  className={
+                    level === "Hard"
+                      ? "level activeLevel"
+                      : "level"
+                  }
+                  onClick={() =>
+                    setLevel("Hard")
+                  }
+                >
+                  🔴 Hard
+                </button>
+
+              </div>
+
+              <div className="questionBox">
+
+                <div className="questionNumber">
+                  Q{current + 1}
+                </div>
+
+                <h2>
+                  {questions[current].question}
+                </h2>
+
+              </div>
+
+              <div className="options">
+
+                {questions[current].options.map(
+                  (option) => {
+
+                    let className =
+                      "option";
+
+                    if (
+                      answered &&
+                      option ===
+                        questions[current]
+                          .answer
+                    ) {
+                      className +=
+                        " correct";
+ 
