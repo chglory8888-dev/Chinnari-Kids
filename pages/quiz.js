@@ -124,6 +124,158 @@ const categories = [
   ["General Knowledge", "🧠"]
 ];
 
+function playSound(type) {
+  if (typeof window === "undefined") return;
+
+  const AudioContext =
+    window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContext) return;
+
+  const audio = new AudioContext();
+
+  if (type === "win") {
+    const notes = [523, 659, 784, 1046];
+
+    notes.forEach((frequency, i) => {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+
+      oscillator.connect(gain);
+      gain.connect(audio.destination);
+
+      oscillator.frequency.value = frequency;
+
+      gain.gain.setValueAtTime(
+        0.001,
+        audio.currentTime + i * 0.12
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.22,
+        audio.currentTime + i * 0.12 + 0.03
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audio.currentTime + i * 0.12 + 0.25
+      );
+
+      oscillator.start(
+        audio.currentTime + i * 0.12
+      );
+
+      oscillator.stop(
+        audio.currentTime + i * 0.12 + 0.25
+      );
+    });
+
+    return;
+  }
+
+  const oscillator = audio.createOscillator();
+  const gain = audio.createGain();
+
+  oscillator.connect(gain);
+  gain.connect(audio.destination);
+
+  if (type === "correct") {
+    oscillator.type = "sine";
+
+    oscillator.frequency.setValueAtTime(
+      523,
+      audio.currentTime
+    );
+
+    oscillator.frequency.setValueAtTime(
+      659,
+      audio.currentTime + 0.12
+    );
+
+    oscillator.frequency.setValueAtTime(
+      784,
+      audio.currentTime + 0.24
+    );
+
+    gain.gain.setValueAtTime(
+      0.001,
+      audio.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.25,
+      audio.currentTime + 0.03
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audio.currentTime + 0.4
+    );
+
+    oscillator.start();
+    oscillator.stop(audio.currentTime + 0.4);
+  }
+
+  if (type === "wrong") {
+    oscillator.type = "sawtooth";
+
+    oscillator.frequency.setValueAtTime(
+      180,
+      audio.currentTime
+    );
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+      90,
+      audio.currentTime + 0.25
+    );
+
+    gain.gain.setValueAtTime(
+      0.001,
+      audio.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.18,
+      audio.currentTime + 0.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audio.currentTime + 0.28
+    );
+
+    oscillator.start();
+    oscillator.stop(audio.currentTime + 0.28);
+  }
+
+  if (type === "click") {
+    oscillator.type = "sine";
+
+    oscillator.frequency.setValueAtTime(
+      700,
+      audio.currentTime
+    );
+
+    gain.gain.setValueAtTime(
+      0.001,
+      audio.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.12,
+      audio.currentTime + 0.01
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audio.currentTime + 0.08
+    );
+
+    oscillator.start();
+    oscillator.stop(audio.currentTime + 0.08);
+  }
+}
+
 export default function Quiz() {
   const [category, setCategory] = useState("Countries");
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -136,6 +288,8 @@ export default function Quiz() {
   const question = questions[questionIndex];
 
   function changeCategory(name) {
+    playSound("click");
+
     setCategory(name);
     setQuestionIndex(0);
     setScore(0);
@@ -152,11 +306,17 @@ export default function Quiz() {
 
     if (option === question[2]) {
       setScore((value) => value + 1);
+      playSound("correct");
+    } else {
+      playSound("wrong");
     }
   }
 
   function nextQuestion() {
+    playSound("click");
+
     if (questionIndex === questions.length - 1) {
+      playSound("win");
       setFinished(true);
       return;
     }
@@ -167,6 +327,8 @@ export default function Quiz() {
   }
 
   function restart() {
+    playSound("click");
+
     setQuestionIndex(0);
     setScore(0);
     setSelected("");
@@ -178,10 +340,12 @@ export default function Quiz() {
     <>
       <Head>
         <title>Mega Quiz | Chinnaari Kids</title>
+
         <meta
           name="description"
           content="Fun educational quiz for kids"
         />
+
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
@@ -198,24 +362,36 @@ export default function Quiz() {
           <nav>
             <Link href="/">Home</Link>
             <Link href="/games">🎮 Games</Link>
-            <Link href="/dots">🔵 Dot-to-Dot</Link>
+            <Link href="/flags">🏳️ Flags</Link>
             <Link href="/world">🌍 World Explorer</Link>
           </nav>
         </header>
 
         <section className="hero">
-          <div className="heroIcon">🧠❓🎯</div>
+          <div className="heroIcon">
+            🧠❓🎯
+          </div>
+
           <h1>Mega Quiz</h1>
-          <p>Learn • Think • Play • Discover</p>
+
+          <p>
+            Learn • Think • Play • Discover
+          </p>
+
           <div className="heroMini">
             🌍 🇮🇳 🐶 🐦 🦋 🍎 🔤 🧠
           </div>
         </section>
 
         <section className="special">
-          <Link href="/flags" className="flagLink">
+          <Link
+            href="/flags"
+            className="flagLink"
+          >
             🏳️ Flags Quiz
-            <span>Learn World Flags →</span>
+            <span>
+              Learn World Flags
+            </span>
           </Link>
         </section>
 
@@ -231,7 +407,9 @@ export default function Quiz() {
                     ? "category active"
                     : "category"
                 }
-                onClick={() => changeCategory(name)}
+                onClick={() =>
+                  changeCategory(name)
+                }
               >
                 <span>{icon}</span>
                 <small>{name}</small>
@@ -248,11 +426,13 @@ export default function Quiz() {
                   <span className="quizEmoji">
                     {question[3]}
                   </span>
+
                   <strong>{category}</strong>
                 </div>
 
                 <span className="counter">
-                  {questionIndex + 1} / {questions.length}
+                  {questionIndex + 1} /{" "}
+                  {questions.length}
                 </span>
               </div>
 
@@ -267,7 +447,8 @@ export default function Quiz() {
               <div className="options">
                 {question[1].map((option) => {
                   const isCorrect =
-                    answered && option === question[2];
+                    answered &&
+                    option === question[2];
 
                   const isWrong =
                     answered &&
@@ -284,12 +465,19 @@ export default function Quiz() {
                           ? "option wrong"
                           : "option"
                       }
-                      onClick={() => answerQuestion(option)}
+                      onClick={() =>
+                        answerQuestion(option)
+                      }
                     >
                       <span>{option}</span>
 
-                      {isCorrect && <b>✅</b>}
-                      {isWrong && <b>❌</b>}
+                      {isCorrect && (
+                        <b>✅</b>
+                      )}
+
+                      {isWrong && (
+                        <b>❌</b>
+                      )}
                     </button>
                   );
                 })}
@@ -319,7 +507,8 @@ export default function Quiz() {
                     className="next"
                     onClick={nextQuestion}
                   >
-                    {questionIndex === questions.length - 1
+                    {questionIndex ===
+                    questions.length - 1
                       ? "🏆 Result"
                       : "Next ➡️"}
                   </button>
@@ -328,6 +517,7 @@ export default function Quiz() {
             </>
           ) : (
             <div className="result">
+
               <div className="resultIcon">
                 {score === questions.length
                   ? "🏆"
@@ -336,7 +526,9 @@ export default function Quiz() {
                   : "💪"}
               </div>
 
-              <h2>Quiz Complete!</h2>
+              <h2>
+                Quiz Complete!
+              </h2>
 
               <div className="resultScore">
                 {score} / {questions.length}
@@ -356,416 +548,405 @@ export default function Quiz() {
               >
                 🔄 Play Again
               </button>
+
             </div>
           )}
         </section>
-      </main>
+        </main>
 
-      <style jsx>{`
-        * {
-          box-sizing: border-box;
-        }
+        <style jsx>{`
+          * {
+            box-sizing: border-box;
+          }
 
-        .page {
-          min-height: 100vh;
-          background: #fffaf3;
-          color: #333;
-          font-family: Arial, sans-serif;
-        }
+          .page {
+            min-height: 100vh;
+            background: #fffaf3;
+            color: #333;
+            font-family: Arial, sans-serif;
+          }
 
-        .header {
-          min-height: 70px;
-          padding: 15px 6%;
-          background: white;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 15px;
-          position: sticky;
-          top: 0;
-          z-index: 20;
-          box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .logo {
-          color: #333;
-          text-decoration: none;
-          font-size: 23px;
-          font-weight: bold;
-          white-space: nowrap;
-        }
-
-        nav {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-
-        nav a {
-          color: #444;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: bold;
-        }
-
-        .hero {
-          text-align: center;
-          padding: 55px 20px;
-          background: linear-gradient(
-            135deg,
-            #e3f2ff,
-            #fff0c9,
-            #f8ddff
-          );
-        }
-
-        .heroIcon {
-          font-size: 55px;
-        }
-
-        .hero h1 {
-          font-size: 44px;
-          margin: 12px 0;
-        }
-
-        .hero p {
-          font-size: 19px;
-          color: #555;
-        }
-
-        .heroMini {
-          font-size: 27px;
-          margin-top: 20px;
-        }
-
-        .special {
-          text-align: center;
-          padding: 25px 20px 5px;
-        }
-
-        .flagLink {
-          display: inline-flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 5px;
-          padding: 16px 30px;
-          background: #ff9d42;
-          color: white;
-          text-decoration: none;
-          border-radius: 25px;
-          font-size: 20px;
-          font-weight: bold;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
-        }
-
-        .flagLink span {
-          font-size: 13px;
-          font-weight: normal;
-        }
-
-        .categories {
-          max-width: 1100px;
-          margin: 30px auto;
-          padding: 0 20px;
-          text-align: center;
-        }
-
-        .categories h2 {
-          font-size: 28px;
-        }
-
-        .categoryGrid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 12px;
-          margin-top: 20px;
-        }
-
-        .category {
-          min-height: 90px;
-          border: 2px solid #eee;
-          background: white;
-          border-radius: 18px;
-          padding: 10px 5px;
-          cursor: pointer;
-          transition: 0.2s;
-        }
-
-        .category:hover {
-          transform: translateY(-3px);
-        }
-
-        .category span {
-          display: block;
-          font-size: 31px;
-          margin-bottom: 5px;
-        }
-
-        .category small {
-          font-weight: bold;
-        }
-
-        .active {
-          background: #fff0d0;
-          border-color: #ff9d42;
-        }
-
-        .quizCard {
-          max-width: 850px;
-          margin: 25px auto 55px;
-          padding: 28px;
-          background: white;
-          border-radius: 30px;
-          box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
-        }
-
-        .quizTop {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 21px;
-        }
-
-        .quizEmoji {
-          font-size: 40px;
-          margin-right: 10px;
-        }
-
-        .counter {
-          background: #fff0c9;
-          padding: 8px 14px;
-          border-radius: 20px;
-          font-size: 14px;
-          font-weight: bold;
-        }
-
-        .question {
-          margin: 25px 0;
-          padding: 30px 20px;
-          text-align: center;
-          border-radius: 25px;
-          background: linear-gradient(
-            135deg,
-            #f3f9ff,
-            #fff8df
-          );
-        }
-
-        .qNumber {
-          display: inline-block;
-          padding: 7px 13px;
-          background: #333;
-          color: white;
-          border-radius: 18px;
-          font-size: 13px;
-          font-weight: bold;
-        }
-
-        .question h2 {
-          font-size: 25px;
-          line-height: 1.5;
-        }
-
-        .options {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 14px;
-        }
-
-        .option {
-          min-height: 62px;
-          border: 2px solid #e5e5e5;
-          background: white;
-          border-radius: 20px;
-          padding: 14px;
-          cursor: pointer;
-          font-size: 16px;
-          font-weight: bold;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .option:hover {
-          border-color: #ffb347;
-          background: #fffaf0;
-        }
-
-        .correct {
-          background: #e3f8e3 !important;
-          border-color: #4caf50 !important;
-        }
-
-        .wrong {
-          background: #ffe4e4 !important;
-          border-color: #f44336 !important;
-        }
-
-        .feedback {
-          margin-top: 18px;
-          padding: 14px;
-          border-radius: 20px;
-          text-align: center;
-          font-weight: bold;
-        }
-
-        .good {
-          background: #e3f8e3;
-        }
-
-        .bad {
-          background: #ffe4e4;
-        }
-
-        .bottom {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 25px;
-        }
-
-        .score {
-          padding: 10px 18px;
-          background: #fff0c9;
-          border-radius: 20px;
-          font-weight: bold;
-        }
-
-        .next,
-        .restart {
-          border: none;
-          background: #4caf50;
-          color: white;
-          padding: 13px 23px;
-          border-radius: 25px;
-          cursor: pointer;
-          font-weight: bold;
-        }
-
-        .result {
-          text-align: center;
-          padding: 20px;
-        }
-
-        .resultIcon {
-          font-size: 80px;
-        }
-
-        .result h2 {
-          font-size: 32px;
-        }
-
-        .resultScore {
-          display: inline-block;
-          padding: 18px 30px;
-          background: #fff0c9;
-          border-radius: 25px;
-          font-size: 38px;
-          font-weight: bold;
-        }
-
-        .result h3 {
-          font-size: 24px;
-        }
-
-        .bottomLinks {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 12px;
-          margin: 20px 20px 50px;
-        }
-
-        .bottomLinks a {
-          background: #333;
-          color: white;
-          text-decoration: none;
-          padding: 13px 20px;
-          border-radius: 25px;
-          font-weight: bold;
-        }
-
-        footer {
-          background: #333;
-          color: white;
-          text-align: center;
-          padding: 35px 20px;
-        }
-
-        footer p {
-          margin: 8px;
-        }
-
-        @media (max-width: 700px) {
           .header {
-            flex-direction: column;
+            min-height: 70px;
+            padding: 15px 6%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
           }
 
-          .categoryGrid {
-            grid-template-columns: repeat(2, 1fr);
+          .logo {
+            color: #333;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: bold;
+            white-space: nowrap;
           }
 
-          .options {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 480px) {
           nav {
-            gap: 8px;
+            display: flex;
+            gap: 13px;
+            flex-wrap: wrap;
+            justify-content: center;
           }
 
           nav a {
-            font-size: 12px;
+            color: #444;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
           }
 
-          .hero h1 {
-            font-size: 32px;
+          .hero {
+            text-align: center;
+            padding: 55px 20px;
+            background: linear-gradient(
+              135deg,
+              #e3f2ff,
+              #fff0c9,
+              #f8ddff
+            );
           }
 
           .heroIcon {
-            font-size: 42px;
+            font-size: 55px;
+          }
+
+          .hero h1 {
+            font-size: 44px;
+            margin: 12px 0;
+          }
+
+          .hero p {
+            font-size: 19px;
+            color: #555;
           }
 
           .heroMini {
-            font-size: 20px;
+            font-size: 28px;
+            margin-top: 20px;
+            letter-spacing: 3px;
           }
 
-          .quizCard {
-            margin-left: 10px;
-            margin-right: 10px;
-            padding: 16px;
-          }
-
-          .quizTop {
-            font-size: 17px;
-          }
-
-          .quizEmoji {
-            font-size: 30px;
-          }
-
-          .question h2 {
-            font-size: 20px;
-          }
-
-          .bottom {
-            flex-direction: column;
-            gap: 15px;
-          }
-
-          .score,
-          .next {
-            width: 100%;
+          .special {
             text-align: center;
+            padding: 28px 20px 5px;
           }
 
           .flagLink {
-            width: 90%;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 15px 30px;
+            background: #ff9d42;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
           }
-        }
-      `}</style>
-    </>
-  );
-}
+
+          .flagLink span {
+            font-size: 13px;
+            font-weight: normal;
+          }
+
+          .categories {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            text-align: center;
+          }
+
+          .categories h2 {
+            font-size: 28px;
+          }
+
+          .categoryGrid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+          }
+
+          .category {
+            min-height: 90px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 18px;
+            padding: 10px 5px;
+            cursor: pointer;
+            transition: 0.2s;
+          }
+
+          .category:hover {
+            transform: translateY(-3px);
+          }
+
+          .category span {
+            display: block;
+            font-size: 31px;
+            margin-bottom: 5px;
+          }
+
+          .category small {
+            font-weight: bold;
+          }
+
+          .active {
+            background: #fff0d0;
+            border-color: #ff9d42;
+          }
+
+          .quizCard {
+            max-width: 850px;
+            margin: 30px auto 60px;
+            padding: 28px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+          }
+
+          .quizTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+          }
+
+          .quizEmoji {
+            font-size: 38px;
+            margin-right: 10px;
+            vertical-align: middle;
+          }
+
+          .counter {
+            background: #fff0c9;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+          }
+
+          .question {
+            margin: 25px 0;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 25px;
+            background: linear-gradient(
+              135deg,
+              #f3f9ff,
+              #fff8df
+            );
+          }
+
+          .qNumber {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #333;
+            color: white;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: bold;
+          }
+
+          .question h2 {
+            font-size: 25px;
+            line-height: 1.5;
+            margin-bottom: 5px;
+          }
+
+          .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+          }
+
+          .option {
+            min-height: 62px;
+            border: 2px solid #e5e5e5;
+            background: white;
+            border-radius: 20px;
+            padding: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            transition: 0.2s;
+          }
+
+          .option:hover {
+            border-color: #ffb347;
+            background: #fffaf0;
+            transform: translateY(-2px);
+          }
+
+          .correct {
+            background: #e3f8e3 !important;
+            border-color: #4caf50 !important;
+          }
+
+          .wrong {
+            background: #ffe4e4 !important;
+            border-color: #f44336 !important;
+          }
+
+          .feedback {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: bold;
+          }
+
+          .good {
+            background: #e3f8e3;
+          }
+
+          .bad {
+            background: #ffe4e4;
+          }
+
+          .bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 25px;
+          }
+
+          .score {
+            padding: 10px 18px;
+            background: #fff0c9;
+            border-radius: 20px;
+            font-weight: bold;
+          }
+
+          .next,
+          .restart {
+            border: none;
+            background: #4caf50;
+            color: white;
+            padding: 13px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+          }
+
+          .next:hover,
+          .restart:hover {
+            transform: translateY(-2px);
+          }
+
+          .result {
+            text-align: center;
+            padding: 25px 10px;
+          }
+
+          .resultIcon {
+            font-size: 80px;
+          }
+
+          .result h2 {
+            font-size: 32px;
+            margin: 15px 0;
+          }
+
+          .resultScore {
+            display: inline-block;
+            padding: 18px 30px;
+            background: #fff0c9;
+            border-radius: 25px;
+            font-size: 38px;
+            font-weight: bold;
+          }
+
+          .result h3 {
+            font-size: 24px;
+            margin: 22px 0;
+          }
+
+          @media (max-width: 800px) {
+            .header {
+              flex-direction: column;
+            }
+
+            .categoryGrid {
+              grid-template-columns: repeat(3, 1fr);
+            }
+          }
+
+          @media (max-width: 600px) {
+            .hero h1 {
+              font-size: 34px;
+            }
+
+            .heroIcon {
+              font-size: 45px;
+            }
+
+            .quizCard {
+              margin: 25px 10px 45px;
+              padding: 18px;
+            }
+
+            .categoryGrid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+
+            .options {
+              grid-template-columns: 1fr;
+            }
+
+            .question h2 {
+              font-size: 20px;
+            }
+
+            .bottom {
+              flex-direction: column;
+            }
+
+            .score,
+            .next {
+              width: 100%;
+              text-align: center;
+            }
+          }
+
+          @media (max-width: 400px) {
+            nav {
+              gap: 8px;
+            }
+
+            nav a {
+              font-size: 11px;
+            }
+
+            .heroMini {
+              font-size: 20px;
+            }
+
+            .quizTop {
+              font-size: 14px;
+            }
+
+            .quizEmoji {
+              font-size: 30px;
+            }
+          }
+        `}</style>
+      </>
+    );
+  }
+            }
