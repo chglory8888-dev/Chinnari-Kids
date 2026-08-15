@@ -4,133 +4,79 @@ import { useState } from "react";
 
 const quizData = {
   Countries: [
-    ["What is the largest country in the world?", ["India", "Russia", "China", "Brazil"], "Russia", "🌍"],
-    ["Which country has the Eiffel Tower?", ["France", "Italy", "Spain", "Germany"], "France", "🗼"],
-    ["Which country is called the Land of the Rising Sun?", ["India", "Japan", "China", "Korea"], "Japan", "🇯🇵"],
-    ["Where are the Great Pyramids?", ["Egypt", "India", "Mexico", "Peru"], "Egypt", "🏜️"],
-    ["Which country is shaped like a boot?", ["France", "Italy", "Spain", "Greece"], "Italy", "🇮🇹"],
+    ["Largest country?", ["India", "Russia", "China", "Brazil"], "Russia", "🌍"],
+    ["Eiffel Tower is in?", ["France", "Italy", "Spain", "Germany"], "France", "🗼"],
+    ["Land of Rising Sun?", ["India", "Japan", "China", "Korea"], "Japan", "🇯🇵"],
+    ["Great Pyramids are in?", ["Egypt", "India", "Mexico", "Peru"], "Egypt", "🏜️"],
+    ["Country shaped like a boot?", ["France", "Italy", "Spain", "Greece"], "Italy", "🇮🇹"]
   ],
 
   Capitals: [
-    ["What is the capital of India?", ["Mumbai", "New Delhi", "Chennai", "Kolkata"], "New Delhi", "🇮🇳"],
-    ["What is the capital of France?", ["Paris", "London", "Rome", "Madrid"], "Paris", "🇫🇷"],
-    ["What is the capital of Japan?", ["Tokyo", "Kyoto", "Osaka", "Hiroshima"], "Tokyo", "🇯🇵"],
-    ["What is the capital of Australia?", ["Sydney", "Melbourne", "Canberra", "Perth"], "Canberra", "🇦🇺"],
-    ["What is the capital of the UK?", ["London", "Manchester", "Liverpool", "Birmingham"], "London", "🇬🇧"],
+    ["Capital of India?", ["Mumbai", "New Delhi", "Chennai", "Kolkata"], "New Delhi", "🇮🇳"],
+    ["Capital of France?", ["Paris", "London", "Rome", "Madrid"], "Paris", "🇫🇷"],
+    ["Capital of Japan?", ["Tokyo", "Kyoto", "Osaka", "Hiroshima"], "Tokyo", "🇯🇵"],
+    ["Capital of Australia?", ["Sydney", "Melbourne", "Canberra", "Perth"], "Canberra", "🇦🇺"],
+    ["Capital of UK?", ["London", "Manchester", "Liverpool", "Birmingham"], "London", "🇬🇧"]
   ],
 
   Currencies: [
-    ["What is the currency of India?", ["Rupee", "Dollar", "Euro", "Pound"], "Rupee", "💰"],
-    ["What is the currency of Japan?", ["Yen", "Won", "Dollar", "Yuan"], "Yen", "💴"],
-    ["What is the currency of USA?", ["Euro", "Dollar", "Pound", "Yen"], "Dollar", "💵"],
-    ["What is the currency of UK?", ["Euro", "Dollar", "Pound", "Yen"], "Pound", "💷"],
-    ["What is the currency used by many European countries?", ["Euro", "Dollar", "Rupee", "Yen"], "Euro", "💶"],
-  ],
-
-  "Indian States": [
-    ["What is the capital of Andhra Pradesh?", ["Amaravati", "Vijayawada", "Tirupati", "Visakhapatnam"], "Amaravati", "🇮🇳"],
-    ["What is the capital of Telangana?", ["Warangal", "Hyderabad", "Nizamabad", "Karimnagar"], "Hyderabad", "🇮🇳"],
-    ["What is the capital of Karnataka?", ["Mysuru", "Bengaluru", "Mangaluru", "Hubballi"], "Bengaluru", "🇮🇳"],
-    ["What is the capital of Tamil Nadu?", ["Madurai", "Chennai", "Salem", "Coimbatore"], "Chennai", "🇮🇳"],
-    ["What is the capital of Kerala?", ["Kochi", "Kannur", "Kollam", "Thiruvananthapuram"], "Thiruvananthapuram", "🇮🇳"],
+    ["Currency of India?", ["Rupee", "Dollar", "Euro", "Pound"], "Rupee", "💰"],
+    ["Currency of Japan?", ["Yen", "Won", "Dollar", "Yuan"], "Yen", "💴"],
+    ["Currency of USA?", ["Euro", "Dollar", "Pound", "Yen"], "Dollar", "💵"],
+    ["Currency of UK?", ["Euro", "Dollar", "Pound", "Yen"], "Pound", "💷"],
+    ["Currency of Europe?", ["Euro", "Dollar", "Rupee", "Yen"], "Euro", "💶"]
   ],
 
   Animals: [
-    ["Which animal is called the King of the Jungle?", ["Tiger", "Lion", "Elephant", "Bear"], "Lion", "🦁"],
-    ["Which is the largest land animal?", ["Elephant", "Giraffe", "Rhino", "Hippo"], "Elephant", "🐘"],
-    ["Which animal gives us wool?", ["Cow", "Sheep", "Horse", "Goat"], "Sheep", "🐑"],
-    ["Which animal is known as man's best friend?", ["Cat", "Dog", "Horse", "Rabbit"], "Dog", "🐶"],
-    ["Which animal has a very long neck?", ["Zebra", "Giraffe", "Tiger", "Deer"], "Giraffe", "🦒"],
+    ["King of the Jungle?", ["Tiger", "Lion", "Elephant", "Bear"], "Lion", "🦁"],
+    ["Largest land animal?", ["Elephant", "Giraffe", "Rhino", "Hippo"], "Elephant", "🐘"],
+    ["Animal that gives wool?", ["Cow", "Sheep", "Horse", "Goat"], "Sheep", "🐑"],
+    ["Man's best friend?", ["Cat", "Dog", "Horse", "Rabbit"], "Dog", "🐶"],
+    ["Animal with long neck?", ["Zebra", "Giraffe", "Tiger", "Deer"], "Giraffe", "🦒"]
   ],
 
   Birds: [
-    ["Which bird is famous for colorful feathers?", ["Crow", "Peacock", "Sparrow", "Duck"], "Peacock", "🦚"],
-    ["Which bird can mimic human speech?", ["Parrot", "Penguin", "Eagle", "Owl"], "Parrot", "🦜"],
-    ["Which bird represents peace?", ["Dove", "Crow", "Eagle", "Owl"], "Dove", "🕊️"],
-    ["Which bird cannot fly?", ["Eagle", "Sparrow", "Penguin", "Parrot"], "Penguin", "🐧"],
-    ["Which bird has excellent eyesight?", ["Eagle", "Duck", "Hen", "Pigeon"], "Eagle", "🦅"],
+    ["Bird with colorful feathers?", ["Crow", "Peacock", "Sparrow", "Duck"], "Peacock", "🦚"],
+    ["Bird that can mimic speech?", ["Parrot", "Penguin", "Eagle", "Owl"], "Parrot", "🦜"],
+    ["Bird representing peace?", ["Dove", "Crow", "Eagle", "Owl"], "Dove", "🕊️"],
+    ["Bird that cannot fly?", ["Eagle", "Sparrow", "Penguin", "Parrot"], "Penguin", "🐧"],
+    ["Bird with excellent eyesight?", ["Eagle", "Duck", "Hen", "Pigeon"], "Eagle", "🦅"]
   ],
 
   Insects: [
-    ["Which insect makes honey?", ["Ant", "Bee", "Fly", "Mosquito"], "Bee", "🐝"],
-    ["Which insect has colorful wings?", ["Butterfly", "Ant", "Beetle", "Fly"], "Butterfly", "🦋"],
-    ["Which insect lives in colonies and carries food?", ["Ant", "Bee", "Moth", "Fly"], "Ant", "🐜"],
-    ["Which insect is also called a ladybird?", ["Ladybug", "Bee", "Cricket", "Fly"], "Ladybug", "🐞"],
-    ["Which insect can jump far?", ["Grasshopper", "Ant", "Bee", "Butterfly"], "Grasshopper", "🦗"],
+    ["Insect that makes honey?", ["Ant", "Bee", "Fly", "Mosquito"], "Bee", "🐝"],
+    ["Insect with colorful wings?", ["Butterfly", "Ant", "Beetle", "Fly"], "Butterfly", "🦋"],
+    ["Insect living in colonies?", ["Ant", "Bee", "Moth", "Fly"], "Ant", "🐜"],
+    ["Ladybird is also called?", ["Ladybug", "Bee", "Cricket", "Fly"], "Ladybug", "🐞"],
+    ["Insect that can jump far?", ["Grasshopper", "Ant", "Bee", "Butterfly"], "Grasshopper", "🦗"]
   ],
 
   Fruits: [
-    ["Which fruit is called the king of fruits in India?", ["Apple", "Mango", "Banana", "Orange"], "Mango", "🥭"],
-    ["Which fruit is yellow and curved?", ["Banana", "Apple", "Grape", "Orange"], "Banana", "🍌"],
-    ["Which fruit has seeds on its outside?", ["Strawberry", "Apple", "Mango", "Pear"], "Strawberry", "🍓"],
-    ["Which fruit is usually red or green?", ["Apple", "Banana", "Watermelon", "Pineapple"], "Apple", "🍎"],
-    ["Which fruit is green outside and red inside?", ["Watermelon", "Orange", "Grape", "Mango"], "Watermelon", "🍉"],
+    ["King of fruits in India?", ["Apple", "Mango", "Banana", "Orange"], "Mango", "🥭"],
+    ["Yellow and curved fruit?", ["Banana", "Apple", "Grape", "Orange"], "Banana", "🍌"],
+    ["Fruit with seeds outside?", ["Strawberry", "Apple", "Mango", "Pear"], "Strawberry", "🍓"],
+    ["Fruit usually red or green?", ["Apple", "Banana", "Watermelon", "Pineapple"], "Apple", "🍎"],
+    ["Green outside and red inside?", ["Watermelon", "Orange", "Grape", "Mango"], "Watermelon", "🍉"]
   ],
 
   Flowers: [
-    ["What is the national flower of India?", ["Rose", "Lotus", "Sunflower", "Jasmine"], "Lotus", "🪷"],
-    ["Which flower follows the sun?", ["Rose", "Sunflower", "Lily", "Lotus"], "Sunflower", "🌻"],
-    ["Which flower is often called the queen of flowers?", ["Rose", "Lotus", "Tulip", "Daisy"], "Rose", "🌹"],
-    ["Which flower commonly grows in ponds?", ["Lotus", "Rose", "Tulip", "Sunflower"], "Lotus", "🌸"],
-    ["Which flower is commonly associated with love?", ["Rose", "Daisy", "Lily", "Marigold"], "Rose", "❤️"],
-  ],
-
-  Numbers: [
-    ["What comes after 9?", ["8", "10", "11", "7"], "10", "🔢"],
-    ["What comes before 20?", ["18", "19", "21", "17"], "19", "🔢"],
-    ["How many fingers are on one hand?", ["4", "5", "6", "10"], "5", "✋"],
-    ["What is 2 + 3?", ["4", "5", "6", "7"], "5", "➕"],
-    ["What is 5 + 5?", ["8", "9", "10", "11"], "10", "➕"],
-  ],
-
-  ABC: [
-    ["Which letter comes after A?", ["B", "C", "D", "E"], "B", "🔤"],
-    ["Which letter comes after C?", ["A", "B", "D", "E"], "D", "🔤"],
-    ["Which letter comes before Z?", ["X", "Y", "W", "V"], "Y", "🔤"],
-    ["What is the first letter of Apple?", ["A", "B", "C", "D"], "A", "🍎"],
-    ["What is the first letter of Ball?", ["A", "B", "C", "D"], "B", "⚽"],
-  ],
-
-  Telugu: [
-    ["తెలుగు అచ్చులలో మొదటి అక్షరం ఏది?", ["అ", "ఆ", "ఇ", "ఈ"], "అ", "అ"],
-    ["అ తర్వాత వచ్చే అక్షరం ఏది?", ["ఇ", "ఆ", "ఉ", "ఎ"], "ఆ", "ఆ"],
-    ["ఆ తర్వాత వచ్చే అక్షరం ఏది?", ["అ", "ఇ", "ఈ", "ఉ"], "ఇ", "ఇ"],
-    ["ఇ తర్వాత వచ్చే అక్షరం ఏది?", ["ఆ", "ఈ", "ఉ", "ఊ"], "ఈ", "ఈ"],
-    ["ఉ తర్వాత వచ్చే అక్షరం ఏది?", ["ఊ", "ఇ", "ఎ", "ఏ"], "ఊ", "ఊ"],
-  ],
-
-  "Famous Places": [
-    ["Where is the Taj Mahal?", ["Agra", "Delhi", "Mumbai", "Jaipur"], "Agra", "🕌"],
-    ["Where is the Eiffel Tower?", ["Paris", "Rome", "London", "Berlin"], "Paris", "🗼"],
-    ["Where is the Statue of Liberty?", ["New York", "London", "Paris", "Tokyo"], "New York", "🗽"],
-    ["Where are the Great Pyramids?", ["Egypt", "India", "Brazil", "China"], "Egypt", "🏜️"],
-    ["Where is the Great Wall?", ["China", "Japan", "India", "Korea"], "China", "🏯"],
-  ],
-
-  "General Knowledge": [
-    ["How many days are in a week?", ["5", "6", "7", "8"], "7", "📅"],
-    ["How many colors are traditionally in a rainbow?", ["5", "6", "7", "8"], "7", "🌈"],
-    ["Which planet do we live on?", ["Mars", "Earth", "Venus", "Jupiter"], "Earth", "🌍"],
-    ["Which star gives Earth light and heat?", ["Moon", "Sun", "Mars", "Venus"], "Sun", "☀️"],
-    ["How many months are in a year?", ["10", "11", "12", "13"], "12", "📆"],
-  ],
+    ["National flower of India?", ["Rose", "Lotus", "Sunflower", "Jasmine"], "Lotus", "🪷"],
+    ["Flower that follows the sun?", ["Rose", "Sunflower", "Lily", "Lotus"], "Sunflower", "🌻"],
+    ["Queen of flowers?", ["Rose", "Lotus", "Tulip", "Daisy"], "Rose", "🌹"],
+    ["Flower commonly grows in ponds?", ["Lotus", "Rose", "Tulip", "Sunflower"], "Lotus", "🌸"],
+    ["Flower associated with love?", ["Rose", "Daisy", "Lily", "Marigold"], "Rose", "❤️"]
+  ]
 };
 
 const categories = [
   ["Countries", "🌍"],
   ["Capitals", "🏛️"],
   ["Currencies", "💰"],
-  ["Indian States", "🇮🇳"],
   ["Animals", "🐶"],
   ["Birds", "🐦"],
   ["Insects", "🦋"],
   ["Fruits", "🍎"],
-  ["Flowers", "🌸"],
-  ["Numbers", "🔢"],
-  ["ABC", "🔤"],
-  ["Telugu", "అ"],
-  ["Famous Places", "🗺️"],
-  ["General Knowledge", "🧠"],
+  ["Flowers", "🌸"]
 ];
 
 export default function Quiz() {
@@ -189,7 +135,7 @@ export default function Quiz() {
         <title>Mega Quiz | Chinnaari Kids</title>
         <meta
           name="description"
-          content="Fun educational quiz for kids."
+          content="Fun educational quiz for kids"
         />
         <meta
           name="viewport"
@@ -198,6 +144,7 @@ export default function Quiz() {
       </Head>
 
       <main className="page">
+
         <header className="header">
           <Link href="/" className="logo">
             🌈 Chinnaari Kids
@@ -207,8 +154,6 @@ export default function Quiz() {
             <Link href="/">Home</Link>
             <Link href="/games">🎮 Games</Link>
             <Link href="/dots">🔵 Dot-to-Dot</Link>
-            <Link href="/drawing">🎨 Drawing</Link>
-            <Link href="/writing">✏️ Writing</Link>
             <Link href="/world">🌍 World Explorer</Link>
           </nav>
         </header>
@@ -216,7 +161,7 @@ export default function Quiz() {
         <section className="hero">
           <div className="heroIcon">🧠❓🎯</div>
           <h1>Mega Quiz</h1>
-          <p>Learn, think and have fun!</p>
+          <p>Learn, Think and Have Fun!</p>
           <div className="heroMini">
             🌍 🇮🇳 🐶 🐦 🍎 🔤 🧠
           </div>
@@ -244,6 +189,7 @@ export default function Quiz() {
         </section>
 
         <section className="quizCard">
+
           {!finished ? (
             <>
               <div className="quizTop">
@@ -268,9 +214,12 @@ export default function Quiz() {
               </div>
 
               <div className="options">
+
                 {question[1].map((option) => {
+
                   const isCorrect =
-                    answered && option === question[2];
+                    answered &&
+                    option === question[2];
 
                   const isWrong =
                     answered &&
@@ -298,6 +247,7 @@ export default function Quiz() {
                     </button>
                   );
                 })}
+
               </div>
 
               {answered && (
@@ -315,6 +265,7 @@ export default function Quiz() {
               )}
 
               <div className="bottom">
+
                 <div className="score">
                   ⭐ Score: {score}
                 </div>
@@ -329,10 +280,12 @@ export default function Quiz() {
                       : "Next ➡️"}
                   </button>
                 )}
+
               </div>
             </>
           ) : (
             <div className="result">
+
               <div className="resultIcon">
                 {score === questions.length
                   ? "🏆"
@@ -352,8 +305,6 @@ export default function Quiz() {
                   ? "🏆 Perfect Score!"
                   : score >= 3
                   ? "🌟 Excellent!"
-                  : score >= 2
-                  ? "👏 Good Job!"
                   : "💪 Keep Learning!"}
               </h3>
 
@@ -363,43 +314,11 @@ export default function Quiz() {
               >
                 🔄 Play Again
               </button>
+
             </div>
           )}
+
         </section>
-
-        <section className="learning">
-          <div>🌟</div>
-
-          <article>
-            <h2>Learn While Playing!</h2>
-
-            <p>
-              Explore countries, capitals, currencies,
-              Indian states, animals, birds, insects,
-              fruits, flowers, numbers, ABC, Telugu
-              and famous places.
-            </p>
-
-            <p>
-              ఆడుతూ పాడుతూ కొత్త విషయాలు
-              నేర్చుకుందాం!
-            </p>
-          </article>
-        </section>
-
-        <section className="links">
-          <Link href="/dots">🔵 Dot-to-Dot</Link>
-          <Link href="/drawing">🎨 Drawing</Link>
-          <Link href="/writing">✏️ Writing</Link>
-          <Link href="/games">🎮 Games</Link>
-          <Link href="/world">🌍 World Explorer</Link>
-        </section>
-
-        <footer>
-          <h3>🌈 Chinnaari Kids</h3>
-          <p>Learn • Play • Discover</p>
-          <p>© 2026 Chinnaari Kids</p>
-        </footer>
       </main>
 
       <style jsx>{`
@@ -417,7 +336,7 @@ export default function Quiz() {
         .header {
           min-height: 70px;
           padding: 15px 6%;
-          background: #fff;
+          background: white;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -494,15 +413,15 @@ export default function Quiz() {
 
         .categoryGrid {
           display: grid;
-          grid-template-columns: repeat(7, 1fr);
-          gap: 10px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 12px;
           margin-top: 20px;
         }
 
         .category {
-          min-height: 85px;
+          min-height: 90px;
           border: 2px solid #eee;
-          background: #fff;
+          background: white;
           border-radius: 18px;
           padding: 10px 5px;
           cursor: pointer;
@@ -532,7 +451,7 @@ export default function Quiz() {
           max-width: 850px;
           margin: 25px auto 55px;
           padding: 28px;
-          background: #fff;
+          background: white;
           border-radius: 30px;
           box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
         }
@@ -573,7 +492,7 @@ export default function Quiz() {
           display: inline-block;
           padding: 7px 13px;
           background: #333;
-          color: #fff;
+          color: white;
           border-radius: 18px;
           font-size: 13px;
           font-weight: bold;
@@ -593,7 +512,7 @@ export default function Quiz() {
         .option {
           min-height: 62px;
           border: 2px solid #e5e5e5;
-          background: #fff;
+          background: white;
           border-radius: 20px;
           padding: 14px;
           cursor: pointer;
@@ -654,4 +573,160 @@ export default function Quiz() {
           border: none;
           background: #4caf50;
           color: white;
-    
+          padding: 13px 23px;
+          border-radius: 25px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+
+        .result {
+          text-align: center;
+          padding: 20px;
+        }
+
+        .resultIcon {
+          font-size: 80px;
+        }
+
+        .result h2 {
+          font-size: 32px;
+        }
+
+        .resultScore {
+          display: inline-block;
+          padding: 18px 30px;
+          background: #fff0c9;
+          border-radius: 25px;
+          font-size: 38px;
+          font-weight: bold;
+        }
+
+        .result h3 {
+          font-size: 24px;
+        }
+
+        .learning {
+          max-width: 850px;
+          margin: 30px auto 50px;
+          padding: 30px;
+          background: white;
+          border-radius: 30px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .learning > div {
+          font-size: 70px;
+        }
+
+        .learning p {
+          color: #666;
+          line-height: 1.6;
+        }
+
+        .links {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin: 20px 20px 50px;
+        }
+
+        .links a {
+          background: #333;
+          color: white;
+          text-decoration: none;
+          padding: 13px 20px;
+          border-radius: 25px;
+          font-weight: bold;
+        }
+
+        footer {
+          background: #333;
+          color: white;
+          text-align: center;
+          padding: 35px 20px;
+        }
+
+        footer p {
+          margin: 8px;
+        }
+
+        @media (max-width: 700px) {
+          .header {
+            flex-direction: column;
+          }
+
+          .categoryGrid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .options {
+            grid-template-columns: 1fr;
+          }
+
+          .learning {
+            margin-left: 15px;
+            margin-right: 15px;
+            flex-direction: column;
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          nav {
+            gap: 8px;
+          }
+
+          nav a {
+            font-size: 12px;
+          }
+
+          .hero h1 {
+            font-size: 32px;
+          }
+
+          .heroIcon {
+            font-size: 42px;
+          }
+
+          .heroMini {
+            font-size: 20px;
+          }
+
+          .quizCard {
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 16px;
+          }
+
+          .quizTop {
+            font-size: 17px;
+          }
+
+          .quizEmoji {
+            font-size: 30px;
+          }
+
+          .question h2 {
+            font-size: 20px;
+          }
+
+          .bottom {
+            flex-direction: column;
+            gap: 15px;
+          }
+
+          .score,
+          .next {
+            width: 100%;
+            text-align: center;
+          }
+        }
+      `}</style>
+    </>
+  );
+                 }
+            
