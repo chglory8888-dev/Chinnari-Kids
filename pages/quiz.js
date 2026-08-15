@@ -1,639 +1,440 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const questions = [
   {
-    q: "What is the capital of India?",
-    options: ["Mumbai", "New Delhi", "Chennai", "Kolkata"],
-    answer: "New Delhi",
-    emoji: "🇮🇳",
+    question: "🐱 పిల్లి ఎలా అరుస్తుంది?",
+    options: ["మ్యావ్ మ్యావ్", "భౌ భౌ", "కూ కూ", "కొక్కరోకో"],
+    answer: "మ్యావ్ మ్యావ్",
   },
   {
-    q: "Which is the largest country?",
-    options: ["India", "Russia", "China", "Brazil"],
-    answer: "Russia",
-    emoji: "🌍",
+    question: "🐶 కుక్క ఎలా అరుస్తుంది?",
+    options: ["మ్యావ్ మ్యావ్", "భౌ భౌ", "కూ కూ", "కొక్కరోకో"],
+    answer: "భౌ భౌ",
   },
   {
-    q: "Which animal is called the King of the Jungle?",
-    options: ["Tiger", "Lion", "Elephant", "Bear"],
-    answer: "Lion",
-    emoji: "🦁",
+    question: "🐦 పక్షి ఎలా అరుస్తుంది?",
+    options: ["భౌ భౌ", "మ్యావ్ మ్యావ్", "కూ కూ", "ఏమి కాదు"],
+    answer: "కూ కూ",
   },
   {
-    q: "Which bird is famous for colorful feathers?",
-    options: ["Crow", "Peacock", "Sparrow", "Duck"],
-    answer: "Peacock",
-    emoji: "🦚",
+    question: "🌞 మనకు వెలుతురు ఇచ్చేది ఏది?",
+    options: ["చంద్రుడు", "సూర్యుడు", "చెట్టు", "పువ్వు"],
+    answer: "సూర్యుడు",
   },
   {
-    q: "Which fruit is yellow and curved?",
-    options: ["Apple", "Banana", "Orange", "Grape"],
-    answer: "Banana",
-    emoji: "🍌",
-  },
-  {
-    q: "How many days are there in a week?",
-    options: ["5", "6", "7", "8"],
-    answer: "7",
-    emoji: "📅",
-  },
-  {
-    q: "Which planet do we live on?",
-    options: ["Mars", "Earth", "Venus", "Jupiter"],
-    answer: "Earth",
-    emoji: "🌎",
-  },
-  {
-    q: "What comes after A?",
-    options: ["B", "C", "D", "E"],
-    answer: "B",
-    emoji: "🔤",
-  },
-  {
-    q: "What is 2 + 3?",
-    options: ["4", "5", "6", "7"],
-    answer: "5",
-    emoji: "➕",
-  },
-  {
-    q: "Which is the national flower of India?",
-    options: ["Rose", "Lotus", "Sunflower", "Jasmine"],
-    answer: "Lotus",
-    emoji: "🌸",
+    question: "🍎 ఆపిల్ ఏ రంగులో ఉంటుంది?",
+    options: ["ఎరుపు", "నలుపు", "నీలం", "తెలుపు"],
+    answer: "ఎరుపు",
   },
 ];
 
-function playSound(type) {
-  if (typeof window === "undefined") return;
-
-  const AudioContext =
-    window.AudioContext || window.webkitAudioContext;
-
-  if (!AudioContext) return;
-
-  const audio = new AudioContext();
-
-  if (audio.state === "suspended") {
-    audio.resume();
-  }
-
-  const oscillator = audio.createOscillator();
-  const gain = audio.createGain();
-
-  oscillator.connect(gain);
-  gain.connect(audio.destination);
-
-  if (type === "correct") {
-    oscillator.type = "sine";
-    oscillator.frequency.value = 700;
-
-    gain.gain.setValueAtTime(0.001, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.3,
-      audio.currentTime + 0.03
-    );
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.35
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.35);
-  }
-
-  if (type === "wrong") {
-    oscillator.type = "square";
-    oscillator.frequency.value = 160;
-
-    gain.gain.setValueAtTime(0.001, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.2,
-      audio.currentTime + 0.02
-    );
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.3
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.3);
-  }
-
-  if (type === "click") {
-    oscillator.type = "sine";
-    oscillator.frequency.value = 800;
-
-    gain.gain.setValueAtTime(0.001, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.2,
-      audio.currentTime + 0.01
-    );
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.1
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.1);
-  }
-
-  if (type === "win") {
-    oscillator.type = "sine";
-
-    oscillator.frequency.setValueAtTime(
-      523,
-      audio.currentTime
-    );
-
-    oscillator.frequency.setValueAtTime(
-      659,
-      audio.currentTime + 0.15
-    );
-
-    oscillator.frequency.setValueAtTime(
-      784,
-      audio.currentTime + 0.3
-    );
-
-    oscillator.frequency.setValueAtTime(
-      1046,
-      audio.currentTime + 0.45
-    );
-
-    gain.gain.setValueAtTime(0.001, audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.3,
-      audio.currentTime + 0.03
-    );
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.8
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.8);
-  }
-}
-
 export default function Quiz() {
-  const [current, setCurrent] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("");
-  const [answered, setAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
 
-  const question = questions[current];
+  const correctSound = useRef(null);
+  const wrongSound = useRef(null);
 
-  function chooseAnswer(option) {
-    if (answered) return;
+  const question = questions[currentQuestion];
+
+  function playSound(type) {
+    const sound =
+      type === "correct"
+        ? correctSound.current
+        : wrongSound.current;
+
+    if (sound) {
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
+  }
+
+  function handleAnswer(option) {
+    if (selected) return;
 
     setSelected(option);
-    setAnswered(true);
 
     if (option === question.answer) {
-      setScore((old) => old + 1);
       playSound("correct");
+      setScore((prev) => prev + 1);
     } else {
       playSound("wrong");
     }
-  }
 
-  function nextQuestion() {
-    playSound("click");
-
-    if (current === questions.length - 1) {
-      playSound("win");
-      setFinished(true);
-      return;
-    }
-
-    setCurrent((old) => old + 1);
-    setSelected("");
-    setAnswered(false);
+    setTimeout(() => {
+      if (currentQuestion + 1 < questions.length) {
+        setCurrentQuestion((prev) => prev + 1);
+        setSelected("");
+      } else {
+        setFinished(true);
+      }
+    }, 1000);
   }
 
   function restartQuiz() {
-    playSound("click");
-    setCurrent(0);
+    setCurrentQuestion(0);
     setScore(0);
     setSelected("");
-    setAnswered(false);
     setFinished(false);
   }
 
   return (
     <>
       <Head>
-        <title>Chinnaari Kids Quiz</title>
+        <title>Chinnaari Quiz</title>
+
         <meta
           name="description"
-          content="Fun educational quiz for kids"
+          content="Fun Telugu quiz for kids"
         />
+
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
         />
       </Head>
 
-      <main className="page">
-        <header className="header">
-          <Link href="/" className="logo">
-            🌈 Chinnaari Kids
+      {/* Sound Files */}
+      <audio
+        ref={correctSound}
+        src="/sounds/correct.mp3"
+        preload="auto"
+      />
+
+      <audio
+        ref={wrongSound}
+        src="/sounds/wrong.mp3"
+        preload="auto"
+      />
+
+      <main className="quiz-page">
+        <div className="quiz-card">
+
+          <Link href="/" className="home-link">
+            🏠 Home
           </Link>
 
-          <nav>
-            <Link href="/">Home</Link>
-            <Link href="/games">🎮 Games</Link>
-            <Link href="/flags">🏳️ Flags</Link>
-            <Link href="/world">🌍 World</Link>
-          </nav>
-        </header>
+          <h1>🎯 Chinnaari Quiz</h1>
 
-        {!finished ? (
-          <section className="quizBox">
-            <div className="hero">
-              <div className="heroEmoji">
-                🧠❓🎯
-              </div>
-
-              <h1>Mega Quiz</h1>
-
-              <p>
-                Learn • Think • Play • Discover
+          {!finished ? (
+            <>
+              <p className="progress">
+                Question {currentQuestion + 1} /{" "}
+                {questions.length}
               </p>
-            </div>
 
-            <div className="info">
-              <span>
-                {question.emoji} Question {current + 1}
-              </span>
-
-              <span>
-                ⭐ Score: {score}
-              </span>
-            </div>
-
-            <div className="question">
-              <h2>{question.q}</h2>
-            </div>
-
-            <div className="options">
-              {question.options.map((option) => {
-                const correct =
-                  answered &&
-                  option === question.answer;
-
-                const wrong =
-                  answered &&
-                  option === selected &&
-                  option !== question.answer;
-
-                return (
-                  <button
-                    key={option}
-                    className={
-                      correct
-                        ? "option correct"
-                        : wrong
-                        ? "option wrong"
-                        : "option"
-                    }
-                    onClick={() =>
-                      chooseAnswer(option)
-                    }
-                  >
-                    <span>{option}</span>
-
-                    {correct && <span>✅</span>}
-
-                    {wrong && <span>❌</span>}
-                  </button>
-                );
-              })}
-            </div>
-
-            {answered && (
-              <div
-                className={
-                  selected === question.answer
-                    ? "feedback good"
-                    : "feedback bad"
-                }
-              >
-                {selected === question.answer
-                  ? "🎉 Correct! Great job!"
-                  : `😊 Correct answer: ${question.answer}`}
+              <div className="question-box">
+                <h2>{question.question}</h2>
               </div>
-            )}
 
-            {answered && (
+              <div className="options">
+                {question.options.map((option) => {
+                  let className = "option";
+
+                  if (selected) {
+                    if (option === question.answer) {
+                      className += " correct";
+                    } else if (option === selected) {
+                      className += " wrong";
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={option}
+                      className={className}
+                      onClick={() => handleAnswer(option)}
+                      disabled={!!selected}
+                    >
+                      {option}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div className="result">
+
+              <div className="trophy">
+                🏆
+              </div>
+
+              <h2>Quiz Complete!</h2>
+
+              <div className="score">
+                {score} / {questions.length}
+              </div>
+
+              {score === questions.length ? (
+                <p className="message">
+                  🌟 Super! You are a Star!
+                </p>
+              ) : score >= 3 ? (
+                <p className="message">
+                  👏 Very Good! Keep Learning!
+                </p>
+              ) : (
+                <p className="message">
+                  😊 Good Try! Try Again!
+                </p>
+              )}
+
               <button
-                className="next"
-                onClick={nextQuestion}
+                className="restart"
+                onClick={restartQuiz}
               >
-                {current === questions.length - 1
-                  ? "🏆 See Result"
-                  : "Next ➡️"}
+                🔄 Play Again
               </button>
-            )}
-          </section>
-        ) : (
-          <section className="result">
-            <div className="trophy">🏆</div>
 
-            <h1>Quiz Complete!</h1>
-
-            <div className="scoreBox">
-              {score} / {questions.length}
             </div>
-
-            <h2>
-              {score === questions.length
-                ? "🎉 Perfect Score!"
-                : score >= 7
-                ? "🌟 Excellent!"
-                : score >= 5
-                ? "👏 Good Job!"
-                : "💪 Keep Learning!"}
-            </h2>
-
-            <button
-              className="restart"
-              onClick={restartQuiz}
-            >
-              🔄 Play Again
-            </button>
-
-            <Link href="/" className="home">
-              🏠 Home
-            </Link>
-          </section>
-        )}
+          )}
+        </div>
       </main>
-        <style jsx>{`
-          .page {
-            min-height: 100vh;
-            background: #fffaf3;
-            color: #333;
-            font-family: Arial, sans-serif;
+
+      <style jsx>{`
+        .quiz-page {
+          min-height: 100vh;
+          padding: 30px 15px;
+          background: linear-gradient(
+            135deg,
+            #fff3b0,
+            #ffd6e8,
+            #c8f7ff
+          );
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          font-family: Arial, sans-serif;
+        }
+
+        .quiz-card {
+          width: 100%;
+          max-width: 600px;
+
+          background: white;
+
+          border-radius: 25px;
+
+          padding: 30px 20px;
+
+          text-align: center;
+
+          box-shadow:
+            0 10px 30px
+            rgba(0, 0, 0, 0.15);
+        }
+
+        .home-link {
+          display: inline-block;
+
+          margin-bottom: 10px;
+
+          text-decoration: none;
+
+          color: #7b2cbf;
+
+          font-weight: bold;
+
+          font-size: 16px;
+        }
+
+        .home-link:hover {
+          text-decoration: underline;
+        }
+
+        h1 {
+          color: #ff6b35;
+
+          font-size: 34px;
+
+          margin: 10px 0 20px;
+        }
+
+        .progress {
+          color: #777;
+
+          font-size: 16px;
+
+          font-weight: bold;
+
+          margin-bottom: 20px;
+        }
+
+        .question-box {
+          background: #fff8e7;
+
+          border-radius: 20px;
+
+          padding: 10px 15px;
+
+          margin-bottom: 25px;
+        }
+
+        h2 {
+          color: #333;
+
+          font-size: 24px;
+
+          margin: 20px 0;
+        }
+
+        .options {
+          display: grid;
+
+          gap: 14px;
+        }
+
+        .option {
+          width: 100%;
+
+          border: none;
+
+          border-radius: 15px;
+
+          padding: 15px;
+
+          font-size: 18px;
+
+          font-weight: bold;
+
+          cursor: pointer;
+
+          background: #f1f1f1;
+
+          color: #333;
+
+          transition: 0.2s;
+        }
+
+        .option:hover:not(:disabled) {
+          transform: scale(1.02);
+
+          background: #e5d4ff;
+        }
+
+        .option:disabled {
+          cursor: default;
+        }
+
+        .option.correct {
+          background: #9be7a7;
+
+          color: #075b16;
+        }
+
+        .option.wrong {
+          background: #ffaaa5;
+
+          color: #8b0000;
+        }
+
+        .result {
+          padding: 20px 0;
+        }
+
+        .trophy {
+          font-size: 75px;
+
+          animation: bounce 1s infinite;
+        }
+
+        .result h2 {
+          color: #7b2cbf;
+
+          font-size: 30px;
+        }
+
+        .score {
+          font-size: 48px;
+
+          font-weight: bold;
+
+          color: #ff6b35;
+
+          margin: 15px 0;
+        }
+
+        .message {
+          font-size: 20px;
+
+          color: #444;
+
+          font-weight: bold;
+        }
+
+        .restart {
+          margin-top: 20px;
+
+          border: none;
+
+          border-radius: 15px;
+
+          padding: 15px 25px;
+
+          font-size: 18px;
+
+          font-weight: bold;
+
+          cursor: pointer;
+
+          background: #7b2cbf;
+
+          color: white;
+
+          transition: 0.2s;
+        }
+
+        .restart:hover {
+          background: #5a189a;
+
+          transform: scale(1.03);
+        }
+
+        @keyframes bounce {
+          0%,
+          100% {
+            transform: translateY(0);
           }
 
-          .header {
-            min-height: 70px;
-            padding: 15px 6%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @media (max-width: 480px) {
+          .quiz-page {
+            padding: 20px 10px;
           }
 
-          .logo {
-            color: #333;
-            text-decoration: none;
-            font-size: 21px;
-            font-weight: bold;
+          .quiz-card {
+            padding: 25px 15px;
           }
 
-          nav {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
+          h1 {
+            font-size: 28px;
           }
 
-          nav a {
-            color: #333;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-          }
-
-          .quizBox {
-            max-width: 850px;
-            margin: 35px auto 60px;
-            padding: 25px;
-          }
-
-          .hero {
-            text-align: center;
-            padding: 35px 15px;
-            border-radius: 30px;
-            background: linear-gradient(
-              135deg,
-              #e1f5ff,
-              #fff0c9,
-              #f6ddff
-            );
-          }
-
-          .heroEmoji {
-            font-size: 52px;
-          }
-
-          .hero h1 {
-            font-size: 42px;
-            margin: 10px 0;
-          }
-
-          .hero p {
-            margin: 0;
-            color: #555;
-            font-size: 17px;
-          }
-
-          .info {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin: 25px 0 15px;
-            font-weight: bold;
-          }
-
-          .question {
-            padding: 30px 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
-          }
-
-          .question h2 {
-            margin: 0;
-            font-size: 24px;
-            line-height: 1.5;
-          }
-
-          .options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
+          h2 {
+            font-size: 20px;
           }
 
           .option {
-            min-height: 60px;
-            padding: 14px 18px;
-            border: 2px solid #e5e5e5;
-            border-radius: 20px;
-            background: white;
-            cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: 0.2s;
+
+            padding: 14px;
           }
 
-          .option:hover {
-            transform: translateY(-2px);
-            border-color: #ffad42;
-            background: #fff9ed;
+          .score {
+            font-size: 42px;
           }
-
-          .correct {
-            background: #e1f7e1 !important;
-            border-color: #4caf50 !important;
-          }
-
-          .wrong {
-            background: #ffe2e2 !important;
-            border-color: #f44336 !important;
-          }
-
-          .feedback {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 20px;
-            text-align: center;
-            font-weight: bold;
-          }
-
-          .good {
-            background: #e1f7e1;
-          }
-
-          .bad {
-            background: #ffe2e2;
-          }
-
-          .next {
-            display: block;
-            margin: 25px auto 0;
-            padding: 14px 28px;
-            border: none;
-            border-radius: 25px;
-            background: #4caf50;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-          }
-
-          .next:hover {
-            transform: translateY(-2px);
-          }
-
-          .result {
-            max-width: 650px;
-            margin: 70px auto;
-            padding: 45px 20px;
-            background: white;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
-          }
-
-          .trophy {
-            font-size: 85px;
-          }
-
-          .result h1 {
-            font-size: 35px;
-          }
-
-          .scoreBox {
-            display: inline-block;
-            padding: 18px 35px;
-            margin: 15px;
-            border-radius: 25px;
-            background: #fff0c9;
-            font-size: 40px;
-            font-weight: bold;
-          }
-
-          .restart,
-          .home {
-            display: inline-block;
-            margin: 10px;
-            padding: 13px 25px;
-            border: none;
-            border-radius: 25px;
-            background: #4caf50;
-            color: white;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-          }
-
-          .home {
-            background: #ff9800;
-          }
-
-          @media (max-width: 700px) {
-            .header {
-              flex-direction: column;
-            }
-
-            .quizBox {
-              margin: 20px 8px 40px;
-              padding: 12px;
-            }
-
-            .options {
-              grid-template-columns: 1fr;
-            }
-
-            .hero h1 {
-              font-size: 34px;
-            }
-
-            .question h2 {
-              font-size: 21px;
-            }
-          }
-
-          @media (max-width: 450px) {
-            nav {
-              gap: 8px;
-            }
-
-            nav a {
-              font-size: 11px;
-            }
-
-            .heroEmoji {
-              font-size: 42px;
-            }
-
-            .hero h1 {
-              font-size: 30px;
-            }
-
-            .info {
-              font-size: 13px;
-            }
-          }
-        `}</style>
-      </>
-    );
-  }
+        }
+      `}</style>
+    </>
+  );
 }
