@@ -1,130 +1,3 @@
-
-Today 9:08 AM
-
-Flags related Yekkada undi 
-
-
-Pasted text.txt
-Document
-
-
-Pasted text.txt
-Document
-
-👍 Okay. ఇప్పుడు quiz.js లో sound function replace చేయడానికి exact code ఇస్తాను.
-
-function playSound(type) { నుంచి ఆ function ముగిసే వరకు మొత్తం delete చేసి, దాని స్థానంలో ఇది paste చేయండి:
-
-function playSound(type) {
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.3
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.3);
-  }
-
-  else if (type === "click") {
-    oscillator.type = "sine";
-
-    oscillator.frequency.setValueAtTime(
-      800,
-      audio.currentTime
-    );
-
-    gain.gain.setValueAtTime(
-      0.001,
-      audio.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.2,
-      audio.currentTime + 0.01
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.1
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.1);
-  }
-
-  else if (type === "win") {
-    oscillator.type = "sine";
-
-    oscillator.frequency.setValueAtTime(
-      523,
-      audio.currentTime
-    );
-
-    oscillator.frequency.setValueAtTime(
-      659,
-      audio.currentTime + 0.15
-    );
-
-    oscillator.frequency.setValueAtTime(
-      784,
-      audio.currentTime + 0.3
-    );
-
-    oscillator.frequency.setValueAtTime(
-      1046,
-      audio.currentTime + 0.45
-    );
-
-    gain.gain.setValueAtTime(
-      0.001,
-      audio.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.3,
-      audio.currentTime + 0.03
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audio.currentTime + 0.8
-    );
-
-    oscillator.start();
-    oscillator.stop(audio.currentTime + 0.8);
-  }
-}
-తర్వాత
-Save → Commit changes → Vercel deploy → /quiz
-
-మొదట ఒక answer button click చేసి test చేయండి. 🔊
-
-If still no sound, అప్పుడు browser autoplay restriction కోసం ఒక “🔊 Enable Sounds” button add చేద్దాం — అది mobileలో మరింత reliable.
-
-
-Code sagame copy avuthundi
-
-అవును 👍 Mobileలో పెద్ద code మొత్తం copy అవ్వడం లేదు. మొత్తం function copy చేయించకుండా చిన్న చిన్న partsగా చేద్దాం.
-
-మీ quiz.jsలో const audio = new AudioContext(); అని search చేయండి.
-
-దాన్ని ఈ ఒక్క lineతో replace చేయండి:
-
-const audio = new AudioContext();
-audio.resume();
-అంతే. ఇంకేమీ మార్చొద్దు.
-
-తర్వాత Save → Commit → Vercel deploy చేయండి.
-
-ఇది కూడా sound ఇవ్వకపోతే, తర్వాత code మార్చకుండా 🔊 Enable Sounds button పెడదాం.
-
-
-Two parts ga pettu
-
-Sure 👍 2 parts ga isthanu. pages/quiz.js ni complete ga replace cheyyandi.
-
-Part 1/2 — copy first
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
@@ -185,7 +58,7 @@ const questions = [
     emoji: "➕",
   },
   {
-    q: "Which flower is the national flower of India?",
+    q: "Which is the national flower of India?",
     options: ["Rose", "Lotus", "Sunflower", "Jasmine"],
     answer: "Lotus",
     emoji: "🌸",
@@ -214,64 +87,31 @@ function playSound(type) {
 
   if (type === "correct") {
     oscillator.type = "sine";
+    oscillator.frequency.value = 700;
 
-    oscillator.frequency.setValueAtTime(
-      523,
-      audio.currentTime
-    );
-
-    oscillator.frequency.setValueAtTime(
-      659,
-      audio.currentTime + 0.12
-    );
-
-    oscillator.frequency.setValueAtTime(
-      784,
-      audio.currentTime + 0.24
-    );
-
-    gain.gain.setValueAtTime(
-      0.001,
-      audio.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.001, audio.currentTime);
     gain.gain.exponentialRampToValueAtTime(
       0.3,
       audio.currentTime + 0.03
     );
-
     gain.gain.exponentialRampToValueAtTime(
       0.001,
-      audio.currentTime + 0.45
+      audio.currentTime + 0.35
     );
 
     oscillator.start();
-    oscillator.stop(audio.currentTime + 0.45);
+    oscillator.stop(audio.currentTime + 0.35);
   }
 
   if (type === "wrong") {
     oscillator.type = "square";
+    oscillator.frequency.value = 160;
 
-    oscillator.frequency.setValueAtTime(
-      180,
-      audio.currentTime
-    );
-
-    oscillator.frequency.exponentialRampToValueAtTime(
-      80,
-      audio.currentTime + 0.3
-    );
-
-    gain.gain.setValueAtTime(
-      0.001,
-      audio.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.001, audio.currentTime);
     gain.gain.exponentialRampToValueAtTime(
       0.2,
       audio.currentTime + 0.02
     );
-
     gain.gain.exponentialRampToValueAtTime(
       0.001,
       audio.currentTime + 0.3
@@ -283,19 +123,13 @@ function playSound(type) {
 
   if (type === "click") {
     oscillator.type = "sine";
+    oscillator.frequency.value = 800;
 
-    oscillator.frequency.value = 700;
-
-    gain.gain.setValueAtTime(
-      0.001,
-      audio.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.001, audio.currentTime);
     gain.gain.exponentialRampToValueAtTime(
       0.2,
       audio.currentTime + 0.01
     );
-
     gain.gain.exponentialRampToValueAtTime(
       0.001,
       audio.currentTime + 0.1
@@ -328,16 +162,11 @@ function playSound(type) {
       audio.currentTime + 0.45
     );
 
-    gain.gain.setValueAtTime(
-      0.001,
-      audio.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.001, audio.currentTime);
     gain.gain.exponentialRampToValueAtTime(
       0.3,
       audio.currentTime + 0.03
     );
-
     gain.gain.exponentialRampToValueAtTime(
       0.001,
       audio.currentTime + 0.8
@@ -387,7 +216,6 @@ export default function Quiz() {
 
   function restartQuiz() {
     playSound("click");
-
     setCurrent(0);
     setScore(0);
     setSelected("");
@@ -395,198 +223,56 @@ export default function Quiz() {
     setFinished(false);
   }
 
-  if (finished) {
-    return (
-      <>
-        <Head>
-          <title>Quiz Result | Chinnaari Kids</title>
-        </Head>
+  return (
+    <>
+      <Head>
+        <title>Chinnaari Kids Quiz</title>
+        <meta
+          name="description"
+          content="Fun educational quiz for kids"
+        />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
+      </Head>
 
-        <main className="page">
-          <header className="header">
-            <Link href="/" className="logo">
-              🌈 Chinnaari Kids
-            </Link>
+      <main className="page">
+        <header className="header">
+          <Link href="/" className="logo">
+            🌈 Chinnaari Kids
+          </Link>
 
-            <nav>
-              <Link href="/">Home</Link>
-              <Link href="/flags">🏳️ Flags</Link>
-              <Link href="/world">🌎 World</Link>
-            </nav>
-          </header>
+          <nav>
+            <Link href="/">Home</Link>
+            <Link href="/games">🎮 Games</Link>
+            <Link href="/flags">🏳️ Flags</Link>
+            <Link href="/world">🌍 World</Link>
+          </nav>
+        </header>
 
-          <section className="result">
-            <div className="trophy">🏆</div>
-
-            <h1>Quiz Complete!</h1>
-
-            <div className="scoreBox">
-              {score} / {questions.length}
-            </div>
-
-            <h2>
-              {score === questions.length
-                ? "🎉 Perfect Score!"
-                : score >= 7
-                ? "🌟 Excellent!"
-                : score >= 5
-                ? "👏 Good Job!"
-                : "💪 Keep Learning!"}
-            </h2>
-
-            <button
-              className="restart"
-              onClick={restartQuiz}
-            >
-              🔄 Play Again
-            </button>
-
-            <br />
-
-            <Link href="/" className="homeButton">
-              🏠 Home
-            </Link>
-          </section>
-        </main>
-
-        <style jsx>{`
-          .page {
-            min-height: 100vh;
-            background: #fffaf3;
-            font-family: Arial, sans-serif;
-          }
-
-          .header {
-            padding: 16px 6%;
-            background: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-          }
-
-          .logo {
-            text-decoration: none;
-            color: #333;
-            font-size: 21px;
-            font-weight: bold;
-          }
-
-          nav {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-          }
-
-          nav a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 13px;
-          }
-
-          .result {
-            max-width: 650px;
-            margin: 80px auto;
-            padding: 45px 20px;
-            text-align: center;
-            background: white;
-            border-radius: 30px;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
-          }
-
-          .trophy {
-            font-size: 90px;
-          }
-
-          .result h1 {
-            font-size: 35px;
-          }
-
-          .scoreBox {
-            display: inline-block;
-            margin: 15px;
-            padding: 18px 35px;
-            border-radius: 25px;
-            background: #fff0c9;
-            font-size: 40px;
-            font-weight: bold;
-          }
-
-          .restart,
-          .homeButton {
-            display: inline-block;
-            margin: 10px;
-            padding: 13px 24px;
-            border-radius: 25px;
-            border: none;
-            background: #4caf50;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-          }
-
-          .homeButton {
-            background: #ff9800;
-          }
-        `}</style>
-      </>
-    );
-  }
-      <>
-        <Head>
-          <title>Quiz | Chinnaari Kids</title>
-
-          <meta
-            name="description"
-            content="Fun educational quiz for children"
-          />
-
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1"
-          />
-        </Head>
-
-        <main className="page">
-          <header className="header">
-            <Link href="/" className="logo">
-              🌈 Chinnaari Kids
-            </Link>
-
-            <nav>
-              <Link href="/">Home</Link>
-              <Link href="/games">🎮 Games</Link>
-              <Link href="/flags">🏳️ Flags</Link>
-              <Link href="/world">🌎 World</Link>
-            </nav>
-          </header>
-
-          <section className="hero">
-            <div className="emoji">
-              🧠❓🎯
-            </div>
-
-            <h1>Mega Quiz</h1>
-
-            <p>
-              Learn • Think • Play • Discover
-            </p>
-          </section>
-
-          <section className="quizCard">
-
-            <div className="top">
-              <div>
-                {question.emoji} Question{" "}
-                {current + 1}
+        {!finished ? (
+          <section className="quizBox">
+            <div className="hero">
+              <div className="heroEmoji">
+                🧠❓🎯
               </div>
 
-              <div>
+              <h1>Mega Quiz</h1>
+
+              <p>
+                Learn • Think • Play • Discover
+              </p>
+            </div>
+
+            <div className="info">
+              <span>
+                {question.emoji} Question {current + 1}
+              </span>
+
+              <span>
                 ⭐ Score: {score}
-              </div>
+              </span>
             </div>
 
             <div className="question">
@@ -595,7 +281,6 @@ export default function Quiz() {
 
             <div className="options">
               {question.options.map((option) => {
-
                 const correct =
                   answered &&
                   option === question.answer;
@@ -621,13 +306,9 @@ export default function Quiz() {
                   >
                     <span>{option}</span>
 
-                    {correct && (
-                      <span>✅</span>
-                    )}
+                    {correct && <span>✅</span>}
 
-                    {wrong && (
-                      <span>❌</span>
-                    )}
+                    {wrong && <span>❌</span>}
                   </button>
                 );
               })}
@@ -657,12 +338,41 @@ export default function Quiz() {
                   : "Next ➡️"}
               </button>
             )}
-
           </section>
-        </main>
+        ) : (
+          <section className="result">
+            <div className="trophy">🏆</div>
 
+            <h1>Quiz Complete!</h1>
+
+            <div className="scoreBox">
+              {score} / {questions.length}
+            </div>
+
+            <h2>
+              {score === questions.length
+                ? "🎉 Perfect Score!"
+                : score >= 7
+                ? "🌟 Excellent!"
+                : score >= 5
+                ? "👏 Good Job!"
+                : "💪 Keep Learning!"}
+            </h2>
+
+            <button
+              className="restart"
+              onClick={restartQuiz}
+            >
+              🔄 Play Again
+            </button>
+
+            <Link href="/" className="home">
+              🏠 Home
+            </Link>
+          </section>
+        )}
+      </main>
         <style jsx>{`
-
           .page {
             min-height: 100vh;
             background: #fffaf3;
@@ -680,9 +390,8 @@ export default function Quiz() {
             gap: 15px;
             position: sticky;
             top: 0;
-            z-index: 20;
-            box-shadow:
-              0 2px 12px rgba(0,0,0,0.08);
+            z-index: 10;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
           }
 
           .logo {
@@ -694,7 +403,7 @@ export default function Quiz() {
 
           nav {
             display: flex;
-            gap: 14px;
+            gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
           }
@@ -706,82 +415,74 @@ export default function Quiz() {
             font-weight: bold;
           }
 
-          .hero {
-            padding: 55px 20px;
-            text-align: center;
-            background:
-              linear-gradient(
-                135deg,
-                #e1f5ff,
-                #fff0c9,
-                #f6ddff
-              );
+          .quizBox {
+            max-width: 850px;
+            margin: 35px auto 60px;
+            padding: 25px;
           }
 
-          .emoji {
-            font-size: 55px;
+          .hero {
+            text-align: center;
+            padding: 35px 15px;
+            border-radius: 30px;
+            background: linear-gradient(
+              135deg,
+              #e1f5ff,
+              #fff0c9,
+              #f6ddff
+            );
+          }
+
+          .heroEmoji {
+            font-size: 52px;
           }
 
           .hero h1 {
-            font-size: 43px;
-            margin: 12px 0;
+            font-size: 42px;
+            margin: 10px 0;
           }
 
           .hero p {
-            font-size: 18px;
+            margin: 0;
             color: #555;
+            font-size: 17px;
           }
 
-          .quizCard {
-            max-width: 850px;
-            margin: 40px auto 70px;
-            padding: 30px;
-            background: white;
-            border-radius: 30px;
-            box-shadow:
-              0 6px 25px rgba(0,0,0,0.08);
-          }
-
-          .top {
+          .info {
             display: flex;
             justify-content: space-between;
             gap: 15px;
-            padding-bottom: 20px;
+            margin: 25px 0 15px;
             font-weight: bold;
           }
 
           .question {
-            padding: 35px 20px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
             text-align: center;
+            background: white;
             border-radius: 25px;
-            background:
-              linear-gradient(
-                135deg,
-                #f0f8ff,
-                #fff7dc
-              );
-            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
           }
 
           .question h2 {
-            font-size: 25px;
-            line-height: 1.5;
             margin: 0;
+            font-size: 24px;
+            line-height: 1.5;
           }
 
           .options {
             display: grid;
-            grid-template-columns:
-              repeat(2, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
           }
 
           .option {
-            min-height: 62px;
+            min-height: 60px;
+            padding: 14px 18px;
             border: 2px solid #e5e5e5;
             border-radius: 20px;
             background: white;
-            padding: 15px;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
@@ -798,29 +499,29 @@ export default function Quiz() {
           }
 
           .correct {
-            background: #e2f8e2 !important;
+            background: #e1f7e1 !important;
             border-color: #4caf50 !important;
           }
 
           .wrong {
-            background: #ffe3e3 !important;
+            background: #ffe2e2 !important;
             border-color: #f44336 !important;
           }
 
           .feedback {
             margin-top: 20px;
             padding: 15px;
-            text-align: center;
             border-radius: 20px;
+            text-align: center;
             font-weight: bold;
           }
 
           .good {
-            background: #e2f8e2;
+            background: #e1f7e1;
           }
 
           .bad {
-            background: #ffe3e3;
+            background: #ffe2e2;
           }
 
           .next {
@@ -840,19 +541,65 @@ export default function Quiz() {
             transform: translateY(-2px);
           }
 
-          @media (max-width: 700px) {
+          .result {
+            max-width: 650px;
+            margin: 70px auto;
+            padding: 45px 20px;
+            background: white;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+          }
 
+          .trophy {
+            font-size: 85px;
+          }
+
+          .result h1 {
+            font-size: 35px;
+          }
+
+          .scoreBox {
+            display: inline-block;
+            padding: 18px 35px;
+            margin: 15px;
+            border-radius: 25px;
+            background: #fff0c9;
+            font-size: 40px;
+            font-weight: bold;
+          }
+
+          .restart,
+          .home {
+            display: inline-block;
+            margin: 10px;
+            padding: 13px 25px;
+            border: none;
+            border-radius: 25px;
+            background: #4caf50;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+          }
+
+          .home {
+            background: #ff9800;
+          }
+
+          @media (max-width: 700px) {
             .header {
               flex-direction: column;
             }
 
-            .options {
-              grid-template-columns: 1fr;
+            .quizBox {
+              margin: 20px 8px 40px;
+              padding: 12px;
             }
 
-            .quizCard {
-              margin: 25px 10px 50px;
-              padding: 20px;
+            .options {
+              grid-template-columns: 1fr;
             }
 
             .hero h1 {
@@ -862,11 +609,9 @@ export default function Quiz() {
             .question h2 {
               font-size: 21px;
             }
-
           }
 
           @media (max-width: 450px) {
-
             nav {
               gap: 8px;
             }
@@ -875,7 +620,7 @@ export default function Quiz() {
               font-size: 11px;
             }
 
-            .emoji {
+            .heroEmoji {
               font-size: 42px;
             }
 
@@ -883,14 +628,12 @@ export default function Quiz() {
               font-size: 30px;
             }
 
-            .top {
+            .info {
               font-size: 13px;
             }
-
           }
-
         `}</style>
       </>
     );
+  }
 }
-            
