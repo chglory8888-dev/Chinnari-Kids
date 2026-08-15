@@ -948,6 +948,6 @@ export default function Quiz() {
         `}</style>
       </>
     );
-  }
 }
+      
             
