@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const questions = [
   {
@@ -36,20 +36,88 @@ export default function Quiz() {
   const [selected, setSelected] = useState("");
   const [finished, setFinished] = useState(false);
 
-  const correctSound = useRef(null);
-  const wrongSound = useRef(null);
-
   const question = questions[currentQuestion];
 
+  // Browser generated sound
   function playSound(type) {
-    const sound =
-      type === "correct"
-        ? correctSound.current
-        : wrongSound.current;
+    if (typeof window === "undefined") return;
 
-    if (sound) {
-      sound.currentTime = 0;
-      sound.play().catch(() => {});
+    try {
+      const AudioContext =
+        window.AudioContext || window.webkitAudioContext;
+
+      if (!AudioContext) return;
+
+      const audioContext = new AudioContext();
+
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      if (type === "correct") {
+        // Happy sound 🎉
+        oscillator.frequency.setValueAtTime(
+          523.25,
+          audioContext.currentTime
+        );
+
+        oscillator.frequency.setValueAtTime(
+          659.25,
+          audioContext.currentTime + 0.12
+        );
+
+        oscillator.frequency.setValueAtTime(
+          783.99,
+          audioContext.currentTime + 0.24
+        );
+
+        gainNode.gain.setValueAtTime(
+          0.25,
+          audioContext.currentTime
+        );
+
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.01,
+          audioContext.currentTime + 0.45
+        );
+
+        oscillator.start();
+
+        oscillator.stop(
+          audioContext.currentTime + 0.45
+        );
+      } else {
+        // Wrong sound 🔔
+        oscillator.frequency.setValueAtTime(
+          220,
+          audioContext.currentTime
+        );
+
+        oscillator.frequency.setValueAtTime(
+          160,
+          audioContext.currentTime + 0.18
+        );
+
+        gainNode.gain.setValueAtTime(
+          0.25,
+          audioContext.currentTime
+        );
+
+        gainNode.gain.exponentialRampToValueAtTime(
+          0.01,
+          audioContext.currentTime + 0.35
+        );
+
+        oscillator.start();
+
+        oscillator.stop(
+          audioContext.currentTime + 0.35
+        );
+      }
+    } catch (error) {
+      console.log("Sound error:", error);
     }
   }
 
@@ -60,6 +128,7 @@ export default function Quiz() {
 
     if (option === question.answer) {
       playSound("correct");
+
       setScore((prev) => prev + 1);
     } else {
       playSound("wrong");
@@ -97,19 +166,6 @@ export default function Quiz() {
           content="width=device-width, initial-scale=1"
         />
       </Head>
-
-      {/* Sound Files */}
-      <audio
-        ref={correctSound}
-        src="/sounds/correct.mp3"
-        preload="auto"
-      />
-
-      <audio
-        ref={wrongSound}
-        src="/sounds/wrong.mp3"
-        preload="auto"
-      />
 
       <main className="quiz-page">
         <div className="quiz-card">
@@ -199,6 +255,7 @@ export default function Quiz() {
         .quiz-page {
           min-height: 100vh;
           padding: 30px 15px;
+
           background: linear-gradient(
             135deg,
             #fff3b0,
@@ -240,12 +297,6 @@ export default function Quiz() {
           color: #7b2cbf;
 
           font-weight: bold;
-
-          font-size: 16px;
-        }
-
-        .home-link:hover {
-          text-decoration: underline;
         }
 
         h1 {
@@ -258,8 +309,6 @@ export default function Quiz() {
 
         .progress {
           color: #777;
-
-          font-size: 16px;
 
           font-weight: bold;
 
