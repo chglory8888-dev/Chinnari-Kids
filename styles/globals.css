@@ -1,0 +1,184 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #fffaf3;
+  color: #333;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+.app {
+  min-height: 100vh;
+  padding-bottom: 75px;
+}
+
+.appHeader {
+  height: 65px;
+
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: white;
+
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.08);
+
+  position: sticky;
+  top: 0;
+
+  z-index: 1000;
+}
+
+.appLogo {
+  color: #333;
+
+  font-size: 21px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.headerRight {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  font-size: 20px;
+}
+
+.appContent {
+  min-height: calc(100vh - 140px);
+}
+
+/* BOTTOM NAVIGATION */
+
+.bottomNav {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 70px;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-around;
+
+  box-shadow:
+    0 -3px 15px
+    rgba(0, 0, 0, 0.12);
+
+  z-index: 9999;
+}
+
+.navItem {
+  min-width: 55px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+
+  color: #555;
+
+  font-weight: 600;
+
+  transition:
+    transform 0.2s,
+    color 0.2s;
+}
+
+.navItem span {
+  font-size: 23px;
+}
+
+.navItem small {
+  font-size: 11px;
+}
+
+.navItem:hover {
+  color: #ff6b6b;
+
+  transform: translateY(-2px);
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .appHeader {
+    height: 60px;
+
+    padding:
+      0 14px;
+  }
+
+  .appLogo {
+    font-size: 19px;
+  }
+
+  .headerRight {
+    font-size: 18px;
+  }
+
+  .bottomNav {
+    height: 68px;
+  }
+
+  .navItem span {
+    font-size: 21px;
+  }
+
+  .navItem small {
+    font-size: 10px;
+  }
+
+}
+
+/* TABLET / DESKTOP */
+
+@media (min-width: 800px) {
+
+  .bottomNav {
+    max-width: 600px;
+
+    left: 50%;
+
+    right: auto;
+
+    transform:
+      translateX(-50%);
+
+    border-radius:
+      25px 25px 0 0;
+  }
+
+}
