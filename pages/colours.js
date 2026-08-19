@@ -3,71 +3,146 @@ import Link from "next/link";
 import { useState } from "react";
 
 const colours = [
-  { name: "Red", telugu: "ఎరుపు", value: "#ff4d4d", emoji: "🍎" },
-  { name: "Blue", telugu: "నీలం", value: "#4d8cff", emoji: "🫐" },
-  { name: "Yellow", telugu: "పసుపు", value: "#ffd633", emoji: "🌞" },
-  { name: "Green", telugu: "ఆకుపచ్చ", value: "#4caf50", emoji: "🍃" },
-  { name: "Orange", telugu: "నారింజ", value: "#ff8c32", emoji: "🍊" },
-  { name: "Pink", telugu: "గులాబీ", value: "#ff7eb6", emoji: "🌸" },
-  { name: "Purple", telugu: "ఊదా", value: "#9b59b6", emoji: "🍇" },
-  { name: "Brown", telugu: "గోధుమ", value: "#9b6b43", emoji: "🧸" },
-  { name: "Black", telugu: "నలుపు", value: "#222222", emoji: "🖤" },
-  { name: "White", telugu: "తెలుపు", value: "#ffffff", emoji: "☁️" },
+  {
+    name: "Red",
+    telugu: "ఎరుపు",
+    emoji: "🔴",
+  },
+  {
+    name: "Blue",
+    telugu: "నీలం",
+    emoji: "🔵",
+  },
+  {
+    name: "Green",
+    telugu: "ఆకుపచ్చ",
+    emoji: "🟢",
+  },
+  {
+    name: "Yellow",
+    telugu: "పసుపు",
+    emoji: "🟡",
+  },
+  {
+    name: "Orange",
+    telugu: "నారింజ",
+    emoji: "🟠",
+  },
+  {
+    name: "Purple",
+    telugu: "ఊదా",
+    emoji: "🟣",
+  },
+  {
+    name: "Pink",
+    telugu: "గులాబీ",
+    emoji: "🩷",
+  },
+  {
+    name: "Brown",
+    telugu: "గోధుమ",
+    emoji: "🟤",
+  },
 ];
 
+function speak(text, lang) {
+  if (
+    typeof window === "undefined" ||
+    !("speechSynthesis" in window)
+  ) {
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = lang;
+  speech.rate = 0.8;
+  speech.pitch = 1.1;
+  speech.volume = 1;
+
+  window.speechSynthesis.speak(speech);
+}
+
+function playSound(type) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const AudioContext =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    const audioContext = new AudioContext();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    if (type === "click") {
+      oscillator.frequency.value = 500;
+      gain.gain.value = 0.08;
+    }
+
+    if (type === "success") {
+      oscillator.frequency.value = 800;
+      gain.gain.value = 0.1;
+    }
+
+    oscillator.start();
+
+    setTimeout(() => {
+      oscillator.stop();
+      audioContext.close();
+    }, 150);
+  } catch (error) {
+    console.log("Sound unavailable");
+  }
+}
+
 export default function Colours() {
-  const [selected, setSelected] = useState(0);
-  const [question, setQuestion] = useState(0);
-  const [score, setScore] = useState(0);
-  const [message, setMessage] = useState("");
+  const [language, setLanguage] = useState("en");
+  const [selected, setSelected] = useState(null);
 
-  const current = colours[selected];
+  function selectColour(colour) {
+    setSelected(colour.name);
+    playSound("click");
 
-  function chooseColour(index) {
-    setSelected(index);
-    setMessage("");
-  }
-
-  function speak(text) {
-    if (
-      typeof window !== "undefined" &&
-      "speechSynthesis" in window
-    ) {
-      const speech = new SpeechSynthesisUtterance(text);
-      speech.lang = "en-US";
-      speech.rate = 0.75;
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(speech);
-    }
-  }
-
-  function answer(index) {
-    if (index === question) {
-      setScore((value) => value + 1);
-      setMessage("🎉 Correct! Great job!");
+    if (language === "te") {
+      speak(
+        `${colour.telugu}. ${colour.name}`,
+        "te-IN"
+      );
     } else {
-      setMessage("😊 Try again!");
+      speak(colour.name, "en-IN");
     }
   }
 
-  function nextQuestion() {
-    const next = (question + 1) % colours.length;
+  function hearAll() {
+    if (language === "te") {
+      speak(
+        "రంగులు. ఎరుపు, నీలం, ఆకుపచ్చ, పసుపు, నారింజ, ఊదా, గులాబీ, గోధుమ",
+        "te-IN"
+      );
+    } else {
+      speak(
+        "Colours. Red, Blue, Green, Yellow, Orange, Purple, Pink, Brown",
+        "en-IN"
+      );
+    }
 
-    setQuestion(next);
-    setMessage("");
+    playSound("success");
   }
 
   return (
     <>
       <Head>
-        <title>Colours Learning | Chinnaari Kids</title>
-
+        <title>Chinnaari Kids - Colours</title>
         <meta
           name="description"
-          content="Learn colours for kids with fun activities, pictures and simple colour games."
+          content="Learn colours with Chinnaari Kids"
         />
-
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
@@ -75,662 +150,272 @@ export default function Colours() {
       </Head>
 
       <main className="page">
+        <div className="topBar">
+          <Link href="/">🏠 Home</Link>
 
-        {/* HEADER */}
-
-        <header className="header">
-
-          <Link href="/" className="logo">
-            🌈 Chinnaari Kids
-          </Link>
-
-          <nav>
-            <Link href="/">Home</Link>
-            <Link href="/numbers">🔢 Numbers</Link>
-            <Link href="/abc">🔤 ABC</Link>
-            <Link href="/telugu">🇮🇳 తెలుగు</Link>
-            <Link href="/games">🎮 Games</Link>
-            <Link href="/puzzles">🧩 Puzzles</Link>
-          </nav>
-
-        </header>
-
-        {/* HERO */}
-
-        <section className="hero">
-
-          <div className="rainbow">
-            🌈
-          </div>
-
-          <h1>
-            🎨 Learn Colours!
-          </h1>
-
-          <p>
-            చూడండి • గుర్తించండి • నేర్చుకోండి
-          </p>
-
-          <span>
-            ♾️ Unlimited Practice
-          </span>
-
-        </section>
-
-        {/* COLOUR CARDS */}
-
-        <section className="colourSection">
-
-          <h2>
-            🌈 Choose a Colour
-          </h2>
-
-          <div className="colourGrid">
-
-            {colours.map((colour, index) => (
-
-              <button
-                key={colour.name}
-                className={
-                  selected === index
-                    ? "colourCard selected"
-                    : "colourCard"
-                }
-                onClick={() =>
-                  chooseColour(index)
-                }
-              >
-
-                <div
-                  className="colourCircle"
-                  style={{
-                    backgroundColor:
-                      colour.value,
-                  }}
-                />
-
-                <div className="colourEmoji">
-                  {colour.emoji}
-                </div>
-
-                <h3>
-                  {colour.name}
-                </h3>
-
-                <p>
-                  {colour.telugu}
-                </p>
-
-              </button>
-
-            ))}
-
-          </div>
-
-        </section>
-
-        {/* SELECTED COLOUR */}
-
-        <section className="selectedBox">
-
-          <div
-            className="bigColour"
-            style={{
-              backgroundColor:
-                current.value,
-            }}
-          />
-
-          <div>
-
-            <h2>
-              {current.name}
-            </h2>
-
-            <h3>
-              {current.telugu}
-            </h3>
-
-            <div className="selectedEmoji">
-              {current.emoji}
-            </div>
-
+          <div className="languageButtons">
             <button
-              className="listen"
-              onClick={() =>
-                speak(
-                  `${current.name}, ${current.telugu}`
-                )
-              }
+              onClick={() => setLanguage("en")}
+              className={language === "en" ? "active" : ""}
             >
-              🔊 Say Colour
+              🇬🇧 English
             </button>
 
+            <button
+              onClick={() => setLanguage("te")}
+              className={language === "te" ? "active" : ""}
+            >
+              🇮🇳 తెలుగు
+            </button>
           </div>
+        </div>
 
-        </section>
+        <section className="hero">
+          <div className="rainbow">🌈</div>
 
-        {/* GAME */}
-
-        <section className="game">
-
-          <div className="gameTop">
-
-            <span>
-              ⭐ Score: {score}
-            </span>
-
-            <span>
-              Question {question + 1}
-            </span>
-
-          </div>
-
-          <h2>
-            🧠 Which colour is this?
-          </h2>
+          <h1>🎨 Learn Colours</h1>
 
           <p>
-            Tap the correct colour!
+            {language === "te"
+              ? "రంగుల పేర్లు నేర్చుకుందాం!"
+              : "Let's learn colours!"}
           </p>
 
-          <div
-            className="questionColour"
-            style={{
-              backgroundColor:
-                colours[question].value,
-            }}
-          />
-
-          <div className="answers">
-
-            {colours.map((colour, index) => (
-
-              <button
-                key={colour.name}
-                onClick={() =>
-                  answer(index)
-                }
-                style={{
-                  backgroundColor:
-                    colour.value,
-                }}
-                className={
-                  colour.name === "White"
-                    ? "answer whiteAnswer"
-                    : "answer"
-                }
-              >
-                {colour.name}
-              </button>
-
-            ))}
-
-          </div>
-
-          {message && (
-            <div className="message">
-              {message}
-            </div>
-          )}
-
-          <button
-            className="next"
-            onClick={nextQuestion}
-          >
-            Next Question ➡️
+          <button className="hearButton" onClick={hearAll}>
+            🔊{" "}
+            {language === "te"
+              ? "అన్ని రంగులు వినండి"
+              : "Hear All Colours"}
           </button>
-
         </section>
 
-        {/* LEARNING TIP */}
+        <section className="colourGrid">
+          {colours.map((colour) => (
+            <button
+              key={colour.name}
+              className={`colourCard ${
+                selected === colour.name ? "selected" : ""
+              }`}
+              onClick={() => selectColour(colour)}
+            >
+              <span className="colourEmoji">
+                {colour.emoji}
+              </span>
 
-        <section className="tip">
+              <strong>
+                {language === "te"
+                  ? colour.telugu
+                  : colour.name}
+              </strong>
 
-          <div className="tipIcon">
-            🧠
-          </div>
+              <small>
+                {language === "te"
+                  ? colour.name
+                  : colour.telugu}
+              </small>
 
-          <div>
+              <span className="speaker">🔊</span>
+            </button>
+          ))}
+        </section>
 
-            <h2>
-              Little Learner Tip
-            </h2>
-
+        <section className="message">
+          {selected ? (
             <p>
-              Look around your home and find
-              something that has the same colour!
+              ⭐{" "}
+              {language === "te"
+                ? "చాలా బాగా చేస్తున్నారు!"
+                : "Great job!"}
             </p>
-
-          </div>
-
+          ) : (
+            <p>
+              👆{" "}
+              {language === "te"
+                ? "ఒక రంగుపై క్లిక్ చేయండి"
+                : "Tap a colour to hear it"}
+            </p>
+          )}
         </section>
 
-        {/* OTHER LEARNING */}
-
-        <section className="links">
-
-          <Link href="/numbers">
-            🔢 Numbers
-          </Link>
-
-          <Link href="/abc">
-            🔤 ABC
-          </Link>
-
-          <Link href="/telugu">
-            🇮🇳 Telugu
-          </Link>
-
-          <Link href="/games">
-            🎮 Games
-          </Link>
-
-          <Link href="/puzzles">
-            🧩 Puzzles
-          </Link>
-
-        </section>
-
-        {/* FOOTER */}
-
-        <footer>
-
-          <h3>
-            🌈 Chinnaari Kids
-          </h3>
-
-          <p>
-            Learn • Play • Discover
-          </p>
-
-          <p>
-            © 2026 Chinnaari Kids
-          </p>
-
-        </footer>
-
+        <Link href="/games" className="backButton">
+          🎮 Games
+        </Link>
       </main>
 
       <style jsx>{`
-
-        * {
-          box-sizing: border-box;
-        }
-
         .page {
           min-height: 100vh;
-          background: #fffaf3;
-          color: #333;
+          padding: 18px;
+          background: linear-gradient(
+            135deg,
+            #fff7d6,
+            #e6f7ff,
+            #fce8ff
+          );
           font-family: Arial, sans-serif;
+          text-align: center;
         }
 
-        .header {
-          min-height: 70px;
-          padding: 15px 6%;
+        .topBar {
+          max-width: 900px;
+          margin: auto;
           display: flex;
-          align-items: center;
           justify-content: space-between;
-          gap: 15px;
-          background: white;
-          box-shadow: 0 2px 15px rgba(0,0,0,.08);
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
-
-        .logo {
-          color: #333;
-          text-decoration: none;
-          font-size: 23px;
-          font-weight: bold;
-          white-space: nowrap;
-        }
-
-        nav {
-          display: flex;
-          gap: 14px;
+          align-items: center;
+          gap: 12px;
           flex-wrap: wrap;
-          justify-content: center;
         }
 
-        nav a {
-          color: #444;
+        .topBar a {
           text-decoration: none;
-          font-size: 14px;
           font-weight: bold;
+          color: #333;
+          background: white;
+          padding: 10px 16px;
+          border-radius: 20px;
         }
 
-        nav a:hover {
-          color: #ff6b6b;
+        .languageButtons {
+          display: flex;
+          gap: 8px;
+        }
+
+        .languageButtons button,
+        .hearButton {
+          border: none;
+          padding: 10px 15px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: bold;
+          background: white;
+        }
+
+        .languageButtons .active {
+          background: #7c4dff;
+          color: white;
         }
 
         .hero {
-          text-align: center;
-          padding: 45px 20px;
-          background: linear-gradient(
-            135deg,
-            #ffe1ec,
-            #e3f4ff
-          );
+          max-width: 800px;
+          margin: 30px auto 25px;
         }
 
         .rainbow {
           font-size: 65px;
         }
 
-        .hero h1 {
-          font-size: 42px;
-          margin: 10px 0;
+        h1 {
+          font-size: 38px;
+          margin: 5px 0;
         }
 
         .hero p {
-          font-size: 18px;
-          color: #555;
-        }
-
-        .hero span {
-          display: inline-block;
-          padding: 9px 18px;
-          background: white;
-          border-radius: 25px;
-          font-weight: bold;
-        }
-
-        .colourSection {
-          max-width: 1000px;
-          margin: 35px auto;
-          padding: 0 20px;
-          text-align: center;
-        }
-
-        .colourGrid {
-          display: grid;
-          grid-template-columns:
-            repeat(5, 1fr);
-          gap: 15px;
-        }
-
-        .colourCard {
-          border: 3px solid transparent;
-          padding: 20px 10px;
-          border-radius: 25px;
-          background: white;
-          cursor: pointer;
-          box-shadow: 0 5px 18px rgba(0,0,0,.06);
-          transition: .2s;
-        }
-
-        .colourCard:hover {
-          transform: translateY(-5px);
-        }
-
-        .colourCard.selected {
-          border-color: #ff6b6b;
-          transform: translateY(-5px);
-        }
-
-        .colourCircle {
-          width: 75px;
-          height: 75px;
-          margin: auto;
-          border-radius: 50%;
-          border: 3px solid #ddd;
-        }
-
-        .colourEmoji {
-          font-size: 38px;
-          margin-top: 10px;
-        }
-
-        .colourCard h3 {
-          margin: 8px 0 3px;
-        }
-
-        .colourCard p {
-          margin: 0;
-          color: #777;
-        }
-
-        .selectedBox {
-          max-width: 850px;
-          margin: 40px auto;
-          padding: 35px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 40px;
-          text-align: center;
-          border-radius: 30px;
-          background: white;
-          box-shadow: 0 8px 30px rgba(0,0,0,.08);
-        }
-
-        .bigColour {
-          width: 180px;
-          height: 180px;
-          border-radius: 50%;
-          border: 6px solid white;
-          box-shadow:
-            0 5px 25px rgba(0,0,0,.15);
-        }
-
-        .selectedBox h2 {
-          font-size: 35px;
-          margin: 5px;
-        }
-
-        .selectedBox h3 {
-          font-size: 22px;
-          color: #777;
-        }
-
-        .selectedEmoji {
-          font-size: 65px;
+          font-size: 20px;
           margin: 10px;
         }
 
-        .listen {
-          border: none;
-          padding: 13px 22px;
-          border-radius: 25px;
-          background: #dff2ff;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .game {
-          max-width: 850px;
-          margin: 40px auto;
-          padding: 35px 25px;
-          text-align: center;
-          border-radius: 30px;
-          background: linear-gradient(
-            135deg,
-            #eee5ff,
-            #e1f8ff
-          );
-          box-shadow: 0 8px 30px rgba(0,0,0,.08);
-        }
-
-        .gameTop {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .gameTop span {
-          padding: 9px 16px;
-          border-radius: 20px;
-          background: white;
-          font-weight: bold;
-        }
-
-        .questionColour {
-          width: 150px;
-          height: 150px;
-          margin: 25px auto;
-          border-radius: 50%;
-          border: 6px solid white;
-          box-shadow:
-            0 5px 20px rgba(0,0,0,.15);
-        }
-
-        .answers {
-          display: grid;
-          grid-template-columns:
-            repeat(5, 1fr);
-          gap: 10px;
-        }
-
-        .answer {
-          border: none;
-          padding: 13px 5px;
-          border-radius: 20px;
+        .hearButton {
+          background: #ff7a00;
           color: white;
-          font-weight: bold;
-          cursor: pointer;
-          text-shadow:
-            0 1px 2px rgba(0,0,0,.5);
+          font-size: 16px;
+          margin-top: 8px;
         }
 
-        .whiteAnswer {
-          color: #333;
-          border: 2px solid #ddd;
-          text-shadow: none;
+        .colourGrid {
+          max-width: 900px;
+          margin: auto;
+          display: grid;
+          grid-template-columns: repeat(
+            auto-fit,
+            minmax(150px, 1fr)
+          );
+          gap: 16px;
+        }
+
+        .colourCard {
+          position: relative;
+          border: 3px solid transparent;
+          border-radius: 24px;
+          padding: 22px 10px;
+          background: white;
+          cursor: pointer;
+          box-shadow: 0 7px 18px rgba(0, 0, 0, 0.12);
+          transition: transform 0.2s;
+        }
+
+        .colourCard:hover {
+          transform: translateY(-5px) scale(1.02);
+        }
+
+        .colourCard.selected {
+          border-color: #7c4dff;
+          transform: scale(1.04);
+        }
+
+        .colourEmoji {
+          display: block;
+          font-size: 55px;
+          margin-bottom: 8px;
+        }
+
+        .colourCard strong {
+          display: block;
+          font-size: 20px;
+          color: #222;
+        }
+
+        .colourCard small {
+          display: block;
+          margin-top: 5px;
+          color: #666;
+          font-size: 14px;
+        }
+
+        .speaker {
+          display: block;
+          margin-top: 10px;
+          font-size: 20px;
         }
 
         .message {
-          margin: 20px;
-          font-size: 20px;
+          margin: 28px auto 18px;
+          font-size: 22px;
           font-weight: bold;
         }
 
-        .next {
-          border: none;
-          padding: 13px 25px;
-          border-radius: 25px;
-          background: #4caf50;
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .tip {
-          max-width: 850px;
-          margin: 35px auto 50px;
-          padding: 30px;
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          background: white;
-          border-radius: 30px;
-          box-shadow: 0 5px 20px rgba(0,0,0,.06);
-        }
-
-        .tipIcon {
-          font-size: 55px;
-        }
-
-        .tip p {
-          color: #666;
-          line-height: 1.7;
-        }
-
-        .links {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 12px;
-          margin: 30px 20px 50px;
-        }
-
-        .links a {
-          padding: 13px 20px;
-          border-radius: 25px;
-          background: #333;
-          color: white;
+        .backButton {
+          display: inline-block;
           text-decoration: none;
+          background: #333;
+          color: white;
+          padding: 12px 22px;
+          border-radius: 25px;
           font-weight: bold;
         }
 
-        footer {
-          padding: 35px 20px;
-          text-align: center;
-          background: #333;
-          color: white;
-        }
+        @media (max-width: 600px) {
+          h1 {
+            font-size: 30px;
+          }
 
-        footer p {
-          margin: 8px;
-        }
-
-        @media (max-width: 800px) {
-
-          .header {
-            flex-direction: column;
+          .rainbow {
+            font-size: 50px;
           }
 
           .colourGrid {
-            grid-template-columns:
-              repeat(2, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
           }
 
-          .selectedBox {
-            margin: 30px 15px;
-            flex-direction: column;
-            gap: 20px;
+          .colourCard {
+            padding: 16px 8px;
           }
 
-          .game {
-            margin: 30px 15px;
+          .colourEmoji {
+            font-size: 45px;
           }
-
-          .answers {
-            grid-template-columns:
-              repeat(2, 1fr);
-          }
-
         }
-
-        @media (max-width: 500px) {
-
-          nav {
-            gap: 8px;
-          }
-
-          nav a {
-            font-size: 12px;
-          }
-
-          .hero h1 {
-            font-size: 34px;
-          }
-
-          .colourGrid {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .colourCircle {
-            width: 60px;
-            height: 60px;
-          }
-
-          .bigColour {
-            width: 140px;
-            height: 140px;
-          }
-
-          .tip {
-            margin-left: 15px;
-            margin-right: 15px;
-            flex-direction: column;
-            text-align: center;
-          }
-
-        }
-
       `}</style>
-
     </>
   );
-                  }
+}
