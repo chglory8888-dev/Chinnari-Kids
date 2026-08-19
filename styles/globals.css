@@ -2,9 +2,14 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+
   background: #fffaf3;
+
   color: #333;
+
+  font-family:
+    Arial,
+    sans-serif;
 }
 
 * {
@@ -21,24 +26,31 @@ button {
 
 .app {
   min-height: 100vh;
-  padding-bottom: 75px;
+
+  padding-bottom: 78px;
 }
 
-.appHeader {
-  height: 65px;
+/* HEADER */
 
-  padding: 0 18px;
+.appHeader {
+  min-height: 64px;
+
+  padding: 10px 16px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   background: white;
 
   box-shadow:
-    0 2px 12px rgba(0, 0, 0, 0.08);
+    0 2px 12px
+    rgba(0, 0, 0, 0.08);
 
   position: sticky;
+
   top: 0;
 
   z-index: 1000;
@@ -54,18 +66,108 @@ button {
   white-space: nowrap;
 }
 
-.headerRight {
+.headerActions {
   display: flex;
 
   align-items: center;
 
-  gap: 12px;
-
-  font-size: 20px;
+  gap: 8px;
 }
 
+.installSmallButton {
+  border: none;
+
+  padding: 9px 14px;
+
+  border-radius: 22px;
+
+  background: #ff6b6b;
+
+  color: white;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.installSmallButton:active {
+  transform: scale(0.96);
+}
+
+/* INSTALL BANNER */
+
+.installBanner {
+  margin: 12px auto;
+
+  max-width: 1000px;
+
+  padding: 14px 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffe1e8,
+      #e5ddff
+    );
+
+  border-radius: 18px;
+}
+
+.installBannerText {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.installBannerText strong {
+  font-size: 16px;
+}
+
+.installBannerText span {
+  font-size: 13px;
+
+  color: #555;
+}
+
+.installButton {
+  flex-shrink: 0;
+
+  border: none;
+
+  padding: 11px 18px;
+
+  border-radius: 24px;
+
+  background: #ff6b6b;
+
+  color: white;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.installButton:hover {
+  transform: scale(1.03);
+}
+
+/* CONTENT */
+
 .appContent {
-  min-height: calc(100vh - 140px);
+  min-height:
+    calc(100vh - 150px);
 }
 
 /* BOTTOM NAVIGATION */
@@ -74,12 +176,12 @@ button {
   position: fixed;
 
   left: 0;
+
   right: 0;
+
   bottom: 0;
 
-  height: 70px;
-
-  background: white;
+  height: 72px;
 
   display: flex;
 
@@ -87,15 +189,17 @@ button {
 
   justify-content: space-around;
 
+  background: white;
+
   box-shadow:
-    0 -3px 15px
+    0 -3px 18px
     rgba(0, 0, 0, 0.12);
 
   z-index: 9999;
 }
 
 .navItem {
-  min-width: 55px;
+  min-width: 58px;
 
   display: flex;
 
@@ -109,8 +213,6 @@ button {
 
   color: #555;
 
-  font-weight: 600;
-
   transition:
     transform 0.2s,
     color 0.2s;
@@ -121,13 +223,16 @@ button {
 }
 
 .navItem small {
-  font-size: 11px;
+  font-size: 10px;
+
+  font-weight: 700;
 }
 
 .navItem:hover {
   color: #ff6b6b;
 
-  transform: translateY(-2px);
+  transform:
+    translateY(-2px);
 }
 
 /* MOBILE */
@@ -135,18 +240,48 @@ button {
 @media (max-width: 600px) {
 
   .appHeader {
-    height: 60px;
+    min-height: 60px;
 
     padding:
-      0 14px;
+      8px 12px;
   }
 
   .appLogo {
-    font-size: 19px;
+    font-size: 18px;
   }
 
-  .headerRight {
-    font-size: 18px;
+  .installSmallButton {
+    padding:
+      8px 11px;
+
+    font-size: 12px;
+  }
+
+  .installBanner {
+    margin:
+      10px 10px;
+
+    padding:
+      13px;
+
+    border-radius: 16px;
+
+    align-items: center;
+  }
+
+  .installBannerText strong {
+    font-size: 14px;
+  }
+
+  .installBannerText span {
+    font-size: 11px;
+  }
+
+  .installButton {
+    padding:
+      9px 13px;
+
+    font-size: 12px;
   }
 
   .bottomNav {
@@ -160,15 +295,14 @@ button {
   .navItem small {
     font-size: 10px;
   }
-
 }
 
-/* TABLET / DESKTOP */
+/* DESKTOP */
 
 @media (min-width: 800px) {
 
   .bottomNav {
-    max-width: 600px;
+    max-width: 620px;
 
     left: 50%;
 
