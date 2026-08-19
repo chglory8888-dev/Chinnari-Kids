@@ -1,135 +1,90 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
-const memoryItems = [
-  "🍎",
-  "🐶",
-  "⭐",
-  "🚗",
-  "🌈",
-  "🦋",
-];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const numbers = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9,
-];
+const memoryItems = ["🍎", "🐶", "⭐", "🚗", "🌈", "🦋"];
 
 const oddItems = [
-  {
-    items: ["🍎", "🍎", "🍎", "🍌"],
-    answer: "🍌",
-  },
-  {
-    items: ["🐶", "🐶", "🐱", "🐶"],
-    answer: "🐱",
-  },
-  {
-    items: ["🔵", "🔵", "🔴", "🔵"],
-    answer: "🔴",
-  },
+  ["🍎", "🍎", "🍎", "🍌"],
+  ["🐶", "🐶", "🐱", "🐶"],
+  ["🔵", "🔵", "🔴", "🔵"]
 ];
 
-const emojiWords = {
-  "🍎": {
-    en: "Apple",
-    te: "ఆపిల్",
-  },
-  "🐶": {
-    en: "Dog",
-    te: "కుక్క",
-  },
-  "⭐": {
-    en: "Star",
-    te: "నక్షత్రం",
-  },
-  "🚗": {
-    en: "Car",
-    te: "కారు",
-  },
-  "🌈": {
-    en: "Rainbow",
-    te: "ఇంద్రధనస్సు",
-  },
-  "🦋": {
-    en: "Butterfly",
-    te: "సీతాకోకచిలుక",
-  },
-  "🍌": {
-    en: "Banana",
-    te: "అరటిపండు",
-  },
-  "🐱": {
-    en: "Cat",
-    te: "పిల్లి",
-  },
-  "🔵": {
-    en: "Blue",
-    te: "నీలం",
-  },
-  "🔴": {
-    en: "Red",
-    te: "ఎరుపు",
-  },
-};
+function speak(text, lang = "en-IN") {
+  if (
+    typeof window === "undefined" ||
+    !("speechSynthesis" in window)
+  ) {
+    return;
+  }
 
-const numberWords = {
-  1: {
-    en: "One",
-    te: "ఒకటి",
-  },
-  2: {
-    en: "Two",
-    te: "రెండు",
-  },
-  3: {
-    en: "Three",
-    te: "మూడు",
-  },
-  4: {
-    en: "Four",
-    te: "నాలుగు",
-  },
-  5: {
-    en: "Five",
-    te: "ఐదు",
-  },
-  6: {
-    en: "Six",
-    te: "ఆరు",
-  },
-  7: {
-    en: "Seven",
-    te: "ఏడు",
-  },
-  8: {
-    en: "Eight",
-    te: "ఎనిమిది",
-  },
-  9: {
-    en: "Nine",
-    te: "తొమ్మిది",
-  },
-};
+  window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+
+  speech.lang = lang;
+  speech.rate = 0.8;
+  speech.pitch = 1.1;
+  speech.volume = 1;
+
+  window.speechSynthesis.speak(speech);
+}
+
+function playBeep(type) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    const context = new AudioContext();
+
+    const oscillator =
+      context.createOscillator();
+
+    const gain = context.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+
+    if (type === "correct") {
+      oscillator.frequency.value = 700;
+      gain.gain.value = 0.12;
+    } else {
+      oscillator.frequency.value = 220;
+      gain.gain.value = 0.1;
+    }
+
+    oscillator.start();
+
+    setTimeout(() => {
+      oscillator.stop();
+      context.close();
+    }, 180);
+  } catch (error) {
+    console.log("Sound unavailable");
+  }
+}
 
 export default function Games() {
-  const [game, setGame] =
-    useState("memory");
+  const [game, setGame] = useState("memory");
 
   const [memoryCards, setMemoryCards] =
     useState([
       ...memoryItems,
-      ...memoryItems,
+      ...memoryItems
     ]);
 
-  const [flipped, setFlipped] =
-    useState([]);
+  const [flipped, setFlipped] = useState([]);
 
-  const [matched, setMatched] =
-    useState([]);
+  const [matched, setMatched] = useState([]);
 
-  const [target, setTarget] =
-    useState(5);
+  const [target, setTarget] = useState(5);
 
   const [numberScore, setNumberScore] =
     useState(0);
@@ -143,347 +98,8 @@ export default function Games() {
   const [message, setMessage] =
     useState("");
 
-  const [voiceOn, setVoiceOn] =
-    useState(true);
-
-  const [voiceLanguage, setVoiceLanguage] =
-    useState("en");
-
-  const [voices, setVoices] =
-    useState([]);
-
-  const audioContextRef =
-    useRef(null);
-
-  /*
-   * LOAD VOICES
-   */
-
-  useEffect(() => {
-    if (typeof window === "undefined")
-      return;
-
-    if (!("speechSynthesis" in window))
-      return;
-
-    const loadVoices = () => {
-      setVoices(
-        window.speechSynthesis.getVoices()
-      );
-    };
-
-    loadVoices();
-
-    window.speechSynthesis.onvoiceschanged =
-      loadVoices;
-
-    return () => {
-      window.speechSynthesis.cancel();
-
-      window.speechSynthesis.onvoiceschanged =
-        null;
-    };
-  }, []);
-
-  /*
-   * GET VOICE
-   */
-
-  function getVoice() {
-    if (!voices.length) return null;
-
-    if (voiceLanguage === "te") {
-      return (
-        voices.find(
-          (voice) =>
-            voice.lang &&
-            voice.lang
-              .toLowerCase()
-              .startsWith("te")
-        ) || null
-      );
-    }
-
-    return (
-      voices.find(
-        (voice) =>
-          voice.lang &&
-          voice.lang
-            .toLowerCase()
-            .startsWith("en-in")
-      ) ||
-      voices.find(
-        (voice) =>
-          voice.lang &&
-          voice.lang
-            .toLowerCase()
-            .startsWith("en")
-      ) ||
-      null
-    );
-  }
-
-  /*
-   * SPEAK
-   */
-
-  function speak(text) {
-    if (!voiceOn) return;
-
-    if (
-      typeof window === "undefined" ||
-      !("speechSynthesis" in window)
-    ) {
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const utterance =
-      new SpeechSynthesisUtterance(text);
-
-    utterance.lang =
-      voiceLanguage === "te"
-        ? "te-IN"
-        : "en-IN";
-
-    utterance.rate = 0.8;
-    utterance.pitch = 1.1;
-    utterance.volume = 1;
-
-    const selectedVoice =
-      getVoice();
-
-    if (selectedVoice) {
-      utterance.voice =
-        selectedVoice;
-    }
-
-    window.speechSynthesis.speak(
-      utterance
-    );
-  }
-
-  /*
-   * SOUND ENGINE
-   */
-
-  function getAudioContext() {
-    if (typeof window === "undefined")
-      return null;
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    if (!AudioContext) return null;
-
-    if (!audioContextRef.current) {
-      audioContextRef.current =
-        new AudioContext();
-    }
-
-    if (
-      audioContextRef.current.state ===
-      "suspended"
-    ) {
-      audioContextRef.current.resume();
-    }
-
-    return audioContextRef.current;
-  }
-
-  /*
-   * SUCCESS SOUND
-   */
-
-  function successSound() {
-    const ctx =
-      getAudioContext();
-
-    if (!ctx) return;
-
-    const now = ctx.currentTime;
-
-    [523.25, 659.25, 783.99].forEach(
-      (frequency, index) => {
-        const oscillator =
-          ctx.createOscillator();
-
-        const gain =
-          ctx.createGain();
-
-        oscillator.frequency.value =
-          frequency;
-
-        oscillator.type = "sine";
-
-        gain.gain.setValueAtTime(
-          0.0001,
-          now + index * 0.12
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-          0.18,
-          now +
-            index * 0.12 +
-            0.03
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-          0.0001,
-          now +
-            index * 0.12 +
-            0.35
-        );
-
-        oscillator.connect(gain);
-        gain.connect(ctx.destination);
-
-        oscillator.start(
-          now + index * 0.12
-        );
-
-        oscillator.stop(
-          now +
-            index * 0.12 +
-            0.4
-        );
-      }
-    );
-  }
-
-  /*
-   * WRONG SOUND
-   */
-
-  function wrongSound() {
-    const ctx =
-      getAudioContext();
-
-    if (!ctx) return;
-
-    const oscillator =
-      ctx.createOscillator();
-
-    const gain =
-      ctx.createGain();
-
-    oscillator.type = "sawtooth";
-    oscillator.frequency.setValueAtTime(
-      180,
-      ctx.currentTime
-    );
-
-    oscillator.frequency.exponentialRampToValueAtTime(
-      90,
-      ctx.currentTime + 0.25
-    );
-
-    gain.gain.setValueAtTime(
-      0.2,
-      ctx.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      ctx.currentTime + 0.3
-    );
-
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-
-    oscillator.start();
-
-    oscillator.stop(
-      ctx.currentTime + 0.3
-    );
-  }
-
-  /*
-   * POP SOUND
-   */
-
-  function popSound() {
-    const ctx =
-      getAudioContext();
-
-    if (!ctx) return;
-
-    const oscillator =
-      ctx.createOscillator();
-
-    const gain =
-      ctx.createGain();
-
-    oscillator.type = "triangle";
-
-    oscillator.frequency.setValueAtTime(
-      500,
-      ctx.currentTime
-    );
-
-    oscillator.frequency.exponentialRampToValueAtTime(
-      100,
-      ctx.currentTime + 0.15
-    );
-
-    gain.gain.setValueAtTime(
-      0.15,
-      ctx.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      ctx.currentTime + 0.15
-    );
-
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-
-    oscillator.start();
-
-    oscillator.stop(
-      ctx.currentTime + 0.18
-    );
-  }
-
-  /*
-   * CELEBRATION
-   */
-
-  function celebrationSound() {
-    const ctx =
-      getAudioContext();
-
-    if (!ctx) return;
-
-    const notes = [
-      523.25,
-      659.25,
-      783.99,
-      1046.5,
-    ];
-
-    notes.forEach(
-      (frequency, index) => {
-        setTimeout(() => {
-          successSound();
-        }, index * 180);
-      }
-    );
-  }
-
-  /*
-   * MEMORY SHUFFLE
-   */
-
   function shuffleCards() {
-    window.speechSynthesis?.cancel();
-
-    const shuffled = [
-      ...memoryCards,
-    ].sort(
+    const shuffled = [...memoryCards].sort(
       () => Math.random() - 0.5
     );
 
@@ -491,11 +107,12 @@ export default function Games() {
     setFlipped([]);
     setMatched([]);
     setMessage("");
-  }
 
-  /*
-   * MEMORY CARD
-   */
+    speak(
+      "New memory game. Find the matching pairs.",
+      "en-IN"
+    );
+  }
 
   function flipCard(index) {
     if (
@@ -506,24 +123,25 @@ export default function Games() {
       return;
     }
 
-    const item =
-      memoryCards[index];
-
-    popSound();
-
-    const word =
-      emojiWords[item]?.[voiceLanguage];
-
-    if (word) {
-      speak(word);
-    }
-
     const newFlipped = [
       ...flipped,
-      index,
+      index
     ];
 
     setFlipped(newFlipped);
+
+    speak(memoryCards[index] === "🐶"
+      ? "Dog"
+      : memoryCards[index] === "🍎"
+      ? "Apple"
+      : memoryCards[index] === "⭐"
+      ? "Star"
+      : memoryCards[index] === "🚗"
+      ? "Car"
+      : memoryCards[index] === "🌈"
+      ? "Rainbow"
+      : "Butterfly"
+    );
 
     if (newFlipped.length === 2) {
       const first =
@@ -533,40 +151,21 @@ export default function Games() {
         memoryCards[newFlipped[1]];
 
       if (first === second) {
-        successSound();
+        playBeep("correct");
 
         setMatched((old) => [
           ...old,
-          ...newFlipped,
+          ...newFlipped
         ]);
 
         setFlipped([]);
 
         speak(
-          voiceLanguage === "te"
-            ? "చాలా బాగుంది"
-            : "Great job"
+          "Great! Matching pair!",
+          "en-IN"
         );
-
-        const newMatched =
-          matched.length + 2;
-
-        if (
-          newMatched ===
-          memoryCards.length
-        ) {
-          setTimeout(() => {
-            celebrationSound();
-
-            speak(
-              voiceLanguage === "te"
-                ? "అద్భుతం! అన్ని జతలను కనుగొన్నారు!"
-                : "Amazing! You matched everything!"
-            );
-          }, 500);
-        }
       } else {
-        wrongSound();
+        playBeep("wrong");
 
         setTimeout(() => {
           setFlipped([]);
@@ -575,39 +174,43 @@ export default function Games() {
     }
   }
 
-  /*
-   * NUMBER GAME
-   */
+  function numberName(number) {
+    const names = [
+      "",
+      "One",
+      "Two",
+      "Three",
+      "Four",
+      "Five",
+      "Six",
+      "Seven",
+      "Eight",
+      "Nine"
+    ];
+
+    return names[number];
+  }
 
   function tapNumber(number) {
-    const word =
-      numberWords[number]?.[
-        voiceLanguage
-      ];
-
-    if (word) {
-      speak(word);
-    }
-
-    popSound();
+    speak(
+      numberName(number),
+      "en-IN"
+    );
 
     if (number === target) {
-      successSound();
+      playBeep("correct");
 
       setNumberScore(
         (value) => value + 1
       );
 
       setMessage(
-        voiceLanguage === "te"
-          ? "🎉 చాలా బాగుంది! సరైన సంఖ్య!"
-          : "🎉 Great! You found the correct number!"
+        "🎉 Correct! Great job!"
       );
 
       speak(
-        voiceLanguage === "te"
-          ? `సరైన సంఖ్య. ${word}`
-          : `Correct! ${word}`
+        `${numberName(number)}. Correct! Great job!`,
+        "en-IN"
       );
 
       const next =
@@ -617,104 +220,106 @@ export default function Games() {
 
       setTarget(next);
     } else {
-      wrongSound();
+      playBeep("wrong");
 
       setMessage(
-        voiceLanguage === "te"
-          ? "😊 మళ్లీ ప్రయత్నించండి!"
-          : "😊 Try again!"
+        "😊 Try again!"
       );
 
       speak(
-        voiceLanguage === "te"
-          ? "మళ్లీ ప్రయత్నించండి"
-          : "Try again"
+        "Try again!",
+        "en-IN"
       );
     }
   }
 
-  /*
-   * ODD GAME
-   */
+  function oddName(item) {
+    if (item === "🍎")
+      return "Apple";
+
+    if (item === "🍌")
+      return "Banana";
+
+    if (item === "🐶")
+      return "Dog";
+
+    if (item === "🐱")
+      return "Cat";
+
+    if (item === "🔵")
+      return "Blue";
+
+    if (item === "🔴")
+      return "Red";
+
+    return "Item";
+  }
 
   function chooseOdd(item) {
-    const word =
-      emojiWords[item]?.[
-        voiceLanguage
-      ];
+    speak(
+      oddName(item),
+      "en-IN"
+    );
 
-    if (word) {
-      speak(word);
-    }
+    const answers = [
+      "🍌",
+      "🐱",
+      "🔴"
+    ];
 
-    popSound();
+    const answer =
+      answers[oddRound];
 
-    if (
-      item ===
-      oddItems[oddRound].answer
-    ) {
-      successSound();
+    if (item === answer) {
+      playBeep("correct");
 
       setOddScore(
         (value) => value + 1
       );
 
       setMessage(
-        voiceLanguage === "te"
-          ? "🎉 సరైన సమాధానం! అద్భుతం!"
-          : "🎉 Correct! Excellent!"
+        "🎉 Correct! Excellent!"
       );
 
       speak(
-        voiceLanguage === "te"
-          ? "సరైన సమాధానం. అద్భుతం!"
-          : "Correct! Excellent!"
+        "Correct! Excellent!",
+        "en-IN"
       );
+
+      setTimeout(() => {
+        if (
+          oddRound <
+          oddItems.length - 1
+        ) {
+          setOddRound(
+            (value) => value + 1
+          );
+
+          setMessage("");
+        } else {
+          setMessage(
+            "🏆 Game Complete!"
+          );
+
+          speak(
+            "Game complete! Well done!",
+            "en-IN"
+          );
+        }
+      }, 700);
     } else {
-      wrongSound();
+      playBeep("wrong");
 
       setMessage(
-        voiceLanguage === "te"
-          ? "💪 పర్వాలేదు! మళ్లీ ప్రయత్నించండి!"
-          : "💪 Nice try!"
+        "💪 Nice try! Try again."
       );
 
       speak(
-        voiceLanguage === "te"
-          ? "పర్వాలేదు. మళ్లీ ప్రయత్నించండి"
-          : "Nice try. Try again"
+        "Nice try. Try again.",
+        "en-IN"
       );
     }
-
-    setTimeout(() => {
-      if (
-        oddRound <
-        oddItems.length - 1
-      ) {
-        setOddRound(
-          (value) => value + 1
-        );
-
-        setMessage("");
-      } else {
-        celebrationSound();
-
-        setMessage(
-          "🏆 Game Complete!"
-        );
-
-        speak(
-          voiceLanguage === "te"
-            ? "అద్భుతం! గేమ్ పూర్తయింది!"
-            : "Amazing! Game complete!"
-        );
-      }
-    }, 700);
   }
-
-  /*
-   * RESET ODD
-   */
 
   function resetOddGame() {
     setOddRound(0);
@@ -722,60 +327,30 @@ export default function Games() {
     setMessage("");
 
     speak(
-      voiceLanguage === "te"
-        ? "మళ్లీ ఆడుదాం"
-        : "Let's play again"
-    );
-  }
-
-  /*
-   * CHANGE GAME
-   */
-
-  function changeGame(value) {
-    window.speechSynthesis?.cancel();
-
-    setGame(value);
-    setMessage("");
-  }
-
-  /*
-   * VOICE SWITCH
-   */
-
-  function toggleVoice() {
-    if (voiceOn) {
-      window.speechSynthesis?.cancel();
-    }
-
-    setVoiceOn(
-      (value) => !value
+      "Odd one out. Find the different item.",
+      "en-IN"
     );
   }
 
   return (
     <>
       <Head>
-
         <title>
           Kids Games | Chinnaari Kids
         </title>
 
         <meta
           name="description"
-          content="Fun educational games for kids including memory, numbers and odd-one-out games with voice and sound effects."
+          content="Fun educational games for children."
         />
 
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
         />
-
       </Head>
 
       <main className="page">
-
-        {/* HEADER */}
 
         <header className="header">
 
@@ -787,7 +362,6 @@ export default function Games() {
           </Link>
 
           <nav>
-
             <Link href="/">
               Home
             </Link>
@@ -815,12 +389,9 @@ export default function Games() {
             <Link href="/learn">
               🔤 Learn
             </Link>
-
           </nav>
 
         </header>
-
-        {/* HERO */}
 
         <section className="hero">
 
@@ -833,56 +404,10 @@ export default function Games() {
           </h1>
 
           <p>
-            Fun games that make
-            learning exciting.
+            Listen, play and learn new things.
           </p>
 
-          {/* VOICE SETTINGS */}
-
-          <div className="voiceSettings">
-
-            <button
-              className="voiceButton"
-              onClick={
-                toggleVoice
-              }
-            >
-              {voiceOn
-                ? "🔊 Voice ON"
-                : "🔇 Voice OFF"}
-            </button>
-
-            <button
-              className={
-                voiceLanguage === "en"
-                  ? "languageButton active"
-                  : "languageButton"
-              }
-              onClick={() =>
-                setVoiceLanguage("en")
-              }
-            >
-              🇬🇧 English
-            </button>
-
-            <button
-              className={
-                voiceLanguage === "te"
-                  ? "languageButton active"
-                  : "languageButton"
-              }
-              onClick={() =>
-                setVoiceLanguage("te")
-              }
-            >
-              🇮🇳 తెలుగు
-            </button>
-
-          </div>
-
         </section>
-
-        {/* GAME MENU */}
 
         <section className="gameMenu">
 
@@ -892,9 +417,15 @@ export default function Games() {
                 ? "menuButton active"
                 : "menuButton"
             }
-            onClick={() =>
-              changeGame("memory")
-            }
+            onClick={() => {
+              setGame("memory");
+              setMessage("");
+
+              speak(
+                "Memory Match",
+                "en-IN"
+              );
+            }}
           >
             🧠 Memory Match
           </button>
@@ -905,9 +436,15 @@ export default function Games() {
                 ? "menuButton active"
                 : "menuButton"
             }
-            onClick={() =>
-              changeGame("numbers")
-            }
+            onClick={() => {
+              setGame("numbers");
+              setMessage("");
+
+              speak(
+                "Number Tap",
+                "en-IN"
+              );
+            }}
           >
             🔢 Number Tap
           </button>
@@ -918,16 +455,20 @@ export default function Games() {
                 ? "menuButton active"
                 : "menuButton"
             }
-            onClick={() =>
-              changeGame("odd")
-            }
+            onClick={() => {
+              setGame("odd");
+              setMessage("");
+
+              speak(
+                "Odd One Out",
+                "en-IN"
+              );
+            }}
           >
             🕵️ Odd One Out
           </button>
 
         </section>
-
-        {/* MEMORY */}
 
         {game === "memory" && (
 
@@ -942,6 +483,7 @@ export default function Games() {
             </h2>
 
             <p>
+              Tap a card and listen to its name.
               Find the matching pairs!
             </p>
 
@@ -951,15 +493,10 @@ export default function Games() {
                 (item, index) => {
 
                   const visible =
-                    flipped.includes(
-                      index
-                    ) ||
-                    matched.includes(
-                      index
-                    );
+                    flipped.includes(index) ||
+                    matched.includes(index);
 
                   return (
-
                     <button
                       key={index}
                       className={
@@ -971,13 +508,10 @@ export default function Games() {
                         flipCard(index)
                       }
                     >
-
                       {visible
                         ? item
                         : "❓"}
-
                     </button>
-
                   );
                 }
               )}
@@ -988,33 +522,21 @@ export default function Games() {
               memoryCards.length && (
 
               <div className="success">
-
                 🎉 Amazing!
-                You matched
-                everything!
-
                 <br />
-
-                ⭐ Great memory!
-
+                ⭐ You matched everything!
               </div>
-
             )}
 
             <button
               className="resetButton"
-              onClick={
-                shuffleCards
-              }
+              onClick={shuffleCards}
             >
               🔄 New Game
             </button>
 
           </section>
-
         )}
-
-        {/* NUMBER */}
 
         {game === "numbers" && (
 
@@ -1029,12 +551,16 @@ export default function Games() {
             </h2>
 
             <p>
-              Find number{" "}
+              Find number
+              {" "}
               <strong>
                 {target}
               </strong>
-              !
             </p>
+
+            <div className="numberHint">
+              🔊 Tap any number to hear it!
+            </div>
 
             <div className="numberGrid">
 
@@ -1045,39 +571,28 @@ export default function Games() {
                     key={number}
                     className="numberButton"
                     onClick={() =>
-                      tapNumber(
-                        number
-                      )
+                      tapNumber(number)
                     }
                   >
                     {number}
                   </button>
-
                 )
               )}
 
             </div>
 
             <div className="scoreBox">
-
-              ⭐ Score:{" "}
-              {numberScore}
-
+              ⭐ Score: {numberScore}
             </div>
 
             {message && (
-
               <div className="message">
                 {message}
               </div>
-
             )}
 
           </section>
-
         )}
-
-        {/* ODD */}
 
         {game === "odd" && (
 
@@ -1092,24 +607,19 @@ export default function Games() {
             </h2>
 
             <p>
-              Find the one
-              that is different!
+              Find the different one!
             </p>
 
             <div className="oddItems">
 
-              {oddItems[
-                oddRound
-              ].items.map(
+              {oddItems[oddRound].map(
                 (item, index) => (
 
                   <button
                     key={index}
                     className="oddButton"
                     onClick={() =>
-                      chooseOdd(
-                        item
-                      )
+                      chooseOdd(item)
                     }
                   >
                     {item}
@@ -1121,61 +631,45 @@ export default function Games() {
             </div>
 
             <div className="scoreBox">
-
-              ⭐ Score:{" "}
-              {oddScore}
-
+              ⭐ Score: {oddScore}
             </div>
 
             {message && (
-
               <div className="message">
                 {message}
               </div>
-
             )}
 
-            {oddRound ===
-              oddItems.length - 1 &&
-              message ===
-                "🏆 Game Complete!" && (
+            {message ===
+              "🏆 Game Complete!" && (
 
               <button
                 className="resetButton"
-                onClick={
-                  resetOddGame
-                }
+                onClick={resetOddGame}
               >
                 🔄 Play Again
               </button>
-
             )}
 
           </section>
-
         )}
-
-        {/* LEARNING */}
 
         <section className="learning">
 
           <div className="learningEmoji">
-            🌟🧠🎯
+            🌟🧠🔊
           </div>
 
           <h2>
-            Play • Think • Learn!
+            Play • Listen • Learn!
           </h2>
 
           <p>
-            Every game helps children
-            improve memory, attention
-            and problem-solving skills.
+            Every game helps children improve
+            memory, attention and problem-solving.
           </p>
 
         </section>
-
-        {/* NAVIGATION */}
 
         <section className="navigation">
 
@@ -1196,8 +690,6 @@ export default function Games() {
           </Link>
 
         </section>
-
-        {/* FOOTER */}
 
         <footer>
 
@@ -1238,8 +730,7 @@ export default function Games() {
           justify-content: space-between;
           background: white;
           box-shadow:
-            0 2px 15px
-            rgba(0,0,0,0.08);
+            0 2px 15px rgba(0,0,0,0.08);
           position: sticky;
           top: 0;
           z-index: 10;
@@ -1266,10 +757,6 @@ export default function Games() {
           font-weight: 600;
         }
 
-        nav a:hover {
-          color: #ff6b6b;
-        }
-
         .hero {
           text-align: center;
           padding: 45px 20px;
@@ -1293,30 +780,6 @@ export default function Games() {
         .hero p {
           font-size: 18px;
           color: #555;
-        }
-
-        .voiceSettings {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 10px;
-          flex-wrap: wrap;
-          margin-top: 20px;
-        }
-
-        .voiceButton,
-        .languageButton {
-          border: none;
-          padding: 10px 16px;
-          border-radius: 22px;
-          background: white;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .languageButton.active {
-          background: #ff6b6b;
-          color: white;
         }
 
         .gameMenu {
@@ -1372,6 +835,15 @@ export default function Games() {
           font-size: 17px;
         }
 
+        .numberHint {
+          display: inline-block;
+          padding: 9px 15px;
+          border-radius: 20px;
+          background: #fff0b8;
+          font-weight: bold;
+          margin-top: 10px;
+        }
+
         .memoryGrid {
           max-width: 520px;
           margin: 30px auto;
@@ -1388,8 +860,7 @@ export default function Games() {
           background: #e7ddff;
           font-size: 38px;
           cursor: pointer;
-          transition:
-            transform 0.2s;
+          transition: transform 0.2s;
         }
 
         .memoryCard:hover {
@@ -1553,7 +1024,6 @@ export default function Games() {
           nav {
             justify-content: center;
           }
-
         }
 
         @media (max-width: 600px) {
@@ -1590,23 +1060,13 @@ export default function Games() {
             font-size: 30px;
           }
 
-          .numberGrid {
-            gap: 10px;
-          }
-
           .numberButton {
             height: 75px;
             font-size: 25px;
           }
-
-          .voiceSettings {
-            flex-direction: column;
-          }
-
         }
 
       `}</style>
-
     </>
   );
 }
