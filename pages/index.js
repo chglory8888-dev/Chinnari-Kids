@@ -100,28 +100,29 @@ export default function Home() {
   return (
     <>
       <Head>
-  <title>Chinnaari Kids | Learn, Play & Have Fun</title>
+        <title>Chinnaari Kids | Learn, Play & Have Fun</title>
 
-  <meta
-    name="description"
-    content="Chinnaari Kids - fun stories, games, puzzles, colours, ABC, Telugu, numbers and world learning for children."
-  />
+        <meta
+          name="description"
+          content="Chinnaari Kids - fun stories, games, puzzles, colours, ABC, Telugu, numbers and world learning for children."
+        />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
 
-  <meta
-    name="theme-color"
-    content="#7c4dff"
-  />
+        <meta
+          name="theme-color"
+          content="#7c4dff"
+        />
 
-  <meta
-    name="google-site-verification"
-    content="dIBVdX3k2APZaWxk8hlGB7ykx_gDwHzGQXNtoswegjk"
-  />
-</Head>
+        {/* Google Search Console Verification */}
+        <meta
+          name="google-site-verification"
+          content="dIBVdX3k2APZaWxk8hlGB7ykx_gDwHzGQXNtoswegjk"
+        />
+      </Head>
 
       <main className="page">
 
@@ -175,7 +176,6 @@ export default function Home() {
 
         </header>
 
-
         {/* HERO */}
 
         <section className="hero">
@@ -217,12 +217,13 @@ export default function Home() {
                 : "Stories, games, puzzles and fun learning for little explorers."}
             </p>
 
-
             <div className="languageButtons">
 
               <button
                 className={
-                  language === "en" ? "languageActive" : ""
+                  language === "en"
+                    ? "languageActive"
+                    : ""
                 }
                 onClick={() => setLanguage("en")}
               >
@@ -231,7 +232,9 @@ export default function Home() {
 
               <button
                 className={
-                  language === "te" ? "languageActive" : ""
+                  language === "te"
+                    ? "languageActive"
+                    : ""
                 }
                 onClick={() => setLanguage("te")}
               >
@@ -239,7 +242,6 @@ export default function Home() {
               </button>
 
             </div>
-
 
             <div className="heroLinks">
 
@@ -278,7 +280,6 @@ export default function Home() {
 
           </div>
 
-
           <div className="heroArt">
 
             <div className="rainbow">
@@ -301,7 +302,6 @@ export default function Home() {
 
         </section>
 
-
         {/* ACTIVITIES */}
 
         <section className="activities">
@@ -321,7 +321,6 @@ export default function Home() {
               ? "మీకు ఇష్టమైన activity ఎంచుకోండి!"
               : "Choose your favourite activity!"}
           </p>
-
 
           <div className="activityGrid">
 
@@ -359,7 +358,6 @@ export default function Home() {
 
         </section>
 
-
         {/* LEARNING ZONE */}
 
         <section className="learningZone">
@@ -382,23 +380,16 @@ export default function Home() {
                 : "Learn something new every day through colourful activities, simple puzzles, stories and educational games."}
             </p>
 
-
             <div className="learningList">
 
               <div>✅ ABC Learning</div>
-
               <div>✅ తెలుగు అక్షరాలు</div>
-
               <div>✅ Count Numbers</div>
-
               <div>✅ Learn Colours</div>
-
               <div>✅ Animals & Fruits</div>
-
               <div>✅ Shapes</div>
 
             </div>
-
 
             <div className="learningLinks">
 
@@ -418,7 +409,6 @@ export default function Home() {
 
           </div>
 
-
           <div className="learningArt">
             🧠
             <br />
@@ -428,7 +418,6 @@ export default function Home() {
           </div>
 
         </section>
-
 
         {/* WORLD */}
 
@@ -449,7 +438,6 @@ export default function Home() {
               currencies and famous places around
               the world.
             </p>
-
 
             <div className="worldFeatures">
 
@@ -475,7 +463,6 @@ export default function Home() {
 
             </div>
 
-
             <div className="worldButtons">
 
               <Link
@@ -496,7 +483,6 @@ export default function Home() {
 
           </div>
 
-
           <div className="worldArt">
 
             🌍
@@ -512,7 +498,6 @@ export default function Home() {
           </div>
 
         </section>
-
 
         {/* DAILY CHALLENGE */}
 
@@ -560,7 +545,6 @@ export default function Home() {
           </div>
 
         </section>
-
 
         {/* FUN SECTION */}
 
@@ -613,7 +597,6 @@ export default function Home() {
           </div>
 
         </section>
-
 
         {/* FOOTER */}
 
@@ -673,7 +656,6 @@ export default function Home() {
 
       </main>
 
-
       <style jsx>{`
 
         * {
@@ -698,7 +680,8 @@ export default function Home() {
           position: sticky;
           top: 0;
           z-index: 50;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+          box-shadow:
+            0 2px 12px rgba(0,0,0,0.08);
         }
 
         .logo {
@@ -735,12 +718,13 @@ export default function Home() {
           align-items: center;
           justify-content: space-between;
           gap: 30px;
-          background: linear-gradient(
-            135deg,
-            #ffe7ef,
-            #f0eaff,
-            #ddf7ff
-          );
+          background:
+            linear-gradient(
+              135deg,
+              #ffe7ef,
+              #f0eaff,
+              #ddf7ff
+            );
         }
 
         .heroContent {
@@ -756,7 +740,8 @@ export default function Home() {
           border-radius: 25px;
           font-size: 13px;
           font-weight: bold;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          box-shadow:
+            0 2px 8px rgba(0,0,0,0.05);
         }
 
         .hero h1 {
@@ -811,7 +796,8 @@ export default function Home() {
           border-radius: 23px;
           font-weight: bold;
           font-size: 14px;
-          box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+          box-shadow:
+            0 3px 10px rgba(0,0,0,0.08);
           cursor: pointer;
         }
 
@@ -886,7 +872,8 @@ export default function Home() {
 
         .activityGrid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns:
+            repeat(4, 1fr);
           gap: 18px;
         }
 
@@ -898,13 +885,15 @@ export default function Home() {
           color: #222;
           background: white;
           border-radius: 24px;
-          box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+          box-shadow:
+            0 4px 18px rgba(0,0,0,0.06);
           transition: 0.2s;
         }
 
         .activityCard:hover {
           transform: translateY(-6px);
-          box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+          box-shadow:
+            0 8px 24px rgba(0,0,0,0.12);
         }
 
         .activityIcon {
@@ -944,11 +933,12 @@ export default function Home() {
         }
 
         .learningZone {
-          background: linear-gradient(
-            135deg,
-            #dcd7ff,
-            #dff7ff
-          );
+          background:
+            linear-gradient(
+              135deg,
+              #dcd7ff,
+              #dff7ff
+            );
         }
 
         .learningContent,
@@ -970,7 +960,8 @@ export default function Home() {
 
         .learningList {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns:
+            repeat(2, 1fr);
           gap: 12px;
           margin: 25px 0;
           font-weight: bold;
@@ -1001,22 +992,25 @@ export default function Home() {
         }
 
         .worldSection {
-          background: linear-gradient(
-            135deg,
-            #e1f5ff,
-            #fff1d4
-          );
+          background:
+            linear-gradient(
+              135deg,
+              #e1f5ff,
+              #fff1d4
+            );
         }
 
         .worldFeatures {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns:
+            repeat(2, 1fr);
           gap: 14px;
           margin: 25px 0;
         }
 
         .worldFeatures div {
-          background: rgba(255,255,255,0.75);
+          background:
+            rgba(255,255,255,0.75);
           padding: 12px;
           border-radius: 15px;
         }
@@ -1058,11 +1052,12 @@ export default function Home() {
           align-items: center;
           gap: 35px;
           border-radius: 30px;
-          background: linear-gradient(
-            135deg,
-            #fff0bd,
-            #ffe1e8
-          );
+          background:
+            linear-gradient(
+              135deg,
+              #fff0bd,
+              #ffe1e8
+            );
         }
 
         .challengeIcon {
@@ -1083,7 +1078,8 @@ export default function Home() {
           background: white;
           border-radius: 30px;
           text-align: center;
-          box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+          box-shadow:
+            0 5px 25px rgba(0,0,0,0.06);
         }
 
         .funSection h2 {
@@ -1160,7 +1156,8 @@ export default function Home() {
           }
 
           .activityGrid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns:
+              repeat(2, 1fr);
           }
 
           .learningZone,
@@ -1204,7 +1201,8 @@ export default function Home() {
           }
 
           .activityGrid {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns:
+              1fr 1fr;
             gap: 12px;
           }
 
