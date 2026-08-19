@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>YOUR-VERCEL-URL/</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/</loc>
   </url>
 
   <url>
-    <loc>YOUR-VERCEL-URL/dashboard</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/dashboard</loc>
   </url>
 
   <url>
-    <loc>YOUR-VERCEL-URL/stories</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/stories</loc>
   </url>
 
   <url>
-    <loc>YOUR-VERCEL-URL/games</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/games</loc>
   </url>
 
   <url>
-    <loc>YOUR-VERCEL-URL/puzzles</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/puzzles</loc>
   </url>
 
   <url>
-    <loc>YOUR-VERCEL-URL/colours</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/colours</loc>
   </url>
 
   <url>
-    <loc>YOUR-VERCEL-URL/learn</loc>
+    <loc>https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/learn</loc>
   </url>
 
 </urlset>
