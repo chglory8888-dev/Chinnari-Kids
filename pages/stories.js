@@ -1,15 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const stories = [
   {
     id: 1,
     title: "The Honest Boy",
     teluguTitle: "నిజాయితీ గల బాలుడు",
-    emoji: "🌳👦💰",
     language: "English",
-    voiceLanguage: "en-IN",
+    emoji: "👦🌳👛",
     color: "#ffe1e8",
     pages: [
       "Once there was a kind boy named Ravi.",
@@ -17,19 +16,27 @@ const stories = [
       "There was money inside the purse.",
       "Ravi did not keep it. He went around the village and found its owner.",
       "The owner was very happy and thanked Ravi for his honesty.",
-      "Ravi smiled because he knew he had done the right thing.",
+      "Ravi smiled because he knew he had done the right thing."
     ],
-    moral:
-      "Always be honest and do the right thing. ❤️",
+    teluguPages: [
+      "ఒకప్పుడు రవి అనే మంచి బాలుడు ఉండేవాడు.",
+      "ఒక రోజు రవికి ఒక చెట్టు కింద అందమైన పర్సు కనిపించింది.",
+      "ఆ పర్సులో డబ్బులు ఉన్నాయి.",
+      "రవి ఆ డబ్బులను తన దగ్గర ఉంచుకోలేదు. గ్రామంలో తిరిగి పర్సు యజమానిని వెతికాడు.",
+      "యజమాని చాలా సంతోషించి రవి నిజాయితీకి ధన్యవాదాలు చెప్పాడు.",
+      "తాను మంచి పని చేశానని తెలుసుకుని రవి చిరునవ్వు నవ్వాడు."
+    ],
+    moral: "Always be honest and do the right thing. ❤️",
+    teluguMoral:
+      "ఎల్లప్పుడూ నిజాయితీగా ఉండాలి. సరైన పని చేయాలి. ❤️"
   },
 
   {
     id: 2,
     title: "The Helpful Little Bird",
     teluguTitle: "సహాయం చేసిన చిన్న పక్షి",
-    emoji: "🐦🐜🍃",
     language: "English",
-    voiceLanguage: "en-IN",
+    emoji: "🐦🍃🐜",
     color: "#dff2ff",
     pages: [
       "A little bird lived in a beautiful forest.",
@@ -37,19 +44,28 @@ const stories = [
       "The bird quickly dropped a leaf near the ant.",
       "The ant climbed onto the leaf and safely reached the land.",
       "A few days later, the ant saw a hunter near the bird.",
-      "The ant warned the bird, and the bird flew away safely.",
+      "The ant warned the bird, and the bird flew away safely."
+    ],
+    teluguPages: [
+      "ఒక అందమైన అడవిలో ఒక చిన్న పక్షి ఉండేది.",
+      "ఒక రోజు ఆ పక్షి నీటిలో ఇబ్బంది పడుతున్న ఒక చిన్న చీమను చూసింది.",
+      "పక్షి వెంటనే చీమ దగ్గర ఒక ఆకును వేసింది.",
+      "చీమ ఆ ఆకుపైకి ఎక్కి సురక్షితంగా ఒడ్డుకు చేరుకుంది.",
+      "కొన్ని రోజుల తరువాత చీమ పక్షి దగ్గర ఒక వేటగాడిని చూసింది.",
+      "చీమ పక్షిని హెచ్చరించింది. పక్షి సురక్షితంగా ఎగిరిపోయింది."
     ],
     moral:
       "A small act of kindness can make a big difference. 🌟",
+    teluguMoral:
+      "చిన్న సహాయం కూడా పెద్ద మార్పును తీసుకురాగలదు. 🌟"
   },
 
   {
     id: 3,
-    title: "చీమ మరియు మిడత",
-    teluguTitle: "కష్టపడే చీమ",
-    emoji: "🐜🦗🌾",
+    title: "The Ant and the Grasshopper",
+    teluguTitle: "చీమ మరియు మిడత",
     language: "తెలుగు",
-    voiceLanguage: "te-IN",
+    emoji: "🐜🌾🦗",
     color: "#fff0b8",
     pages: [
       "ఒక అడవిలో ఒక చీమ మరియు ఒక మిడత ఉండేవి.",
@@ -57,19 +73,27 @@ const stories = [
       "మిడత మాత్రం రోజంతా ఆడుతూ పాడుతూ ఉండేది.",
       "వర్షాకాలం వచ్చింది. మిడతకు ఆహారం లేక ఇబ్బంది పడింది.",
       "చీమ తన దగ్గర ఉన్న ఆహారాన్ని పంచుకుంది.",
-      "మిడత తన తప్పును తెలుసుకుని ఇకపై కష్టపడాలని నిర్ణయించుకుంది.",
+      "మిడత తన తప్పును తెలుసుకుని ఇకపై కష్టపడాలని నిర్ణయించుకుంది."
     ],
-    moral:
-      "కష్టపడి పనిచేస్తే మంచి ఫలితాలు వస్తాయి. 🌟",
+    teluguPages: [
+      "ఒక అడవిలో ఒక చీమ మరియు ఒక మిడత ఉండేవి.",
+      "చీమ ప్రతిరోజూ కష్టపడి ఆహారాన్ని సేకరించేది.",
+      "మిడత మాత్రం రోజంతా ఆడుతూ పాడుతూ ఉండేది.",
+      "వర్షాకాలం వచ్చింది. మిడతకు ఆహారం లేక ఇబ్బంది పడింది.",
+      "చీమ తన దగ్గర ఉన్న ఆహారాన్ని పంచుకుంది.",
+      "మిడత తన తప్పును తెలుసుకుని ఇకపై కష్టపడాలని నిర్ణయించుకుంది."
+    ],
+    moral: "Work hard and prepare for the future. 🌟",
+    teluguMoral:
+      "కష్టపడి పనిచేసి భవిష్యత్తుకు సిద్ధంగా ఉండాలి. 🌟"
   },
 
   {
     id: 4,
-    title: "దాహంతో ఉన్న కాకి",
+    title: "The Thirsty Crow",
     teluguTitle: "దాహంతో ఉన్న కాకి",
-    emoji: "🐦‍⬛🏺💧",
     language: "తెలుగు",
-    voiceLanguage: "te-IN",
+    emoji: "🐦‍⬛🏺💧",
     color: "#e9ddff",
     pages: [
       "ఒక రోజు ఒక కాకికి చాలా దాహం వేసింది.",
@@ -77,51 +101,50 @@ const stories = [
       "చివరికి ఒక కుండ కనిపించింది.",
       "కుండలో కొంచెం నీరు మాత్రమే ఉంది.",
       "కాకి చిన్న రాళ్లను ఒక్కొక్కటిగా కుండలో వేసింది.",
-      "నీరు పైకి వచ్చింది. కాకి నీరు తాగి తన దాహం తీర్చుకుంది.",
+      "నీరు పైకి వచ్చింది. కాకి నీరు తాగి తన దాహం తీర్చుకుంది."
+    ],
+    teluguPages: [
+      "ఒక రోజు ఒక కాకికి చాలా దాహం వేసింది.",
+      "అది నీటి కోసం చాలా చోట్ల వెతికింది.",
+      "చివరికి ఒక కుండ కనిపించింది.",
+      "కుండలో కొంచెం నీరు మాత్రమే ఉంది.",
+      "కాకి చిన్న రాళ్లను ఒక్కొక్కటిగా కుండలో వేసింది.",
+      "నీరు పైకి వచ్చింది. కాకి నీరు తాగి తన దాహం తీర్చుకుంది."
     ],
     moral:
-      "తెలివిగా ఆలోచిస్తే సమస్యకు పరిష్కారం దొరుకుతుంది. 🧠",
-  },
+      "Think wisely and you can find a solution to a problem. 🧠",
+    teluguMoral:
+      "తెలివిగా ఆలోచిస్తే సమస్యకు పరిష్కారం దొరుకుతుంది. 🧠"
+  }
 ];
 
 export default function Stories() {
-  const [selectedStory, setSelectedStory] =
-    useState(null);
+  const [selectedStory, setSelectedStory] = useState(null);
+
+  const [language, setLanguage] = useState("telugu");
+
+  const [playing, setPlaying] = useState(false);
+
+  const [paused, setPaused] = useState(false);
 
   const [stars, setStars] = useState(0);
 
-  const [completed, setCompleted] =
-    useState({});
+  const [completed, setCompleted] = useState({});
 
-  const [speaking, setSpeaking] =
-    useState(false);
+  const [voiceIndex, setVoiceIndex] = useState(0);
 
-  const [paused, setPaused] =
-    useState(false);
-
-  const [voiceOn, setVoiceOn] =
-    useState(true);
-
-  const [voices, setVoices] =
-    useState([]);
-
-  const utteranceRef = useRef(null);
-
-  /*
-   * LOAD BROWSER VOICES
-   */
+  const [voices, setVoices] = useState([]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (!("speechSynthesis" in window)) return;
+    if (!("speechSynthesis" in window)) {
+      return;
+    }
 
-    const loadVoices = () => {
-      const available =
-        window.speechSynthesis.getVoices();
-
-      setVoices(available);
-    };
+    function loadVoices() {
+      setVoices(window.speechSynthesis.getVoices());
+    }
 
     loadVoices();
 
@@ -130,248 +153,48 @@ export default function Stories() {
 
     return () => {
       window.speechSynthesis.cancel();
-
-      window.speechSynthesis.onvoiceschanged =
-        null;
     };
   }, []);
 
-  /*
-   * STOP VOICE
-   */
+  const filteredVoices = useMemo(() => {
+    if (!voices.length) return [];
+
+    if (language === "telugu") {
+      return voices.filter((voice) =>
+        voice.lang.toLowerCase().startsWith("te")
+      );
+    }
+
+    return voices.filter((voice) =>
+      voice.lang.toLowerCase().startsWith("en")
+    );
+  }, [voices, language]);
 
   function stopVoice() {
-    if (typeof window === "undefined") return;
-
-    if ("speechSynthesis" in window) {
+    if (
+      typeof window !== "undefined" &&
+      "speechSynthesis" in window
+    ) {
       window.speechSynthesis.cancel();
     }
 
-    utteranceRef.current = null;
-
-    setSpeaking(false);
+    setPlaying(false);
     setPaused(false);
   }
-
-  /*
-   * FIND BEST VOICE
-   */
-
-  function findVoice(language) {
-    if (!voices.length) return null;
-
-    const wanted =
-      language.toLowerCase();
-
-    /*
-     * First exact language
-     */
-
-    let voice = voices.find(
-      (item) =>
-        item.lang &&
-        item.lang.toLowerCase() === wanted
-    );
-
-    if (voice) return voice;
-
-    /*
-     * Telugu fallback
-     */
-
-    if (wanted.startsWith("te")) {
-      voice = voices.find(
-        (item) =>
-          item.lang &&
-          item.lang
-            .toLowerCase()
-            .startsWith("te")
-      );
-
-      if (voice) return voice;
-    }
-
-    /*
-     * English India
-     */
-
-    if (wanted === "en-in") {
-      voice = voices.find(
-        (item) =>
-          item.lang &&
-          item.lang
-            .toLowerCase()
-            .startsWith("en-in")
-      );
-
-      if (voice) return voice;
-    }
-
-    /*
-     * English fallback
-     */
-
-    if (wanted.startsWith("en")) {
-      voice = voices.find(
-        (item) =>
-          item.lang &&
-          item.lang
-            .toLowerCase()
-            .startsWith("en")
-      );
-
-      if (voice) return voice;
-    }
-
-    return null;
-  }
-
-  /*
-   * PLAY COMPLETE STORY
-   */
-
-  function playFullStory() {
-    if (!selectedStory) return;
-
-    if (!voiceOn) {
-      setVoiceOn(true);
-    }
-
-    if (
-      typeof window === "undefined" ||
-      !("speechSynthesis" in window)
-    ) {
-      alert(
-        "Your browser does not support voice reading."
-      );
-
-      return;
-    }
-
-    /*
-     * Stop previous speech
-     */
-
-    window.speechSynthesis.cancel();
-
-    setSpeaking(false);
-    setPaused(false);
-
-    /*
-     * Combine ALL story pages
-     */
-
-    const fullStory =
-      selectedStory.pages.join(" ");
-
-    const completeText =
-      fullStory +
-      " " +
-      "Moral. " +
-      selectedStory.moral;
-
-    const utterance =
-      new SpeechSynthesisUtterance(
-        completeText
-      );
-
-    utterance.lang =
-      selectedStory.voiceLanguage;
-
-    /*
-     * Child-friendly speed
-     */
-
-    utterance.rate = 0.75;
-    utterance.pitch = 1.05;
-    utterance.volume = 1;
-
-    /*
-     * Select language voice
-     */
-
-    const voice = findVoice(
-      selectedStory.voiceLanguage
-    );
-
-    if (voice) {
-      utterance.voice = voice;
-    }
-
-    utterance.onstart = () => {
-      setSpeaking(true);
-      setPaused(false);
-    };
-
-    utterance.onend = () => {
-      setSpeaking(false);
-      setPaused(false);
-    };
-
-    utterance.onerror = () => {
-      setSpeaking(false);
-      setPaused(false);
-    };
-
-    utteranceRef.current = utterance;
-
-    window.speechSynthesis.speak(
-      utterance
-    );
-  }
-
-  /*
-   * PAUSE / RESUME
-   */
-
-  function togglePause() {
-    if (typeof window === "undefined")
-      return;
-
-    if (!("speechSynthesis" in window))
-      return;
-
-    if (!speaking) {
-      playFullStory();
-      return;
-    }
-
-    if (paused) {
-      window.speechSynthesis.resume();
-
-      setPaused(false);
-    } else {
-      window.speechSynthesis.pause();
-
-      setPaused(true);
-    }
-  }
-
-  /*
-   * REPLAY
-   */
-
-  function replayStory() {
-    stopVoice();
-
-    setTimeout(() => {
-      playFullStory();
-    }, 150);
-  }
-
-  /*
-   * OPEN STORY
-   */
 
   function openStory(story) {
     stopVoice();
 
     setSelectedStory(story);
-  }
 
-  /*
-   * CLOSE STORY
-   */
+    setLanguage(
+      story.language === "తెలుగు"
+        ? "telugu"
+        : "english"
+    );
+
+    setVoiceIndex(0);
+  }
 
   function closeStory() {
     stopVoice();
@@ -379,39 +202,146 @@ export default function Stories() {
     setSelectedStory(null);
   }
 
-  /*
-   * FINISH STORY
-   */
+  function getStoryText() {
+    if (!selectedStory) return "";
 
-  function finishStory() {
+    const pages =
+      language === "telugu"
+        ? selectedStory.teluguPages
+        : selectedStory.pages;
+
+    const moral =
+      language === "telugu"
+        ? selectedStory.teluguMoral
+        : selectedStory.moral;
+
+    return [...pages, moral].join(" ");
+  }
+
+  function playStory() {
     if (!selectedStory) return;
 
+    if (
+      typeof window === "undefined" ||
+      !("speechSynthesis" in window)
+    ) {
+      alert(
+        "Voice is not supported in this browser."
+      );
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const text = getStoryText();
+
+    const speech =
+      new SpeechSynthesisUtterance(text);
+
+    speech.lang =
+      language === "telugu"
+        ? "te-IN"
+        : "en-US";
+
+    speech.rate = 0.85;
+    speech.pitch = 1;
+    speech.volume = 1;
+
+    if (filteredVoices.length > 0) {
+      speech.voice =
+        filteredVoices[voiceIndex] ||
+        filteredVoices[0];
+    }
+
+    speech.onstart = () => {
+      setPlaying(true);
+      setPaused(false);
+    };
+
+    speech.onend = () => {
+      setPlaying(false);
+      setPaused(false);
+
+      completeStory();
+    };
+
+    speech.onerror = () => {
+      setPlaying(false);
+      setPaused(false);
+    };
+
+    window.speechSynthesis.speak(speech);
+  }
+
+  function pauseStory() {
+    if (
+      typeof window !== "undefined" &&
+      "speechSynthesis" in window
+    ) {
+      window.speechSynthesis.pause();
+
+      setPaused(true);
+    }
+  }
+
+  function resumeStory() {
+    if (
+      typeof window !== "undefined" &&
+      "speechSynthesis" in window
+    ) {
+      window.speechSynthesis.resume();
+
+      setPaused(false);
+    }
+  }
+
+  function replayStory() {
     stopVoice();
 
-    if (!completed[selectedStory.id]) {
-      setStars(
-        (value) => value + 5
-      );
+    setTimeout(() => {
+      playStory();
+    }, 150);
+  }
 
-      setCompleted(
-        (value) => ({
-          ...value,
-          [selectedStory.id]: true,
-        })
-      );
+  function changeLanguage(newLanguage) {
+    stopVoice();
+
+    setLanguage(newLanguage);
+  }
+
+  function completeStory() {
+    if (!selectedStory) return;
+
+    if (!completed[selectedStory.id]) {
+      setStars((value) => value + 5);
+
+      setCompleted((value) => ({
+        ...value,
+        [selectedStory.id]: true
+      }));
     }
+  }
+
+  function nextVoice() {
+    if (!filteredVoices.length) return;
+
+    setVoiceIndex(
+      (value) =>
+        (value + 1) %
+        filteredVoices.length
+    );
   }
 
   return (
     <>
       <Head>
         <title>
-          Kids Stories | Chinnaari Kids
+          Stories | Chinnaari Kids
         </title>
 
         <meta
           name="description"
-          content="English and Telugu moral stories for children with voice reading."
+          content="Telugu and English stories with voice for children."
         />
 
         <meta
@@ -421,8 +351,6 @@ export default function Stories() {
       </Head>
 
       <main className="page">
-
-        {/* HEADER */}
 
         <header className="header">
 
@@ -434,7 +362,6 @@ export default function Stories() {
           </Link>
 
           <nav>
-
             <Link href="/">
               Home
             </Link>
@@ -462,12 +389,9 @@ export default function Stories() {
             <Link href="/learn">
               🔤 Learn
             </Link>
-
           </nav>
 
         </header>
-
-        {/* HERO */}
 
         <section className="hero">
 
@@ -480,7 +404,7 @@ export default function Stories() {
           </h1>
 
           <p>
-            Read, listen, imagine and learn.
+            Listen, imagine and learn.
           </p>
 
           <div className="stars">
@@ -489,8 +413,6 @@ export default function Stories() {
 
         </section>
 
-        {/* STORIES */}
-
         <section className="storiesSection">
 
           <h2>
@@ -498,75 +420,65 @@ export default function Stories() {
           </h2>
 
           <p className="subtitle">
-            Choose a story and listen to the
-            whole story.
+            Listen to the complete story in
+            Telugu or English.
           </p>
 
           <div className="storyGrid">
 
-            {stories.map(
-              (story) => (
+            {stories.map((story) => (
 
-                <article
-                  key={story.id}
-                  className="storyCard"
-                  style={{
-                    background:
-                      story.color,
-                  }}
+              <article
+                key={story.id}
+                className="storyCard"
+                style={{
+                  background:
+                    story.color
+                }}
+              >
+
+                <div className="storyEmoji">
+                  {story.emoji}
+                </div>
+
+                <div className="language">
+                  {story.language}
+                </div>
+
+                <h3>
+                  {story.title}
+                </h3>
+
+                <p className="teluguTitle">
+                  {story.teluguTitle}
+                </p>
+
+                <p>
+                  {story.pages[0]}
+                </p>
+
+                <button
+                  className="readButton"
+                  onClick={() =>
+                    openStory(story)
+                  }
                 >
+                  🎧 Listen to Story
+                </button>
 
-                  <div className="storyPicture">
-
-                    <div className="bigEmoji">
-                      {story.emoji}
-                    </div>
-
+                {completed[story.id] && (
+                  <div className="completed">
+                    ✅ Completed
                   </div>
+                )}
 
-                  <div className="language">
-                    {story.language}
-                  </div>
+              </article>
 
-                  <h3>
-                    {story.title}
-                  </h3>
-
-                  <p className="teluguTitle">
-                    {story.teluguTitle}
-                  </p>
-
-                  <p className="preview">
-                    {story.pages[0]}
-                  </p>
-
-                  <button
-                    className="readButton"
-                    onClick={() =>
-                      openStory(story)
-                    }
-                  >
-                    📖 Read & Listen
-                  </button>
-
-                  {completed[
-                    story.id
-                  ] && (
-                    <div className="completed">
-                      ✅ Completed
-                    </div>
-                  )}
-
-                </article>
-
-              )
-            )}
+            ))}
 
           </div>
 
         </section>
-
-        {/* READER */}
 
         {selectedStory && (
 
@@ -581,24 +493,8 @@ export default function Stories() {
                 ✕
               </button>
 
-              {/* STORY IMAGE / ILLUSTRATION */}
-
-              <div
-                className="readerPicture"
-                style={{
-                  background:
-                    selectedStory.color,
-                }}
-              >
-
-                <div className="readerEmoji">
-                  {selectedStory.emoji}
-                </div>
-
-              </div>
-
-              <div className="language readerLanguage">
-                {selectedStory.language}
+              <div className="readerEmoji">
+                {selectedStory.emoji}
               </div>
 
               <h2>
@@ -609,137 +505,138 @@ export default function Stories() {
                 {selectedStory.teluguTitle}
               </p>
 
-              {/* FULL STORY TEXT */}
-
-              <div className="storyBox">
-
-                {selectedStory.pages.map(
-                  (text, index) => (
-
-                    <p key={index}>
-                      {text}
-                    </p>
-
-                  )
-                )}
-
-                <div className="moralBox">
-                  ❤️ <strong>Moral:</strong>{" "}
-                  {selectedStory.moral}
-                </div>
-
+              <div className="storyVisual">
+                {selectedStory.emoji}
               </div>
 
-              {/* VOICE */}
-
-              <div className="voiceArea">
-
-                <h3>
-                  🎧 Listen to the Story
-                </h3>
-
-                <p>
-                  Press Play to hear the
-                  complete story.
-                </p>
-
-                <div className="voiceButtons">
-
-                  <button
-                    className="playButton"
-                    onClick={
-                      playFullStory
-                    }
-                  >
-                    ▶️ Play Full Story
-                  </button>
-
-                  <button
-                    className="pauseButton"
-                    onClick={
-                      togglePause
-                    }
-                  >
-                    {paused
-                      ? "▶️ Resume"
-                      : "⏸️ Pause"}
-                  </button>
-
-                  <button
-                    className="stopButton"
-                    onClick={
-                      stopVoice
-                    }
-                  >
-                    ⏹️ Stop
-                  </button>
-
-                  <button
-                    className="replayButton"
-                    onClick={
-                      replayStory
-                    }
-                  >
-                    🔁 Replay
-                  </button>
-
-                </div>
-
-                <div className="status">
-
-                  {speaking &&
-                    !paused && (
-                      <span>
-                        🔊 Story is
-                        playing...
-                      </span>
-                    )}
-
-                  {paused && (
-                    <span>
-                      ⏸️ Story paused
-                    </span>
-                  )}
-
-                  {!speaking &&
-                    !paused && (
-                      <span>
-                        🔊 Ready
-                      </span>
-                    )}
-
-                </div>
+              <div className="languageButtons">
 
                 <button
-                  className="voiceToggle"
-                  onClick={() => {
-
-                    if (voiceOn) {
-                      stopVoice();
-                    }
-
-                    setVoiceOn(
-                      (value) =>
-                        !value
-                    );
-                  }}
+                  className={
+                    language === "telugu"
+                      ? "languageButton selected"
+                      : "languageButton"
+                  }
+                  onClick={() =>
+                    changeLanguage(
+                      "telugu"
+                    )
+                  }
                 >
-                  {voiceOn
-                    ? "🔊 Voice ON"
-                    : "🔇 Voice OFF"}
+                  🇮🇳 తెలుగు
+                </button>
+
+                <button
+                  className={
+                    language === "english"
+                      ? "languageButton selected"
+                      : "languageButton"
+                  }
+                  onClick={() =>
+                    changeLanguage(
+                      "english"
+                    )
+                  }
+                >
+                  🇬🇧 English
                 </button>
 
               </div>
 
-              {/* FINISH */}
+              <div className="voiceStatus">
+
+                {language === "telugu"
+                  ? "🔊 తెలుగు Voice"
+                  : "🔊 English Voice"}
+
+              </div>
+
+              <div className="storyFullText">
+
+                {language === "telugu"
+                  ? selectedStory.teluguPages.join(
+                      " "
+                    )
+                  : selectedStory.pages.join(
+                      " "
+                    )}
+
+              </div>
+
+              <div className="voiceButtons">
+
+                {!playing && !paused && (
+
+                  <button
+                    className="playButton"
+                    onClick={playStory}
+                  >
+                    ▶️ Play Full Story
+                  </button>
+
+                )}
+
+                {playing && (
+
+                  <button
+                    className="pauseButton"
+                    onClick={pauseStory}
+                  >
+                    ⏸️ Pause
+                  </button>
+
+                )}
+
+                {paused && (
+
+                  <button
+                    className="playButton"
+                    onClick={resumeStory}
+                  >
+                    ▶️ Resume
+                  </button>
+
+                )}
+
+                <button
+                  className="replayButton"
+                  onClick={replayStory}
+                >
+                  🔄 Replay
+                </button>
+
+              </div>
+
+              {filteredVoices.length > 1 && (
+
+                <button
+                  className="voiceChange"
+                  onClick={nextVoice}
+                >
+                  🎙️ Change Voice
+                </button>
+
+              )}
+
+              <div className="moral">
+
+                <strong>
+                  🌟 Moral
+                </strong>
+
+                <p>
+                  {language === "telugu"
+                    ? selectedStory.teluguMoral
+                    : selectedStory.moral}
+                </p>
+
+              </div>
 
               <button
                 className="finishButton"
-                onClick={
-                  finishStory
-                }
+                onClick={completeStory}
               >
-                🏆 Finish Story +5 ⭐
+                ⭐ Mark Story Complete
               </button>
 
             </section>
@@ -747,8 +644,6 @@ export default function Stories() {
           </div>
 
         )}
-
-        {/* TIP */}
 
         <section className="tip">
 
@@ -763,16 +658,13 @@ export default function Stories() {
             </h2>
 
             <p>
-              Listen carefully and think
-              about the lesson in every
-              story. ❤️
+              Listen carefully, imagine the story
+              and learn the good lesson. ❤️
             </p>
 
           </div>
 
         </section>
-
-        {/* NAVIGATION */}
 
         <section className="navigation">
 
@@ -781,16 +673,14 @@ export default function Stories() {
           </Link>
 
           <Link href="/games">
-            🎮 Play Games
+            🎮 Games
           </Link>
 
-          <Link href="/puzzles">
-            🧩 Puzzles
+          <Link href="/learn">
+            🔤 Learn
           </Link>
 
         </section>
-
-        {/* FOOTER */}
 
         <footer>
 
@@ -829,11 +719,9 @@ export default function Stories() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 20px;
           background: white;
           box-shadow:
-            0 2px 15px
-            rgba(0,0,0,0.08);
+            0 2px 15px rgba(0,0,0,0.08);
           position: sticky;
           top: 0;
           z-index: 10;
@@ -858,10 +746,6 @@ export default function Stories() {
           text-decoration: none;
           font-size: 14px;
           font-weight: 600;
-        }
-
-        nav a:hover {
-          color: #ff6b6b;
         }
 
         .hero {
@@ -923,7 +807,7 @@ export default function Stories() {
         }
 
         .storyCard {
-          padding: 25px 22px;
+          padding: 28px 22px;
           border-radius: 28px;
           text-align: left;
           box-shadow:
@@ -931,24 +815,13 @@ export default function Stories() {
             rgba(0,0,0,0.06);
         }
 
-        .storyPicture {
-          min-height: 150px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 22px;
-          background:
-            rgba(255,255,255,0.55);
-        }
-
-        .bigEmoji {
-          font-size: 70px;
-          letter-spacing: 5px;
+        .storyEmoji {
+          font-size: 65px;
         }
 
         .language {
           display: inline-block;
-          margin-top: 15px;
+          margin-top: 10px;
           padding: 6px 12px;
           border-radius: 20px;
           background: white;
@@ -967,7 +840,7 @@ export default function Stories() {
           color: #666;
         }
 
-        .preview {
+        .storyCard > p:not(.teluguTitle) {
           line-height: 1.6;
           color: #555;
           min-height: 50px;
@@ -975,18 +848,13 @@ export default function Stories() {
 
         .readButton {
           margin-top: 10px;
-          padding: 13px 20px;
+          padding: 12px 20px;
           border: none;
           border-radius: 24px;
           background: #ff6b6b;
           color: white;
           font-weight: bold;
           cursor: pointer;
-          font-size: 15px;
-        }
-
-        .readButton:hover {
-          transform: scale(1.04);
         }
 
         .completed {
@@ -1018,7 +886,7 @@ export default function Stories() {
           max-height: 92vh;
           overflow-y: auto;
           position: relative;
-          padding: 35px 25px;
+          padding: 40px 30px;
           border-radius: 30px;
           background: white;
           text-align: center;
@@ -1031,32 +899,17 @@ export default function Stories() {
           position: absolute;
           top: 15px;
           right: 15px;
-          width: 40px;
-          height: 40px;
+          width: 38px;
+          height: 38px;
           border: none;
           border-radius: 50%;
           background: #eee;
           cursor: pointer;
           font-size: 18px;
-          z-index: 2;
-        }
-
-        .readerPicture {
-          min-height: 190px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 25px;
-          margin-bottom: 15px;
         }
 
         .readerEmoji {
-          font-size: 95px;
-          letter-spacing: 8px;
-        }
-
-        .readerLanguage {
-          margin-top: 0;
+          font-size: 65px;
         }
 
         .reader h2 {
@@ -1069,42 +922,65 @@ export default function Stories() {
           font-weight: bold;
         }
 
-        .storyBox {
-          margin-top: 25px;
-          padding: 22px;
+        .storyVisual {
+          margin: 20px auto;
+          min-height: 150px;
+          max-width: 600px;
+          border-radius: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 75px;
+          background:
+            linear-gradient(
+              135deg,
+              #e5f7ff,
+              #fff0c9
+            );
+          box-shadow:
+            inset 0 0 20px
+            rgba(0,0,0,0.04);
+        }
+
+        .languageButtons {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin: 20px 0 12px;
+        }
+
+        .languageButton {
+          border: none;
+          padding: 11px 18px;
           border-radius: 25px;
-          background: #fff8df;
-          text-align: left;
+          background: #eee;
+          font-weight: bold;
+          cursor: pointer;
         }
 
-        .storyBox p {
-          font-size: 18px;
-          line-height: 1.8;
-          margin: 0 0 15px;
+        .languageButton.selected {
+          background: #4caf50;
+          color: white;
         }
 
-        .moralBox {
-          margin-top: 20px;
-          padding: 18px;
-          border-radius: 18px;
+        .voiceStatus {
+          display: inline-block;
+          padding: 8px 15px;
+          border-radius: 20px;
           background: #fff0b8;
-          line-height: 1.7;
+          font-weight: bold;
+          font-size: 13px;
         }
 
-        .voiceArea {
-          margin-top: 25px;
-          padding: 22px;
-          border-radius: 25px;
-          background: #f5f0ff;
-        }
-
-        .voiceArea h3 {
-          margin: 0 0 8px;
-          font-size: 22px;
-        }
-
-        .voiceArea p {
-          color: #666;
+        .storyFullText {
+          margin: 20px 0;
+          padding: 25px;
+          border-radius: 24px;
+          background: #fff8df;
+          font-size: 19px;
+          line-height: 1.9;
+          text-align: left;
         }
 
         .voiceButtons {
@@ -1112,13 +988,16 @@ export default function Stories() {
           justify-content: center;
           gap: 10px;
           flex-wrap: wrap;
-          margin-top: 15px;
         }
 
-        .voiceButtons button {
+        .playButton,
+        .pauseButton,
+        .replayButton,
+        .voiceChange,
+        .finishButton {
           border: none;
-          padding: 12px 15px;
-          border-radius: 22px;
+          padding: 13px 20px;
+          border-radius: 25px;
           font-weight: bold;
           cursor: pointer;
         }
@@ -1129,45 +1008,35 @@ export default function Stories() {
         }
 
         .pauseButton {
-          background: #ffca3a;
-        }
-
-        .stopButton {
-          background: #ff8a80;
+          background: #ff9800;
           color: white;
         }
 
         .replayButton {
-          background: #9c88ff;
-          color: white;
+          background: #e5ddff;
+          color: #333;
         }
 
-        .status {
-          min-height: 25px;
-          margin: 12px 0;
-          color: #666;
-          font-weight: bold;
+        .voiceChange {
+          margin-top: 12px;
+          background: #dff2ff;
         }
 
-        .voiceToggle {
-          border: none;
-          padding: 9px 15px;
-          border-radius: 20px;
-          background: white;
-          font-weight: bold;
-          cursor: pointer;
+        .moral {
+          margin: 25px 0;
+          padding: 20px;
+          border-radius: 22px;
+          background: #e9f7e5;
+        }
+
+        .moral p {
+          line-height: 1.7;
+          margin-bottom: 0;
         }
 
         .finishButton {
-          margin-top: 20px;
-          border: none;
-          padding: 14px 24px;
-          border-radius: 25px;
           background: #ff6b6b;
           color: white;
-          font-weight: bold;
-          cursor: pointer;
-          font-size: 16px;
         }
 
         .tip {
@@ -1264,24 +1133,18 @@ export default function Stories() {
             font-size: 32px;
           }
 
-          .storyCard {
-            padding: 20px 16px;
-          }
-
           .reader {
-            padding: 30px 15px;
+            padding: 35px 18px;
           }
 
-          .readerEmoji {
-            font-size: 65px;
+          .storyVisual {
+            min-height: 130px;
+            font-size: 60px;
           }
 
-          .storyBox p {
+          .storyFullText {
             font-size: 17px;
-          }
-
-          .voiceButtons button {
-            width: 100%;
+            padding: 20px;
           }
 
           .tip {
