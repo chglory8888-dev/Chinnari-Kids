@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://YOUR-VERCEL-DOMAIN.vercel.app/sitemap.xml
+Sitemap: https://chinnari-kids-l5x86jr1p-chglory8888-devs-projects.vercel.app/sitemap.xml
