@@ -1,22 +1,31 @@
 {
   "name": "Chinnaari Kids",
   "short_name": "Chinnaari Kids",
-  "description": "Fun learning, stories, games and activities for kids.",
+  "description": "Telugu and English stories, games and learning for children.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#fffaf3",
   "theme_color": "#ff6b6b",
   "orientation": "portrait",
+  "lang": "en",
+  "categories": [
+    "education",
+    "kids",
+    "games"
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
