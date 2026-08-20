@@ -6,15 +6,43 @@
   </url>
 
   <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/abc</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/capitals</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/colours</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/countries</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/currencies</loc>
+  </url>
+
+  <url>
     <loc>https://chinnari-kids-sigma.vercel.app/dashboard</loc>
   </url>
 
   <url>
-    <loc>https://chinnari-kids-sigma.vercel.app/stories</loc>
+    <loc>https://chinnari-kids-sigma.vercel.app/dots</loc>
   </url>
 
   <url>
-    <loc>https://chinnari-kids-sigma.vercel.app/rhymes</loc>
+    <loc>https://chinnari-kids-sigma.vercel.app/drawing</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/famous-places</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/flags</loc>
   </url>
 
   <url>
@@ -22,11 +50,39 @@
   </url>
 
   <url>
-    <loc>https://chinnari-kids-sigma.vercel.app/telugu-rhymes</loc>
+    <loc>https://chinnari-kids-sigma.vercel.app/indian-states</loc>
   </url>
 
   <url>
-    <loc>https://chinnari-kids-sigma.vercel.app/about</loc>
+    <loc>https://chinnari-kids-sigma.vercel.app/learn</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/numbers</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/puzzles</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/quiz</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/stories</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/telugu</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/world-explorer</loc>
+  </url>
+
+  <url>
+    <loc>https://chinnari-kids-sigma.vercel.app/writing</loc>
   </url>
 
 </urlset>
