@@ -100,29 +100,29 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Chinnaari Kids | Learn, Play & Have Fun</title>
+      <Head>
+  <title>Chinnaari Kids | Learn, Play & Have Fun</title>
 
-        <meta
-          name="description"
-          content="Chinnaari Kids - fun stories, games, puzzles, colours, ABC, Telugu, numbers and world learning for children."
-        />
+  <meta
+    name="description"
+    content="Chinnaari Kids - fun stories, games, puzzles, colours, ABC, Telugu, numbers and world learning for children."
+  />
 
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
 
-        <meta
-          name="theme-color"
-          content="#7c4dff"
-        />
+  <meta
+    name="theme-color"
+    content="#7c4dff"
+  />
 
-        {/* Google Search Console Verification */}
-        <meta
-          name="google-site-verification"
-          content="dIBVdX3k2APZaWxk8hlGB7ykx_gDwHzGQXNtoswegjk"
-        />
-      </Head>
+  <meta
+    name="google-site-verification"
+    content="dIBVdX3k2APZaWxk8hlGB7ykx_gDwHzGQXNtoswegjk"
+  />
+</Head>
 
       <main className="page">
 
