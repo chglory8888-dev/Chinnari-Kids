@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const activities = [
   {
@@ -75,29 +75,7 @@ const collections = {
   shapes: ["⭐", "❤️", "🔵", "🟩", "🔺", "⬛", "💎", "🌙"],
 };
 
-const abcLetters = [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-];
-
-const teluguLetters = [
-  "అ",
-  "ఆ",
-  "ఇ",
-  "ఈ",
-  "ఉ",
-  "ఊ",
-  "ఎ",
-  "ఏ",
-];
-
-function createDots(type, count) {
+function createDots(count) {
   const dots = [];
 
   for (let i = 0; i < count; i++) {
@@ -106,11 +84,8 @@ function createDots(type, count) {
 
     const radius = 145;
 
-    const x =
-      250 + Math.cos(angle) * radius;
-
-    const y =
-      250 + Math.sin(angle) * radius;
+    const x = 250 + Math.cos(angle) * radius;
+    const y = 250 + Math.sin(angle) * radius;
 
     dots.push({
       x,
@@ -122,7 +97,132 @@ function createDots(type, count) {
   return dots;
 }
 
+/* --------------------------------
+   DOTTED WRITING DATA
+-------------------------------- */
+
+const dottedNumbers = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+];
+
+const dottedABC = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];
+
+const dottedTeluguVowels = [
+  "అ",
+  "ఆ",
+  "ఇ",
+  "ఈ",
+  "ఉ",
+  "ఊ",
+  "ఋ",
+  "ఎ",
+  "ఏ",
+  "ఐ",
+  "ఒ",
+  "ఓ",
+  "ఔ",
+];
+
+const dottedTeluguConsonants = [
+  "క",
+  "ఖ",
+  "గ",
+  "ఘ",
+  "ఙ",
+  "చ",
+  "ఛ",
+  "జ",
+  "ఝ",
+  "ఞ",
+  "ట",
+  "ఠ",
+  "డ",
+  "ఢ",
+  "ణ",
+  "త",
+  "థ",
+  "ద",
+  "ధ",
+  "న",
+  "ప",
+  "ఫ",
+  "బ",
+  "భ",
+  "మ",
+  "య",
+  "ర",
+  "ల",
+  "వ",
+  "శ",
+  "ష",
+  "స",
+  "హ",
+];
+
+const dottedSets = {
+  numbers: {
+    title: "Numbers",
+    icon: "🔢",
+    items: dottedNumbers,
+  },
+  abc: {
+    title: "English A-Z",
+    icon: "🔤",
+    items: dottedABC,
+  },
+  vowels: {
+    title: "తెలుగు అచ్చులు",
+    icon: "అ",
+    items: dottedTeluguVowels,
+  },
+  consonants: {
+    title: "తెలుగు హల్లులు",
+    icon: "క",
+    items: dottedTeluguConsonants,
+  },
+};
+
 export default function Dots() {
+  /* --------------------------------
+     DOT TO DOT GAME
+  -------------------------------- */
+
   const [activity, setActivity] = useState(
     activities[0]
   );
@@ -137,16 +237,28 @@ export default function Dots() {
     "Connect the dots in order!"
   );
 
-  const [target, setTarget] = useState(
-    "🔢 Numbers"
-  );
+  /* --------------------------------
+     DOTTED WRITING
+  -------------------------------- */
 
-  const svgRef = useRef(null);
+  const [dottedType, setDottedType] =
+    useState("numbers");
 
-  const dots = createDots(
-    activity.type,
-    activity.count
-  );
+  const [dottedIndex, setDottedIndex] =
+    useState(0);
+
+  const [practiceMessage, setPracticeMessage] =
+    useState(
+      "Trace the dotted character with your finger ✏️"
+    );
+
+  const dottedSet =
+    dottedSets[dottedType];
+
+  const currentDotted =
+    dottedSet.items[dottedIndex];
+
+  const dots = createDots(activity.count);
 
   useEffect(() => {
     resetGame();
@@ -155,12 +267,13 @@ export default function Dots() {
   function resetGame() {
     setConnected([]);
     setCompleted(false);
-    setMessage("Connect the dots in order!");
+    setMessage(
+      "Connect the dots in order!"
+    );
   }
 
   function chooseActivity(item) {
     setActivity(item);
-    setTarget(`${item.icon} ${item.title}`);
   }
 
   function chooseDot(number) {
@@ -180,12 +293,15 @@ export default function Dots() {
         activity.count
       ) {
         setCompleted(true);
+
         setMessage(
           "🎉 Great Job! You connected all the dots!"
         );
       } else {
         setMessage(
-          `⭐ Great! Now connect dot ${number + 1}`
+          `⭐ Great! Now connect dot ${
+            number + 1
+          }`
         );
       }
     } else {
@@ -245,25 +361,80 @@ export default function Dots() {
       : "🌟";
   }
 
+  /* --------------------------------
+     DOTTED PRACTICE FUNCTIONS
+  -------------------------------- */
+
+  function selectDottedType(type) {
+    setDottedType(type);
+    setDottedIndex(0);
+    setPracticeMessage(
+      "Trace the dotted character with your finger ✏️"
+    );
+  }
+
+  function nextDotted() {
+    if (
+      dottedIndex <
+      dottedSet.items.length - 1
+    ) {
+      setDottedIndex(
+        dottedIndex + 1
+      );
+
+      setPracticeMessage(
+        "Great! Now trace this one ✏️"
+      );
+    } else {
+      setPracticeMessage(
+        "🎉 Excellent! You completed this set!"
+      );
+    }
+  }
+
+  function previousDotted() {
+    if (dottedIndex > 0) {
+      setDottedIndex(
+        dottedIndex - 1
+      );
+
+      setPracticeMessage(
+        "Let's practice again ✏️"
+      );
+    }
+  }
+
+  function resetDotted() {
+    setDottedIndex(0);
+
+    setPracticeMessage(
+      "Trace the dotted character with your finger ✏️"
+    );
+  }
+
   return (
     <>
       <Head>
+
         <title>
-          Dot to Dot | Chinnaari Kids
+          Dot to Dot & Dotted Lines | Chinnaari Kids
         </title>
 
         <meta
           name="description"
-          content="Fun dot to dot learning activities for kids with numbers, ABC, Telugu, animals, birds, insects, fruits, flowers, vehicles and shapes."
+          content="Fun dot to dot games and dotted line writing practice for kids. Learn numbers, English ABC, Telugu vowels and Telugu consonants."
         />
 
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
         />
+
       </Head>
 
       <main className="page">
+
+        {/* HEADER */}
 
         <header className="header">
 
@@ -275,6 +446,7 @@ export default function Dots() {
           </Link>
 
           <nav>
+
             <Link href="/">
               Home
             </Link>
@@ -295,12 +467,15 @@ export default function Dots() {
               🎨 Drawing
             </Link>
 
-            <Link href="/world">
+            <Link href="/world-explorer">
               🌍 World Explorer
             </Link>
+
           </nav>
 
         </header>
+
+        {/* HERO */}
 
         <section className="hero">
 
@@ -313,8 +488,7 @@ export default function Dots() {
           </h1>
 
           <p>
-            Connect the dots and discover something
-            amazing!
+            Connect the dots and discover something amazing!
           </p>
 
           <div className="heroMini">
@@ -323,42 +497,220 @@ export default function Dots() {
 
         </section>
 
-        <section className="categorySection">
+        {/* DOTTED WRITING PRACTICE */}
 
-          <h2>
-            🌟 Choose Your Activity
-          </h2>
+        <section className="dottedSection">
 
-          <div className="categoryGrid">
+          <div className="dottedHeader">
 
-            {activities.map((item) => (
-              <button
-                key={item.type}
-                className={
-                  activity.type ===
-                  item.type
-                    ? "category activeCategory"
-                    : "category"
-                }
-                onClick={() =>
-                  chooseActivity(item)
-                }
-              >
+            <div className="pencilIcon">
+              ✏️
+            </div>
 
-                <span className="categoryIcon">
-                  {item.icon}
-                </span>
+            <div>
+
+              <h2>
+                Dotted Line Writing Practice
+              </h2>
+
+              <p>
+                Trace the dotted letters and numbers!
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* DOTTED CATEGORY BUTTONS */}
+
+          <div className="dottedCategories">
+
+            {Object.entries(
+              dottedSets
+            ).map(
+              ([key, item]) => (
+
+                <button
+                  key={key}
+                  className={
+                    dottedType === key
+                      ? "dottedCategory activeDottedCategory"
+                      : "dottedCategory"
+                  }
+                  onClick={() =>
+                    selectDottedType(key)
+                  }
+                >
+
+                  <span>
+                    {item.icon}
+                  </span>
+
+                  {item.title}
+
+                </button>
+
+              )
+            )}
+
+          </div>
+
+          {/* PRACTICE CARD */}
+
+          <div className="practiceCard">
+
+            <div className="practiceTop">
+
+              <span>
+                {dottedSet.icon}{" "}
+                {dottedSet.title}
+              </span>
+
+              <span className="practiceCount">
+                {dottedIndex + 1} /{" "}
+                {dottedSet.items.length}
+              </span>
+
+            </div>
+
+            <div className="dottedCanvas">
+
+              <div className="writingCharacter">
 
                 <span>
-                  {item.title}
+                  {currentDotted}
                 </span>
 
+              </div>
+
+              <div className="writingGuide">
+                👆 Trace the dots
+              </div>
+
+            </div>
+
+            <div className="practiceMessage">
+              {practiceMessage}
+            </div>
+
+            <div className="practiceButtons">
+
+              <button
+                onClick={
+                  previousDotted
+                }
+                disabled={
+                  dottedIndex === 0
+                }
+                className="practiceButton"
+              >
+                ◀️ Previous
               </button>
-            ))}
+
+              <button
+                onClick={
+                  resetDotted
+                }
+                className="practiceButton resetPractice"
+              >
+                🔄 Reset
+              </button>
+
+              <button
+                onClick={
+                  nextDotted
+                }
+                className="practiceButton nextPractice"
+              >
+                Next ▶️
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* PRACTICE INFORMATION */}
+
+          <div className="practiceInfo">
+
+            <div>
+              👆
+              <strong>
+                Trace
+              </strong>
+              <span>
+                Follow the dotted character
+              </span>
+            </div>
+
+            <div>
+              🧠
+              <strong>
+                Learn
+              </strong>
+              <span>
+                Improve letter recognition
+              </span>
+            </div>
+
+            <div>
+              ✍️
+              <strong>
+                Practice
+              </strong>
+              <span>
+                Build writing confidence
+              </span>
+            </div>
 
           </div>
 
         </section>
+
+        {/* DOT TO DOT CATEGORIES */}
+
+        <section className="categorySection">
+
+          <h2>
+            🌟 Choose Your Dot-to-Dot Activity
+          </h2>
+
+          <div className="categoryGrid">
+
+            {activities.map(
+              (item) => (
+
+                <button
+                  key={item.type}
+                  className={
+                    activity.type ===
+                    item.type
+                      ? "category activeCategory"
+                      : "category"
+                  }
+                  onClick={() =>
+                    chooseActivity(item)
+                  }
+                >
+
+                  <span className="categoryIcon">
+                    {item.icon}
+                  </span>
+
+                  <span>
+                    {item.title}
+                  </span>
+
+                </button>
+
+              )
+            )}
+
+          </div>
+
+        </section>
+
+        {/* GAME */}
 
         <section className="gameSection">
 
@@ -384,6 +736,8 @@ export default function Dots() {
             </div>
 
           </div>
+
+          {/* LEVELS */}
 
           <div className="levels">
 
@@ -428,10 +782,11 @@ export default function Dots() {
 
           </div>
 
+          {/* SVG DOT GAME */}
+
           <div className="canvasArea">
 
             <svg
-              ref={svgRef}
               viewBox="0 0 500 500"
               className="dotCanvas"
             >
@@ -456,64 +811,72 @@ export default function Dots() {
                 />
               )}
 
-              {dots.map((dot) => {
+              {dots.map(
+                (dot) => {
 
-                const isConnected =
-                  connected.includes(
-                    dot.number
-                  );
+                  const isConnected =
+                    connected.includes(
+                      dot.number
+                    );
 
-                return (
-                  <g
-                    key={dot.number}
-                    onClick={() =>
-                      chooseDot(
+                  return (
+                    <g
+                      key={
                         dot.number
-                      )
-                    }
-                    onTouchStart={() =>
-                      chooseDot(
-                        dot.number
-                      )
-                    }
-                    className="dotGroup"
-                  >
-
-                    <circle
-                      cx={dot.x}
-                      cy={dot.y}
-                      r="25"
-                      fill={
-                        isConnected
-                          ? "#4caf50"
-                          : "#ffffff"
                       }
-                      stroke={
-                        isConnected
-                          ? "#2e7d32"
-                          : "#333"
+                      onClick={() =>
+                        chooseDot(
+                          dot.number
+                        )
                       }
-                      strokeWidth="4"
-                    />
-
-                    <text
-                      x={dot.x}
-                      y={dot.y + 7}
-                      textAnchor="middle"
-                      fontSize="19"
-                      fontWeight="bold"
-                      fill={
-                        isConnected
-                          ? "#ffffff"
-                          : "#333"
+                      onTouchStart={() =>
+                        chooseDot(
+                          dot.number
+                        )
                       }
+                      className="dotGroup"
                     >
-                      {dot.number}
-                    </text>
 
-                  </g>
-                );
-              })}
+                      <circle
+                        cx={dot.x}
+                        cy={dot.y}
+                        r="25"
+                        fill={
+                          isConnected
+                            ? "#4caf50"
+                            : "#ffffff"
+                        }
+                        stroke={
+                          isConnected
+                            ? "#2e7d32"
+                            : "#333"
+                        }
+                        strokeWidth="4"
+                      />
+
+                      <text
+                        x={dot.x}
+                        y={
+                          dot.y + 7
+                        }
+                        textAnchor="middle"
+                        fontSize="19"
+                        fontWeight="bold"
+                        fill={
+                          isConnected
+                            ? "#ffffff"
+                            : "#333"
+                        }
+                      >
+                        {
+                          dot.number
+                        }
+                      </text>
+
+                    </g>
+                  );
+                }
+              )}
 
               {completed && (
                 <text
@@ -538,7 +901,9 @@ export default function Dots() {
 
             <button
               className="reset"
-              onClick={resetGame}
+              onClick={
+                resetGame
+              }
             >
               🔄 Start Again
             </button>
@@ -546,6 +911,8 @@ export default function Dots() {
           </div>
 
         </section>
+
+        {/* INSTRUCTIONS */}
 
         <section className="instructions">
 
@@ -599,6 +966,8 @@ export default function Dots() {
 
         </section>
 
+        {/* LEARNING */}
+
         <section className="learning">
 
           <div className="learningEmoji">
@@ -627,6 +996,8 @@ export default function Dots() {
 
         </section>
 
+        {/* LINKS */}
+
         <section className="links">
 
           <Link href="/drawing">
@@ -645,11 +1016,17 @@ export default function Dots() {
             🧩 Puzzles
           </Link>
 
-          <Link href="/world">
+          <Link href="/world-explorer">
             🌍 World Explorer
           </Link>
 
+          <Link href="/stories">
+            📚 Stories
+          </Link>
+
         </section>
+
+        {/* FOOTER */}
 
         <footer>
 
@@ -693,7 +1070,8 @@ export default function Dots() {
           position: sticky;
           top: 0;
           z-index: 20;
-          box-shadow: 0 2px 15px rgba(0,0,0,.08);
+          box-shadow:
+            0 2px 15px rgba(0,0,0,.08);
         }
 
         .logo {
@@ -721,6 +1099,8 @@ export default function Dots() {
         nav a:hover {
           color: #ff6b6b;
         }
+
+        /* HERO */
 
         .hero {
           text-align: center;
@@ -753,6 +1133,243 @@ export default function Dots() {
           margin-top: 20px;
           font-size: 28px;
         }
+
+        /* DOTTED PRACTICE */
+
+        .dottedSection {
+          max-width: 1050px;
+          margin: 45px auto;
+          padding: 0 20px;
+        }
+
+        .dottedHeader {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 18px;
+          text-align: center;
+          margin-bottom: 25px;
+        }
+
+        .pencilIcon {
+          font-size: 55px;
+        }
+
+        .dottedHeader h2 {
+          font-size: 30px;
+          margin: 0 0 7px;
+        }
+
+        .dottedHeader p {
+          margin: 0;
+          color: #666;
+          font-size: 17px;
+        }
+
+        .dottedCategories {
+          display: grid;
+          grid-template-columns:
+            repeat(4, 1fr);
+          gap: 12px;
+          margin-bottom: 25px;
+        }
+
+        .dottedCategory {
+          border: 2px solid #eee;
+          background: white;
+          border-radius: 20px;
+          padding: 15px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
+          transition: .2s;
+        }
+
+        .dottedCategory span {
+          display: block;
+          font-size: 32px;
+          margin-bottom: 5px;
+        }
+
+        .dottedCategory:hover {
+          transform: translateY(-3px);
+        }
+
+        .activeDottedCategory {
+          border-color: #ff9d42;
+          background: #fff0d0;
+        }
+
+        .practiceCard {
+          max-width: 700px;
+          margin: auto;
+          padding: 25px;
+          background: white;
+          border-radius: 30px;
+          box-shadow:
+            0 7px 25px rgba(0,0,0,.08);
+        }
+
+        .practiceTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 21px;
+          font-weight: bold;
+          margin-bottom: 15px;
+        }
+
+        .practiceCount {
+          background: #fff0c9;
+          padding: 7px 13px;
+          border-radius: 20px;
+          font-size: 14px;
+        }
+
+        .dottedCanvas {
+          min-height: 330px;
+          border: 3px dashed #bbb;
+          border-radius: 25px;
+          background:
+            linear-gradient(
+              #fff,
+              #f9fcff
+            );
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dottedCanvas::before,
+        .dottedCanvas::after {
+          content: "";
+          position: absolute;
+          left: 8%;
+          right: 8%;
+          border-top: 2px dashed #c9d8e5;
+        }
+
+        .dottedCanvas::before {
+          top: 35%;
+        }
+
+        .dottedCanvas::after {
+          bottom: 25%;
+        }
+
+        .writingCharacter {
+          position: relative;
+          z-index: 2;
+          font-size: 180px;
+          line-height: 1;
+          font-weight: bold;
+          color: transparent;
+          -webkit-text-stroke:
+            4px #8aa4b8;
+          text-shadow:
+            3px 3px 0 #dce7ef,
+            6px 6px 0 #e7eef4;
+          letter-spacing: 5px;
+        }
+
+        .writingCharacter span {
+          color: transparent;
+          -webkit-text-stroke:
+            4px #7c9bb0;
+          text-decoration-line: underline;
+          text-decoration-style: dotted;
+          text-decoration-thickness: 5px;
+          text-underline-offset: 12px;
+        }
+
+        .writingGuide {
+          position: relative;
+          z-index: 3;
+          margin-top: 18px;
+          padding: 8px 15px;
+          background: #fff0c9;
+          border-radius: 20px;
+          font-weight: bold;
+          color: #555;
+        }
+
+        .practiceMessage {
+          text-align: center;
+          margin: 18px 0;
+          padding: 12px;
+          background: #eaffdf;
+          border-radius: 20px;
+          font-weight: bold;
+        }
+
+        .practiceButtons {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .practiceButton {
+          border: none;
+          padding: 12px 18px;
+          border-radius: 25px;
+          background: #333;
+          color: white;
+          cursor: pointer;
+          font-weight: bold;
+        }
+
+        .practiceButton:disabled {
+          opacity: .4;
+          cursor: not-allowed;
+        }
+
+        .resetPractice {
+          background: #777;
+        }
+
+        .nextPractice {
+          background: #4caf50;
+        }
+
+        .practiceInfo {
+          max-width: 850px;
+          margin: 25px auto 0;
+          display: grid;
+          grid-template-columns:
+            repeat(3, 1fr);
+          gap: 15px;
+        }
+
+        .practiceInfo div {
+          background: white;
+          border-radius: 20px;
+          padding: 18px;
+          text-align: center;
+          box-shadow:
+            0 4px 15px rgba(0,0,0,.05);
+          font-size: 30px;
+        }
+
+        .practiceInfo strong,
+        .practiceInfo span {
+          display: block;
+        }
+
+        .practiceInfo strong {
+          font-size: 17px;
+          margin: 7px 0 3px;
+        }
+
+        .practiceInfo span {
+          color: #666;
+          font-size: 13px;
+        }
+
+        /* CATEGORY */
 
         .categorySection {
           max-width: 1050px;
@@ -799,6 +1416,8 @@ export default function Dots() {
           background: #fff0d0;
           transform: translateY(-4px);
         }
+
+        /* GAME */
 
         .gameSection {
           max-width: 850px;
@@ -898,6 +1517,8 @@ export default function Dots() {
           font-weight: bold;
         }
 
+        /* INSTRUCTIONS */
+
         .instructions {
           max-width: 1000px;
           margin: 30px auto 50px;
@@ -929,6 +1550,8 @@ export default function Dots() {
           color: #666;
         }
 
+        /* LEARNING */
+
         .learning {
           max-width: 850px;
           margin: 30px auto 50px;
@@ -955,6 +1578,8 @@ export default function Dots() {
           font-weight: bold;
         }
 
+        /* LINKS */
+
         .links {
           display: flex;
           justify-content: center;
@@ -972,6 +1597,8 @@ export default function Dots() {
           font-weight: bold;
         }
 
+        /* FOOTER */
+
         footer {
           background: #333;
           color: white;
@@ -983,6 +1610,8 @@ export default function Dots() {
           margin: 8px;
         }
 
+        /* TABLET */
+
         @media (max-width: 800px) {
 
           .categoryGrid {
@@ -990,11 +1619,22 @@ export default function Dots() {
               repeat(4, 1fr);
           }
 
+          .dottedCategories {
+            grid-template-columns:
+              repeat(2, 1fr);
+          }
+
           .instructions {
             grid-template-columns: 1fr;
           }
 
+          .practiceInfo {
+            grid-template-columns: 1fr;
+          }
+
         }
+
+        /* MOBILE */
 
         @media (max-width: 600px) {
 
@@ -1052,6 +1692,30 @@ export default function Dots() {
             text-align: center;
           }
 
+          .dottedSection {
+            padding: 0 12px;
+          }
+
+          .dottedHeader {
+            flex-direction: column;
+          }
+
+          .dottedHeader h2 {
+            font-size: 25px;
+          }
+
+          .writingCharacter {
+            font-size: 130px;
+          }
+
+          .dottedCanvas {
+            min-height: 280px;
+          }
+
+          .practiceCard {
+            padding: 15px;
+          }
+
         }
 
         @media (max-width: 420px) {
@@ -1065,9 +1729,26 @@ export default function Dots() {
             font-size: 21px;
           }
 
+          .dottedCategories {
+            grid-template-columns: 1fr;
+          }
+
+          .practiceButtons {
+            flex-direction: column;
+          }
+
+          .practiceButton {
+            width: 100%;
+          }
+
+          .writingCharacter {
+            font-size: 105px;
+          }
+
         }
 
       `}</style>
+
     </>
   );
 }
