@@ -100,7 +100,6 @@ export default function Home() {
   return (
     <>
       <Head>
-      <Head>
   <title>Chinnaari Kids | Learn, Play & Have Fun</title>
 
   <meta
