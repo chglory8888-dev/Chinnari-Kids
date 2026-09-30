@@ -1222,8 +1222,8 @@ const stories = [
       "పెద్దలు కలిసి ఇళ్లను బాగు చేశారు.",
       "గ్రామం మళ్లీ సురక్షితంగా మారే వరకు అందరూ సహాయం చేశారు."
     ],
-    moral: "Helping hands can make a big differencce
-      teluguMoral: "సహాయక చేతులు గొప్ప మార్పును తీసుకురాగలవు."
+        moral: "Helping hands can make a big difference.",
+    teluguMoral: "సహాయక చేతులు గొప్ప మార్పును తీసుకురాగలవు."
   },
 
   {
@@ -1251,7 +1251,7 @@ const stories = [
     teluguMoral: "ప్రతి మంచి పని ప్రపంచాన్ని మరింత మంచిగా మార్చగలదు."
   }
 ];
-
+    
 
                           
 
