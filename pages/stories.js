@@ -1251,6 +1251,789 @@ const stories = [
     teluguMoral: "ప్రతి మంచి పని ప్రపంచాన్ని మరింత మంచిగా మార్చగలదు."
   }
 ];
+export default function Stories() {
+  const [selectedStory, setSelectedStory] = useState(null);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [isTelugu, setIsTelugu] = useState(false);
+  const [completedStories, setCompletedStories] = useState([]);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("chinnari-completed-stories");
+      if (saved) {
+        setCompletedStories(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error("Could not load completed stories:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "chinnari-completed-stories",
+        JSON.stringify(completedStories)
+      );
+    } catch (error) {
+      console.error("Could not save completed stories:", error);
+    }
+  }, [completedStories]);
+
+  const completedCount = completedStories.length;
+
+  const progress = useMemo(() => {
+    if (!selectedStory) return 0;
+
+    return Math.round(
+      ((pageIndex + 1) / selectedStory.pages.length) * 100
+    );
+  }, [selectedStory, pageIndex]);
+
+  const currentText = useMemo(() => {
+    if (!selectedStory) return "";
+
+    if (isTelugu && selectedStory.teluguPages) {
+      return selectedStory.teluguPages[pageIndex];
+    }
+
+    return selectedStory.pages[pageIndex];
+  }, [selectedStory, pageIndex, isTelugu]);
+
+  const speakText = () => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      alert("Voice is not supported in this browser.");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(currentText);
+
+    utterance.lang = isTelugu ? "te-IN" : "en-US";
+    utterance.rate = 0.85;
+    utterance.pitch = 1;
+
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+    };
+
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    setIsSpeaking(false);
+  };
+
+  const openStory = (story) => {
+    stopSpeaking();
+    setSelectedStory(story);
+    setPageIndex(0);
+    setIsTelugu(false);
+  };
+
+  const closeStory = () => {
+    stopSpeaking();
+    setSelectedStory(null);
+    setPageIndex(0);
+  };
+
+  const markCompleted = (storyId) => {
+    setCompletedStories((prev) => {
+      if (prev.includes(storyId)) {
+        return prev;
+      }
+
+      return [...prev, storyId];
+    });
+  };
+
+  const nextPage = () => {
+    if (!selectedStory) return;
+
+    if (pageIndex < selectedStory.pages.length - 1) {
+      stopSpeaking();
+      setPageIndex((prev) => prev + 1);
+    } else {
+      markCompleted(selectedStory.id);
+    }
+  };
+
+  const previousPage = () => {
+    if (pageIndex > 0) {
+      stopSpeaking();
+      setPageIndex((prev) => prev - 1);
+    }
+  };
+
+  return (
+    <>
+      <Head>
+        <title>Chinnari Kids - Stories</title>
+        <meta
+          name="description"
+          content="Fun English and Telugu moral stories for children."
+        />
+        <meta
+          name="keywords"
+          content="kids stories, Telugu stories, English stories, moral stories, Chinnari Kids"
+        />
+      </Head>
+
+      <main className="stories-page">
+        <header className="top-header">
+          <div>
+            <h1>🌈 Chinnari Kids</h1>
+            <p>Fun Stories • Good Habits • Happy Learning</p>
+          </div>
+
+          <Link href="/" className="home-button">
+            🏠 Home
+          </Link>
+        </header>
+
+        <section className="hero">
+          <div>
+            <h2>📚 Kids Stories</h2>
+            <p>
+              Read wonderful stories and learn beautiful life lessons.
+            </p>
+          </div>
+
+          <div className="progress-card">
+            <span>⭐ Stories Completed</span>
+            <strong>
+              {completedCount} / {stories.length}
+            </strong>
+          </div>
+        </section>
+
+        {!selectedStory && (
+          <section className="story-grid">
+            {stories.map((story) => {
+              const completed = completedStories.includes(story.id);
+
+              return (
+                <article
+                  key={story.id}
+                  className="story-card"
+                  style={{
+                    background: story.color || "#ffffff"
+                  }}
+                  onClick={() => openStory(story)}
+                >
+                  <div className="story-number">
+                    Story {story.id}
+                  </div>
+
+                  <div className="story-emoji">
+                    {story.emoji}
+                  </div>
+
+                  <h3>{story.title}</h3>
+
+                  <h4>{story.teluguTitle}</h4>
+
+                  <p className="story-language">
+                    🌐 {story.language}
+                  </p>
+
+                  <button
+                    type="button"
+                    className="read-button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openStory(story);
+                    }}
+                  >
+                    📖 Read Story
+                  </button>
+
+                  {completed && (
+                    <div className="completed-badge">
+                      ⭐ Completed
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </section>
+        )}
+
+        {selectedStory && (
+          <section className="reader">
+            <div
+              className="reader-card"
+              style={{
+                background: selectedStory.color || "#ffffff"
+              }}
+            >
+              <div className="reader-top">
+                <button
+                  type="button"
+                  className="back-button"
+                  onClick={closeStory}
+                >
+                  ← All Stories
+                </button>
+
+                <span>
+                  Story {selectedStory.id} / {stories.length}
+                </span>
+              </div>
+
+              <div className="reader-emoji">
+                {selectedStory.emoji}
+              </div>
+
+              <h2>{selectedStory.title}</h2>
+
+              <h3>{selectedStory.teluguTitle}</h3>
+
+              <div className="language-switch">
+                <button
+                  type="button"
+                  className={!isTelugu ? "active" : ""}
+                  onClick={() => {
+                    stopSpeaking();
+                    setIsTelugu(false);
+                  }}
+                >
+                  🇬🇧 English
+                </button>
+
+                <button
+                  type="button"
+                  className={isTelugu ? "active" : ""}
+                  onClick={() => {
+                    stopSpeaking();
+                    setIsTelugu(true);
+                  }}
+                >
+                  🇮🇳 తెలుగు
+                </button>
+              </div>
+
+              <div className="page-progress">
+                <div className="progress-info">
+                  <span>
+                    Page {pageIndex + 1} of {selectedStory.pages.length}
+                  </span>
+
+                  <span>{progress}%</span>
+                </div>
+
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width: `${progress}%`
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="story-page-text">
+                <span className="page-icon">📖</span>
+
+                <p>{currentText}</p>
+              </div>
+
+              <div className="voice-controls">
+                {!isSpeaking ? (
+                  <button
+                    type="button"
+                    onClick={speakText}
+                    className="voice-button"
+                  >
+                    🔊 Read Aloud
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={stopSpeaking}
+                    className="voice-button stop"
+                  >
+                    ⏹️ Stop Voice
+                  </button>
+                )}
+              </div>
+
+              <div className="navigation-buttons">
+                <button
+                  type="button"
+                  onClick={previousPage}
+                  disabled={pageIndex === 0}
+                >
+                  ⬅️ Previous
+                </button>
+
+                {pageIndex < selectedStory.pages.length - 1 ? (
+                  <button
+                    type="button"
+                    onClick={nextPage}
+                  >
+                    Next ➡️
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="complete-button"
+                    onClick={() => markCompleted(selectedStory.id)}
+                  >
+                    ⭐ Complete Story
+                  </button>
+                )}
+              </div>
+
+              {pageIndex === selectedStory.pages.length - 1 && (
+                <div className="moral-box">
+                  <h3>💡 Moral of the Story</h3>
+
+                  <p>
+                    {isTelugu
+                      ? selectedStory.teluguMoral
+                      : selectedStory.moral}
+                  </p>
+                </div>
+              )}
+
+              {completedStories.includes(selectedStory.id) && (
+                <div className="success-message">
+                  🎉 Great job! You completed this story! ⭐
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+      </main>
+
+      <style jsx>{`
+        * {
+          box-sizing: border-box;
+        }
+
+        .stories-page {
+          min-height: 100vh;
+          background: linear-gradient(
+            135deg,
+            #f8fbff 0%,
+            #fff8fc 50%,
+            #f5fff9 100%
+          );
+          padding-bottom: 50px;
+          color: #263238;
+        }
+
+        .top-header {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 25px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+        }
+
+        .top-header h1 {
+          margin: 0;
+          font-size: 32px;
+          color: #673ab7;
+        }
+
+        .top-header p {
+          margin: 6px 0 0;
+          color: #607d8b;
+        }
+
+        .home-button {
+          text-decoration: none;
+          background: #673ab7;
+          color: white;
+          padding: 11px 18px;
+          border-radius: 25px;
+          font-weight: 700;
+        }
+
+        .hero {
+          max-width: 1200px;
+          margin: 10px auto 30px;
+          padding: 30px 25px;
+          border-radius: 28px;
+          background: white;
+          box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 25px;
+        }
+
+        .hero h2 {
+          margin: 0;
+          font-size: 34px;
+          color: #3f51b5;
+        }
+
+        .hero p {
+          color: #607d8b;
+          margin-bottom: 0;
+        }
+
+        .progress-card {
+          min-width: 190px;
+          padding: 18px;
+          border-radius: 20px;
+          background: #fff3cd;
+          text-align: center;
+        }
+
+        .progress-card span {
+          display: block;
+          font-size: 14px;
+        }
+
+        .progress-card strong {
+          display: block;
+          margin-top: 5px;
+          font-size: 25px;
+          color: #f57c00;
+        }
+
+        .story-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 20px;
+        }
+
+        .story-card {
+          position: relative;
+          padding: 22px;
+          border-radius: 25px;
+          min-height: 290px;
+          cursor: pointer;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .story-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .story-number {
+          font-size: 13px;
+          font-weight: 700;
+          color: #607d8b;
+        }
+
+        .story-emoji {
+          font-size: 55px;
+          text-align: center;
+          margin: 18px 0 12px;
+        }
+
+        .story-card h3 {
+          margin: 0;
+          text-align: center;
+          font-size: 20px;
+        }
+
+        .story-card h4 {
+          margin: 8px 0;
+          text-align: center;
+          font-size: 16px;
+          color: #5e35b1;
+        }
+
+        .story-language {
+          text-align: center;
+          color: #607d8b;
+          font-size: 13px;
+        }
+
+        .read-button {
+          display: block;
+          margin: 15px auto 0;
+          border: 0;
+          border-radius: 22px;
+          padding: 10px 17px;
+          background: #673ab7;
+          color: white;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .completed-badge {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: #4caf50;
+          color: white;
+          border-radius: 15px;
+          padding: 5px 9px;
+          font-size: 11px;
+          font-weight: 700;
+        }
+
+        .reader {
+          max-width: 850px;
+          margin: 0 auto;
+          padding: 0 20px;
+        }
+
+        .reader-card {
+          border-radius: 30px;
+          padding: 25px;
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .reader-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 15px;
+          color: #607d8b;
+          font-weight: 700;
+        }
+
+        .back-button {
+          border: 0;
+          background: white;
+          padding: 10px 15px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .reader-emoji {
+          text-align: center;
+          font-size: 75px;
+          margin-top: 20px;
+        }
+
+        .reader-card h2 {
+          text-align: center;
+          font-size: 30px;
+          margin: 8px 0;
+        }
+
+        .reader-card h3 {
+          text-align: center;
+          color: #5e35b1;
+        }
+
+        .language-switch {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          margin: 20px 0;
+        }
+
+        .language-switch button {
+          border: 2px solid #673ab7;
+          background: white;
+          color: #673ab7;
+          padding: 9px 17px;
+          border-radius: 22px;
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .language-switch button.active {
+          background: #673ab7;
+          color: white;
+        }
+
+        .page-progress {
+          margin: 20px 0;
+        }
+
+        .progress-info {
+          display: flex;
+          justify-content: space-between;
+          font-size: 13px;
+          font-weight: 700;
+          color: #607d8b;
+          margin-bottom: 7px;
+        }
+
+        .progress-bar {
+          height: 10px;
+          border-radius: 10px;
+          background: rgba(0, 0, 0, 0.08);
+          overflow: hidden;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: #673ab7;
+          border-radius: 10px;
+          transition: width 0.3s ease;
+        }
+
+        .story-page-text {
+          margin: 25px 0;
+          background: rgba(255, 255, 255, 0.85);
+          border-radius: 25px;
+          padding: 30px 25px;
+          min-height: 190px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .page-icon {
+          font-size: 35px;
+        }
+
+        .story-page-text p {
+          font-size: 23px;
+          line-height: 1.7;
+          margin: 15px 0 0;
+          font-weight: 600;
+        }
+
+        .voice-controls {
+          text-align: center;
+          margin: 15px 0;
+        }
+
+        .voice-button {
+          border: 0;
+          background: #2196f3;
+          color: white;
+          padding: 12px 20px;
+          border-radius: 25px;
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .voice-button.stop {
+          background: #e53935;
+        }
+
+        .navigation-buttons {
+          display: flex;
+          justify-content: space-between;
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        .navigation-buttons button {
+          border: 0;
+          padding: 13px 20px;
+          border-radius: 25px;
+          background: #673ab7;
+          color: white;
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .navigation-buttons button:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+
+        .navigation-buttons .complete-button {
+          background: #43a047;
+        }
+
+        .moral-box {
+          margin-top: 25px;
+          padding: 22px;
+          border-radius: 22px;
+          background: #fff8d6;
+        }
+
+        .moral-box h3 {
+          color: #f57c00;
+          margin-top: 0;
+        }
+
+        .moral-box p {
+          text-align: center;
+          font-size: 19px;
+          font-weight: 600;
+          line-height: 1.6;
+        }
+
+        .success-message {
+          margin-top: 20px;
+          padding: 15px;
+          border-radius: 18px;
+          background: #e8f5e9;
+          color: #2e7d32;
+          text-align: center;
+          font-weight: 700;
+        }
+
+        @media (max-width: 650px) {
+          .top-header {
+            align-items: flex-start;
+          }
+
+          .top-header h1 {
+            font-size: 25px;
+          }
+
+          .hero {
+            margin-left: 15px;
+            margin-right: 15px;
+            padding: 22px;
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .hero h2 {
+            font-size: 28px;
+          }
+
+          .story-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .reader-card {
+            padding: 18px;
+          }
+
+          .reader-card h2 {
+            font-size: 25px;
+          }
+
+          .story-page-text p {
+            font-size: 20px;
+          }
+
+          .navigation-buttons {
+            flex-direction: column;
+          }
+
+          .navigation-buttons button {
+            width: 100%;
+          }
+        }
+      `}</style>
+    </>
+  );
+}
   
     
 
